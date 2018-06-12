@@ -116,14 +116,14 @@ class FlowNetwork:
             ret = self._mcf.Solve()
 
             if ret == self._mcf.OPTIMAL:
-                print('iter %d: optimal found' % i)
+                # print('iter %d: optimal found' % i)
                 # update flows, readjusting each flow for lower bounds
                 for arc in self.arcs:
                     arc.flow = self._mcf.Flow(arc.idx) + arc.min_cap
-            else:
-                print('iter %d: no optimal: ' % i)
+            # else:
+                # print('iter %d: no optimal: ' % i)
 
-            print(self)
+            # print(self)
             i += 1
 
     def reset(self):
@@ -159,6 +159,7 @@ class FlowNetwork:
     def __str__(self):
         flowSum = 0
         for arc in self.arcs:
-            print(arc)
+            if arc.flow > 0:
+                print(arc)
             flowSum += arc.flow * arc.cost
         return 'cost(flow) = %d\n' % flowSum

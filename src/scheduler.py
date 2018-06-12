@@ -1,6 +1,6 @@
 from netflow import FlowVertex, FlowArc
 
-NUM_WEEKS = 10
+NUM_WEEKS = 52
 
 
 class Clinician:
@@ -24,11 +24,11 @@ class Parser:
         self.arcs = [
             # circulation edge
             FlowArc(
-                self.vertices['sink'], 
-                self.vertices['source'], 
-                min_cap=0, 
-                max_cap=self.vertices['source'].supply - self.vertices['sink'].supply, 
-                cost=0, 
+                self.vertices['sink'],
+                self.vertices['source'],
+                min_cap=0,
+                max_cap=NUM_WEEKS*2,
+                cost=0,
                 fixed_cost=True)
         ]
 
