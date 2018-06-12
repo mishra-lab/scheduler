@@ -1,5 +1,5 @@
 from netflow import FlowArc, FlowNetwork, FlowVertex
-from strategy import RandomStrategy
+from strategy import RandomStrategy, ConsecutiveStrategy
 import time
 
 
@@ -17,8 +17,8 @@ def main():
     }
 
     arcs = [
-        FlowArc(vertices['source'], vertices['a'], 0, 5, 0, fixed_cost=True),
-        FlowArc(vertices['source'], vertices['b'], 0, 5, 0, fixed_cost=True),
+        FlowArc(vertices['source'], vertices['a'], min_cap=0, max_cap=5, cost=0, fixed_cost=True),
+        FlowArc(vertices['source'], vertices['b'], min_cap=0, max_cap=5, cost=0, fixed_cost=True),
 
         FlowArc(vertices['a'], vertices['1'], 0, 1, 1),
         FlowArc(vertices['a'], vertices['2'], 0, 1, 1),
@@ -27,10 +27,10 @@ def main():
         FlowArc(vertices['a'], vertices['5'], 0, 1, 1),
 
         FlowArc(vertices['b'], vertices['1'], 0, 1, 1),
-        FlowArc(vertices['b'], vertices['2'], 0, 1, 1),
+        FlowArc(vertices['b'], vertices['2'], 0, 1, 100),
         FlowArc(vertices['b'], vertices['3'], 0, 1, 1),
-        FlowArc(vertices['b'], vertices['4'], 0, 1, 1),
-        FlowArc(vertices['b'], vertices['5'], 0, 1, 1),
+        FlowArc(vertices['b'], vertices['4'], 0, 1, 100),
+        FlowArc(vertices['b'], vertices['5'], 0, 1, 100),
 
         FlowArc(vertices['1'], vertices['sink'], 1, 1, 0, fixed_cost=True),
         FlowArc(vertices['2'], vertices['sink'], 1, 1, 0, fixed_cost=True),
@@ -38,11 +38,12 @@ def main():
         FlowArc(vertices['4'], vertices['sink'], 1, 1, 0, fixed_cost=True),
         FlowArc(vertices['5'], vertices['sink'], 1, 1, 0, fixed_cost=True),
         # circulation edge
-        FlowArc(vertices['sink'], vertices['source'], 0, 10, 0)
+        FlowArc(vertices['sink'], vertices['source'], 0, 10, 0, fixed_cost=True)
     ]
 
-    net = FlowNetwork(vertices.values(), arcs, strategy=RandomStrategy)
-    net.solve()
+    # net = FlowNetwork(vertices.values(), arcs, strategy=RandomStrategy)
+    net = FlowNetwork(vertices.values(), arcs, strategy=ConsecutiveStrategy)
+    net.solve(iterations=2)
 
 
 if __name__ == '__main__':

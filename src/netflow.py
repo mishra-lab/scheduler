@@ -107,11 +107,11 @@ class FlowNetwork:
         if (arc not in self.arcs):
             self.arcs.append(arc)
 
-    def solve(self, iterations=100):
+    def solve(self, iterations=5):
         i = 0
         while i < iterations:
-            self.reset()
             self.strategy.adjustCosts()
+            self.reset()
             self._regenerate_mcf()
             ret = self._mcf.Solve()
 

@@ -1,4 +1,5 @@
 import random
+import itertools
 
 
 class Strategy:
@@ -42,13 +43,36 @@ class RandomStrategy(Strategy):
 
 class ConsecutiveStrategy(Strategy):
 
-    def __init__(self, network):
+    def __init__(self, network, consecutive_allowed=2):
         Strategy.__init__(self, network)
+        self.consecutive_allowed = consecutive_allowed
+
+    def groupby_source_vert(self, arc):
+        return arc.source_vert.name
 
     def adjustCosts(self):
         """
         Adjust costs by counting number of consecutive weeks assigned
-        to each doctor, discouraging > k weeks in a row
+        to each clincian, discouraging > consecutive_allowed weeks in a row
         """
-        # TODO: implement
-        return
+        # group arcs by clinician
+        grouped_arcs = {}
+        adjustable_arcs = filter(lambda x: not x.fixed_cost, self.network.arcs)
+        for key, arc_iter in itertools.groupby(adjustable_arcs, key=self.groupby_source_vert):
+            grouped_arcs[key] = list(arc_iter)
+
+        for key in grouped_arcs:
+            consec = 0
+            arcs = grouped_arcs[key]
+            for arc in arcs:
+                # keep an incrementing count when we encounter consecutive
+                # weeks
+                if arc.flow == 1:
+                    consec += 1
+                elif arc.flow == 0:
+                    consec = 0
+
+                # increase the cost of the arc when we go over the threshold
+                if consec > self.consecutive_allowed:
+                    arc.cost += 1
+                    consec = 0
