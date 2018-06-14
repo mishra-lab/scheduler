@@ -135,7 +135,7 @@ class Scheduler:
 
 
 class API:
-    SCOPE = 'https://www.googleapis.com/auth/calendar.readonly'
+    SCOPE = 'https://www.googleapis.com/auth/calendar'
 
     def __init__(self, secret_path, calendar_id):
         self._store = file.Storage('credentials.json')
@@ -161,3 +161,22 @@ class API:
             orderBy='startTime').execute()
 
         return result.get('items', [])
+
+    def create_event(self, start, end, attendees, summary):
+        event = {
+            'summary': summary,
+            'start': {
+                'date': start
+            },
+            'end': {
+                'date': end
+            },
+            'attendees': [
+                {'email': _} for _ in attendees
+            ]
+        }
+
+        self._service.events().insert(
+            calendarId=self.calendar_id,
+            body=event
+        ).execute()
