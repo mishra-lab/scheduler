@@ -8,11 +8,14 @@ class Strategy:
     in minflow network.
     """
 
-    def __init__(self, network):
+    def __init__(self, network=None):
         self.network = network
 
     def adjustCosts(self):
         raise NotImplementedError
+
+    def set_network(self, network):
+        self.network = network
 
 
 class RandomStrategy(Strategy):
@@ -22,7 +25,7 @@ class RandomStrategy(Strategy):
     Each arc has a 50% chance of being adjusted
     """
 
-    def __init__(self, network):
+    def __init__(self, network=None):
         Strategy.__init__(self, network)
 
     def adjustCosts(self):
@@ -43,7 +46,7 @@ class RandomStrategy(Strategy):
 
 class ConsecutiveStrategy(Strategy):
 
-    def __init__(self, network, consecutive_allowed=2):
+    def __init__(self, network=None, consecutive_allowed=2):
         Strategy.__init__(self, network)
         self.consecutive_allowed = consecutive_allowed
 
