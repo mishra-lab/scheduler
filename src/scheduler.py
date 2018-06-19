@@ -5,7 +5,7 @@ from oauth2client import file, client, tools
 from datetime import datetime, timedelta
 import json
 
-NUM_WEEKS = 3
+NUM_WEEKS = 5
 # mon 8am + 105 hours = fri 5pm
 # 105 = 4 * 24hr + (17hr - 8hr)
 WEEK_HOURS = 24 * 4 + (17 - 8)
@@ -69,7 +69,7 @@ class Scheduler:
                     for week in week_range:
                         if 'weeks_off' not in self.clinicians[creator]:
                             self.clinicians[creator]['weeks_off'] = []
-                        self.clinicians[creator]['weeks_off'].append(str(week))
+                        self.clinicians[creator]['weeks_off'].append(week)
 
     def build_net(self):
         self.network.add_vertex(FlowVertex('source', NUM_WEEKS))
