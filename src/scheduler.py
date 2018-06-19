@@ -5,28 +5,30 @@ from oauth2client import file, client, tools
 from datetime import datetime, timedelta
 import json
 
-NUM_WEEKS = 52
+NUM_WEEKS = 3
+# mon 8am + 105 hours = fri 5pm
+# 105 = 4 * 24hr + (17hr - 8hr)
+WEEK_HOURS = 24 * 4 + (17 - 8)
 
 
 class Scheduler:
-    def __init__(self, settings_file=None):
+    def __init__(self, settings):
         secret_path = '../client_secret.json'
         calendar_id = 'primary'
 
-        if settings_file:
-            with open(settings_file, 'r') as f:
-                settings = json.load(f)
-                secret_path = settings['secret_path']
-                calendar_id = settings['calendar_id']
-                self.clinic_conf = settings['clinician_config']
+        secret_path = settings['secret_path']
+        calendar_id = settings['calendar_id']
+        self.clinic_conf = settings['clinician_config']
 
-        self._API = API(secret_path, calendar_id)
+        self._API = API(secret_path, calendar_id, settings)
         self.clinicians = {}
         self.network = FlowNetwork()
 
     def read_clinic_conf(self):
         with open(self.clinic_conf, 'r') as f:
             self.clinicians = json.load(f)
+        for clinician in self.clinicians:
+            self.clinicians[clinician]['weeks_off'] = []
 
     def populate_weeks_off_from_file(self, data_file):
         clinicians = {}
@@ -127,17 +129,33 @@ class Scheduler:
             clin_vert = FlowVertex.get_vertex(clinician)
             for arc in clin_vert.out_arcs:
                 if arc.flow > 0:
+                    week_num = int(arc.dest_vert.name)
                     # make sure we didn't assign a week off
-                    assert int(
-                        arc.dest_vert.name) not in self.clinicians[clinician]['weeks_off']
+                    assert week_num not in self.clinicians[clinician]['weeks_off']
                     self.clinicians[clinician]['weeks_assigned'].append(
-                        int(arc.dest_vert.name))
+                        week_num)
+
+        # create events for weeks assigned
+        for clinician in self.clinicians:
+            for week_num in self.clinicians[clinician]['weeks_assigned']:
+                # format: year/week_num/week_day/time
+                week_start = datetime.strptime(
+                    '2019/{0:02d}/1/08:00/'.format(week_num),
+                    '%G/%V/%u/%H:%M/')
+                week_end = week_start + timedelta(hours=WEEK_HOURS)
+                email = self.clinicians[clinician]['email']
+                summary = '%s - on call' % (clinician)
+                self._API.create_event(
+                    week_start.isoformat(),
+                    week_end.isoformat(),
+                    [email],
+                    summary)
 
 
 class API:
     SCOPE = 'https://www.googleapis.com/auth/calendar'
 
-    def __init__(self, secret_path, calendar_id):
+    def __init__(self, secret_path, calendar_id, settings):
         self._store = file.Storage('credentials.json')
         self._creds = self._store.get()
         if not self._creds or self._creds.invalid:
@@ -148,6 +166,23 @@ class API:
             'calendar', 'v3', http=self._creds.authorize(Http()))
 
         self.calendar_id = calendar_id
+        self.settings = settings
+        self.time_zone = self.get_timezone()
+
+    def get_timezone(self):
+        """
+        Returns the timezone of the calendar given by calendar_id.
+        
+        When possible, reads info from settings file.
+        """
+        tz = self.settings['time_zone']
+        if tz:
+            return tz
+        else:
+            result = self._service.calendars().get(
+                calendarId=self.calendar_id).execute()
+            self.settings['time_zone'] = result.get('timeZone')
+            return self.settings['time_zone']
 
     def get_events(self, start, max_res=100):
         """
@@ -163,13 +198,19 @@ class API:
         return result.get('items', [])
 
     def create_event(self, start, end, attendees, summary):
+        """
+        Creates a new event from start to end with the given attendees
+        list and summary
+        """
         event = {
             'summary': summary,
             'start': {
-                'date': start
+                'dateTime': start,
+                'timeZone': self.time_zone
             },
             'end': {
-                'date': end
+                'dateTime': end,
+                'timeZone': self.time_zone
             },
             'attendees': [
                 {'email': _} for _ in attendees

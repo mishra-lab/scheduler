@@ -1,14 +1,16 @@
 from netflow import FlowNetwork
 from strategy import RandomStrategy, ConsecutiveStrategy
 from scheduler import Scheduler
+from settings import SettingsManager
 import time
 import os
 
 
-def main(rel_path):
-    sched = Scheduler(build_path('../settings.json'))
+def main(settings):
+    sched = Scheduler(settings)
     sched.read_clinic_conf()
-    sched.populate_weeks_off_from_file(build_path(rel_path))
+    # sched.populate_weeks_off_from_file(build_path(rel_path))
+    sched.populate_weeks_off()
     sched.build_net()
 
     sched.network.set_strategy(RandomStrategy())
@@ -27,11 +29,13 @@ def build_path(rel_path):
     )
 
 if __name__ == '__main__':
-    import argparse
-    parser = argparse.ArgumentParser()
-    parser.add_argument('relative_path')
-    args = parser.parse_args()
+    # import argparse
+    # parser = argparse.ArgumentParser()
+    # parser.add_argument('relative_path')
+    # args = parser.parse_args()
 
     start_time = time.clock()
-    main(args.relative_path)
+    with SettingsManager(build_path('../settings.json')) as settings:
+        main(settings)
+    # main(args.relative_path)
     print('time =', time.clock() - start_time, 'seconds')
