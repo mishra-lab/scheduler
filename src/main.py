@@ -1,16 +1,19 @@
+import os
+import time
+
 from netflow import FlowNetwork
-from strategy import RandomStrategy, ConsecutiveStrategy
 from scheduler import Scheduler
 from settings import SettingsManager
-import time
-import os
+from strategy import ConsecutiveStrategy, RandomStrategy
 
 
-def main(settings):
+def main(settings, data_path=None):
     sched = Scheduler(settings)
     sched.read_clinic_conf()
-    # sched.populate_weeks_off_from_file(build_path(rel_path))
-    sched.populate_weeks_off()
+    if data_path:
+        sched.populate_weeks_off_from_file(build_path(data_path))
+    else:
+        sched.populate_weeks_off()
     sched.build_net()
 
     sched.network.set_strategy(RandomStrategy())
@@ -19,8 +22,14 @@ def main(settings):
     sched.network.set_strategy(ConsecutiveStrategy(consecutive_allowed=2))
     sched.network.solve(iterations=50)
     # print(sched.network)
-    sched.assign_weeks()
+    # sched.assign_weeks()
     print(sched.network)
+
+    net = sched.network
+    assignments = list(filter(lambda x: x.flow > 0 and x.source_vert.name in sched.clinicians.keys(),net.arcs))
+    assignments.sort(key=lambda x: int(x.dest_vert.name))
+    for a in assignments:
+        print(a.source_vert.name)
 
 def build_path(rel_path):
     return os.path.join(
@@ -29,13 +38,12 @@ def build_path(rel_path):
     )
 
 if __name__ == '__main__':
-    # import argparse
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument('relative_path')
-    # args = parser.parse_args()
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--file')
+    args = parser.parse_args()
 
     start_time = time.clock()
-    with SettingsManager(build_path('../settings.json')) as settings:
-        main(settings)
-    # main(args.relative_path)
+    with SettingsManager(build_path('../config/settings.json')) as settings:
+        main(settings, args.file)
     print('time =', time.clock() - start_time, 'seconds')

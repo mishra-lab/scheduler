@@ -1,11 +1,13 @@
-from netflow import FlowVertex, FlowArc, FlowNetwork
+import json
+from datetime import datetime, timedelta
+
 from googleapiclient.discovery import build
 from httplib2 import Http
-from oauth2client import file, client, tools
-from datetime import datetime, timedelta
-import json
+from oauth2client import client, file, tools
 
-NUM_WEEKS = 5
+from netflow import FlowArc, FlowNetwork, FlowVertex
+
+NUM_WEEKS = 52
 # mon 8am + 105 hours = fri 5pm
 # 105 = 4 * 24hr + (17hr - 8hr)
 WEEK_HOURS = 24 * 4 + (17 - 8)
@@ -13,12 +15,12 @@ WEEK_HOURS = 24 * 4 + (17 - 8)
 
 class Scheduler:
     def __init__(self, settings):
-        secret_path = '../client_secret.json'
+        secret_path = '../config/client_secret.json'
         calendar_id = 'primary'
 
         secret_path = settings['secret_path']
         calendar_id = settings['calendar_id']
-        self.clinic_conf = settings['clinician_config']
+        self.clinic_conf = settings['clinician_config_path']
 
         self._API = API(secret_path, calendar_id, settings)
         self.clinicians = {}
@@ -67,8 +69,6 @@ class Scheduler:
                     week_range = list(
                         range(start.isocalendar()[1], end.isocalendar()[1] + 1))
                     for week in week_range:
-                        if 'weeks_off' not in self.clinicians[creator]:
-                            self.clinicians[creator]['weeks_off'] = []
                         self.clinicians[creator]['weeks_off'].append(week)
 
     def build_net(self):

@@ -1,5 +1,5 @@
-import random
 import itertools
+import random
 
 
 class Strategy:

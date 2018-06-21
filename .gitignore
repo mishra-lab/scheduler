@@ -107,7 +107,3 @@ venv.bak/
 .vscode/
 
 # API
-client_secret.json
-src/credentials.json
-clinician_config.json
-settings.json

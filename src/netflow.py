@@ -1,4 +1,5 @@
 from ortools.graph import pywrapgraph
+
 from strategy import RandomStrategy
 
 

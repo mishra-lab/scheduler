@@ -1,0 +1,5 @@
+{
+    "calendar_id": "primary",
+    "clinician_config_path": "./clinician_config.json",
+    "secret_path": "./client_secret.json"
+}
