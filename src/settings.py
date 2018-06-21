@@ -1,4 +1,5 @@
 import json
+import os
 
 
 class SettingsManager:
@@ -7,10 +8,25 @@ class SettingsManager:
 
     Use inside ```with``` statement
     """
+
     def __init__(self, settings_file):
         self._settings_file = settings_file
+        self._dirname = os.path.dirname(self._settings_file)
+
         with open(self._settings_file, 'r') as f:
             self._json = json.load(f)
+
+    def get_path_from_key(self, key):
+        """
+        Returns path assuming same directory as the settings file.
+
+        Useful when retrieveing a setting that stores a relative path
+        """
+        path = self[key]
+        if path:
+            return os.path.normpath(
+                os.path.join(self._dirname, path)
+            )
 
     def __enter__(self):
         return self

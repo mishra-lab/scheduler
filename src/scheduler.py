@@ -18,9 +18,9 @@ class Scheduler:
         secret_path = '../config/client_secret.json'
         calendar_id = 'primary'
 
-        secret_path = settings['secret_path']
+        secret_path = settings.get_path_from_key('secret_path')
         calendar_id = settings['calendar_id']
-        self.clinic_conf = settings['clinician_config_path']
+        self.clinic_conf = settings.get_path_from_key('clinician_config_path')
 
         self._API = API(secret_path, calendar_id, settings)
         self.clinicians = {}
