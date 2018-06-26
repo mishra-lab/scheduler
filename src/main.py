@@ -16,14 +16,14 @@ def main(settings, data_path=None):
         sched.populate_weeks_off()
     sched.build_net()
 
-    sched.network.set_strategy(RandomStrategy())
-    sched.network.solve(iterations=2)
+    # sched.network.set_strategy(RandomStrategy())
+    # sched.network.solve(iterations=2)
 
     sched.network.set_strategy(ConsecutiveStrategy(consecutive_allowed=2))
     sched.network.solve(iterations=50)
     # print(sched.network)
     # sched.assign_weeks()
-    print(sched.network)
+    # print(sched.network)
 
     net = sched.network
     assignments = list(filter(lambda x: x.flow > 0 and x.source_vert.name in sched.clinicians.keys(),net.arcs))

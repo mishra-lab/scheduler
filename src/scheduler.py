@@ -7,11 +7,28 @@ from oauth2client import client, file, tools
 
 from netflow import FlowArc, FlowNetwork, FlowVertex
 
-NUM_WEEKS = 52
+NUM_WEEKS = 5
 # mon 8am + 105 hours = fri 5pm
 # 105 = 4 * 24hr + (17hr - 8hr)
 WEEK_HOURS = 24 * 4 + (17 - 8)
 
+
+class Clinician:
+    def __init__(self, name, min_, max_, email, weeks_off):
+        self.name = name
+        self.min = min_
+        self.max = max_
+        self.email = email
+        self.weeks_off = weeks_off
+        self.weeks_assigned = []
+
+        self._vert = None
+
+    def get_vert(self):
+        return self._vert
+
+    def set_vert(self, vert):
+        self._vert = vert
 
 class Scheduler:
     def __init__(self, settings):
@@ -28,18 +45,22 @@ class Scheduler:
 
     def read_clinic_conf(self):
         with open(self.clinic_conf, 'r') as f:
-            self.clinicians = json.load(f)
-        for clinician in self.clinicians:
-            self.clinicians[clinician]['weeks_off'] = []
+            data = json.load(f)
+            for clinician in data:
+                self.clinicians[clinician] = \
+                    Clinician(
+                        name=clinician,
+                        min_=data[clinician]['min'],
+                        max_=data[clinician]['max'],
+                        email=data[clinician]['email'] if 'email' in data[clinician] else '',
+                        weeks_off=[]
+                )
 
     def populate_weeks_off_from_file(self, data_file):
-        clinicians = {}
         with open(data_file, 'r') as f:
-            clinicians = json.load(f)
-
-        for clinician in clinicians:
-            if clinician in self.clinicians:
-                self.clinicians[clinician]['weeks_off'] = clinicians[clinician]['weeks_off']
+            data = json.load(f)
+            for clinician in data:
+                self.clinicians[clinician].weeks_off = data[clinician]['weeks_off']
 
     def populate_weeks_off(self):
         now = datetime.utcnow().isoformat() + 'Z'
@@ -69,7 +90,7 @@ class Scheduler:
                     week_range = list(
                         range(start.isocalendar()[1], end.isocalendar()[1] + 1))
                     for week in week_range:
-                        self.clinicians[creator]['weeks_off'].append(week)
+                        self.clinicians[creator].weeks_off.append(week)
 
     def build_net(self):
         self.network.add_vertex(FlowVertex('source', NUM_WEEKS))
@@ -85,7 +106,7 @@ class Scheduler:
         )
 
         # add vertices for each week + arcs to sink
-        for i in range(0, NUM_WEEKS):
+        for i in range(NUM_WEEKS):
             self.network.add_vertex(FlowVertex(str(i+1), 0))
             self.network.add_arc(
                 FlowArc(
@@ -99,57 +120,51 @@ class Scheduler:
 
         # add vertices for each clinican, an arc from source to clinician
         # and an arc from clinician to each week
-        for name in self.clinicians:
-            self.network.add_vertex(FlowVertex(name, 0))
-            clinician = self.clinicians[name]
+        for clin in self.clinicians.values():
+            vert = FlowVertex(clin.name, 0)
+            self.network.add_vertex(vert)
+            clin.set_vert(vert)
             self.network.add_arc(
                 FlowArc(
                     FlowVertex.get_vertex('source'),
-                    FlowVertex.get_vertex(name),
-                    min_cap=clinician['min'],
-                    max_cap=clinician['max'],
+                    FlowVertex.get_vertex(clin.name),
+                    min_cap=clin.min,
+                    max_cap=clin.max,
                     cost=0,
                     fixed_cost=True)
             )
             for i in range(0, NUM_WEEKS):
                 self.network.add_arc(
                     FlowArc(
-                        FlowVertex.get_vertex(name),
+                        FlowVertex.get_vertex(clin.name),
                         FlowVertex.get_vertex(str(i+1)),
                         min_cap=0,
                         max_cap=1,
-                        cost=1000 if i+1 in clinician['weeks_off'] else 1,
-                        fixed_cost=True if i+1 in clinician['weeks_off'] else False)
+                        cost=1000 if i+1 in clin.weeks_off else 1,
+                        fixed_cost=True if i+1 in clin.weeks_off else False)
                 )
 
     def assign_weeks(self):
-        for clinician in self.clinicians:
-            if 'weeks_assigned' not in self.clinicians[clinician]:
-                self.clinicians[clinician]['weeks_assigned'] = []
-            clin_vert = FlowVertex.get_vertex(clinician)
-            for arc in clin_vert.out_arcs:
+        for clin in self.clinicians.values():
+            vert = clin.get_vert()
+            for arc in vert.out_arcs:
                 if arc.flow > 0:
-                    week_num = int(arc.dest_vert.name)
-                    # make sure we didn't assign a week off
-                    assert week_num not in self.clinicians[clinician]['weeks_off']
-                    self.clinicians[clinician]['weeks_assigned'].append(
-                        week_num)
+                    clin.weeks_assigned.append(int(arc.dest_vert.name))
 
         # create events for weeks assigned
-        for clinician in self.clinicians:
-            for week_num in self.clinicians[clinician]['weeks_assigned']:
-                # format: year/week_num/week_day/time
+        for clin in self.clinicians.values():
+            for week_num in clin.weeks_assigned:
                 week_start = datetime.strptime(
                     '2019/{0:02d}/1/08:00/'.format(week_num),
                     '%G/%V/%u/%H:%M/')
                 week_end = week_start + timedelta(hours=WEEK_HOURS)
-                email = self.clinicians[clinician]['email']
-                summary = '%s - on call' % (clinician)
+                summary = '{} - on call'.format(clin.name)
                 self._API.create_event(
                     week_start.isoformat(),
                     week_end.isoformat(),
-                    [email],
-                    summary)
+                    [clin.email],
+                    summary
+                )
 
 
 class API:
