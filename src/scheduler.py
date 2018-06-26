@@ -6,7 +6,7 @@ from httplib2 import Http
 from oauth2client import client, file, tools
 from ortools.linear_solver import pywraplp
 
-NUM_WEEKS = 52
+NUM_WEEKS = 5
 # mon 8am + 105 hours = fri 5pm
 # 105 = 4 * 24hr + (17hr - 8hr)
 WEEK_HOURS = 24 * 4 + (17 - 8)
@@ -156,7 +156,7 @@ class Scheduler:
     def assign_weeks(self):
         for clin in self.clinicians.values():
             for j in range(NUM_WEEKS):
-                if clin.get_var(j).solution_value() == 1.0:
+                if clin.get_value(j) == 1.0:
                     clin.weeks_assigned.append(j)
 
         # create events for weeks assigned

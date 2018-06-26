@@ -19,7 +19,7 @@ def main(settings, data_path=None):
 
     for j in range(NUM_WEEKS):
         for clin in sched.clinicians.values():
-            if clin.get_var(j).solution_value() == 1.0:
+            if clin.get_value(j) == 1.0:
                 print(clin.name)
                 break
     
