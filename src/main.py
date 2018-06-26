@@ -2,7 +2,7 @@ import os
 import time
 
 from netflow import FlowNetwork
-from scheduler import Scheduler
+from scheduler import Scheduler, NUM_WEEKS
 from settings import SettingsManager
 from strategy import ConsecutiveStrategy, RandomStrategy
 
@@ -14,22 +14,15 @@ def main(settings, data_path=None):
         sched.populate_weeks_off_from_file(build_path(data_path))
     else:
         sched.populate_weeks_off()
-    sched.build_net()
+    sched.build_lp()
+    sched.solve_lp()
 
-    sched.network.set_strategy(RandomStrategy())
-    sched.network.solve(iterations=2)
-
-    sched.network.set_strategy(ConsecutiveStrategy(consecutive_allowed=2))
-    sched.network.solve(iterations=50)
-    # print(sched.network)
-    # sched.assign_weeks()
-    print(sched.network)
-
-    net = sched.network
-    assignments = list(filter(lambda x: x.flow > 0 and x.source_vert.name in sched.clinicians.keys(),net.arcs))
-    assignments.sort(key=lambda x: int(x.dest_vert.name))
-    for a in assignments:
-        print(a.source_vert.name)
+    for j in range(NUM_WEEKS):
+        for clin in sched.clinicians.values():
+            if clin.get_var(j).solution_value() == 1.0:
+                print(clin.name)
+                break
+    
 
 def build_path(rel_path):
     return os.path.join(

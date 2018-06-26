@@ -4,13 +4,36 @@ from datetime import datetime, timedelta
 from googleapiclient.discovery import build
 from httplib2 import Http
 from oauth2client import client, file, tools
-
-from netflow import FlowArc, FlowNetwork, FlowVertex
+from ortools.linear_solver import pywraplp
 
 NUM_WEEKS = 52
 # mon 8am + 105 hours = fri 5pm
 # 105 = 4 * 24hr + (17hr - 8hr)
 WEEK_HOURS = 24 * 4 + (17 - 8)
+
+
+class Clinician:
+    def __init__(self, name, min_, max_, email, weeks_off):
+        self.name = name
+        self.min = min_
+        self.max = max_
+        self.email = email
+        self.weeks_off = weeks_off
+        self.weeks_assigned = []
+
+        self._vars = [[]] * NUM_WEEKS
+
+    def get_vars(self):
+        return self._vars
+
+    def get_var(self, week):
+        return self._vars[week]
+
+    def set_var(self, week, val):
+        self._vars[week] = val
+
+    def get_value(self, week):
+        return self._vars[week].solution_value()
 
 
 class Scheduler:
@@ -24,22 +47,28 @@ class Scheduler:
 
         self._API = API(secret_path, calendar_id, settings)
         self.clinicians = {}
-        self.network = FlowNetwork()
+        # self.network = FlowNetwork()
+        self.lpSolver = pywraplp.Solver(
+            'scheduler', pywraplp.Solver.CBC_MIXED_INTEGER_PROGRAMMING)
 
     def read_clinic_conf(self):
         with open(self.clinic_conf, 'r') as f:
-            self.clinicians = json.load(f)
-        for clinician in self.clinicians:
-            self.clinicians[clinician]['weeks_off'] = []
+            data = json.load(f)
+            for clinician in data:
+                self.clinicians[clinician] = \
+                    Clinician(
+                        name=clinician,
+                        min_=data[clinician]['min'],
+                        max_=data[clinician]['max'],
+                        email=data[clinician]['email'] if 'email' in data[clinician] else '',
+                        weeks_off=[]
+                )
 
     def populate_weeks_off_from_file(self, data_file):
-        clinicians = {}
         with open(data_file, 'r') as f:
-            clinicians = json.load(f)
-
-        for clinician in clinicians:
-            if clinician in self.clinicians:
-                self.clinicians[clinician]['weeks_off'] = clinicians[clinician]['weeks_off']
+            data = json.load(f)
+            for clinician in data:
+                self.clinicians[clinician].weeks_off = data[clinician]['weeks_off']
 
     def populate_weeks_off(self):
         now = datetime.utcnow().isoformat() + 'Z'
@@ -69,87 +98,81 @@ class Scheduler:
                     week_range = list(
                         range(start.isocalendar()[1], end.isocalendar()[1] + 1))
                     for week in week_range:
-                        self.clinicians[creator]['weeks_off'].append(week)
+                        self.clinicians[creator].weeks_off.append(week - 1)
 
-    def build_net(self):
-        self.network.add_vertex(FlowVertex('source', NUM_WEEKS))
-        self.network.add_vertex(FlowVertex('sink', -NUM_WEEKS))
-        # add circulation arc
-        self.network.add_arc(FlowArc(
-            FlowVertex.get_vertex('sink'),
-            FlowVertex.get_vertex('source'),
-            min_cap=0,
-            max_cap=NUM_WEEKS*2,
-            cost=0,
-            fixed_cost=True)
+    def build_lp(self):
+        helpers = {}
+
+        for clinician in self.clinicians.values():
+            for j in range(NUM_WEEKS):
+                clinician.set_var(j, self.lpSolver.IntVar(
+                    0, 1, '{},{}'.format(clinician.name, j)
+                ))
+
+        # no holes + no overlap
+        for j in range(NUM_WEEKS):
+            vars_ = []
+            for clinician in self.clinicians.values():
+                vars_.append(clinician.get_var(j))
+            self.lpSolver.Add(self.lpSolver.Sum(vars_) == 1)
+
+        # mins/maxes
+        for clinician in self.clinicians.values():
+            self.lpSolver.Add(self.lpSolver.Sum(
+                clinician.get_vars()) <= clinician.max)
+            self.lpSolver.Add(-self.lpSolver.Sum(clinician.get_vars())
+                              <= -clinician.min)
+
+        # at most 2 consective weeks of work
+        for clinician in self.clinicians.values():
+            for j in range(NUM_WEEKS - 2):
+                self.lpSolver.Add(clinician.get_var(
+                    j) + clinician.get_var(j + 1) + clinician.get_var(j + 2) <= 2)
+
+        # initialize helper vars used to maximize product of vars
+        for clinician in self.clinicians.values():
+            helpers[clinician.name] = []
+            for j in range(NUM_WEEKS - 1):
+                helpers[clinician.name].append(self.lpSolver.IntVar(
+                    0, 1, '{0},{1}*{0},{2}'.format(clinician.name, j, j+1)))
+                self.lpSolver.Add(
+                    helpers[clinician.name][j] <= clinician.get_var(j))
+                self.lpSolver.Add(
+                    helpers[clinician.name][j] <= clinician.get_var(j))
+
+        # build objective function
+        block_count = self.lpSolver.Sum(
+            (helpers[clin.name][j]) for clin in self.clinicians.values() for j in range(NUM_WEEKS - 1)
         )
+        appeasement_count = self.lpSolver.Sum(
+            (0 if j in clin.weeks_off else clin.get_var(j)) for clin in self.clinicians.values() for j in range(NUM_WEEKS))
+        self.lpSolver.Maximize(
+            0.5 * appeasement_count +
+            0.5 * block_count)
 
-        # add vertices for each week + arcs to sink
-        for i in range(0, NUM_WEEKS):
-            self.network.add_vertex(FlowVertex(str(i+1), 0))
-            self.network.add_arc(
-                FlowArc(
-                    FlowVertex.get_vertex(str(i+1)),
-                    FlowVertex.get_vertex('sink'),
-                    min_cap=1,
-                    max_cap=1,
-                    cost=0,
-                    fixed_cost=True)
-            )
-
-        # add vertices for each clinican, an arc from source to clinician
-        # and an arc from clinician to each week
-        for name in self.clinicians:
-            self.network.add_vertex(FlowVertex(name, 0))
-            clinician = self.clinicians[name]
-            self.network.add_arc(
-                FlowArc(
-                    FlowVertex.get_vertex('source'),
-                    FlowVertex.get_vertex(name),
-                    min_cap=clinician['min'],
-                    max_cap=clinician['max'],
-                    cost=0,
-                    fixed_cost=True)
-            )
-            for i in range(0, NUM_WEEKS):
-                self.network.add_arc(
-                    FlowArc(
-                        FlowVertex.get_vertex(name),
-                        FlowVertex.get_vertex(str(i+1)),
-                        min_cap=0,
-                        max_cap=1,
-                        cost=1000 if i+1 in clinician['weeks_off'] else 1,
-                        fixed_cost=True if i+1 in clinician['weeks_off'] else False)
-                )
+    def solve_lp(self):
+        self.lpSolver.Solve()
 
     def assign_weeks(self):
-        for clinician in self.clinicians:
-            if 'weeks_assigned' not in self.clinicians[clinician]:
-                self.clinicians[clinician]['weeks_assigned'] = []
-            clin_vert = FlowVertex.get_vertex(clinician)
-            for arc in clin_vert.out_arcs:
-                if arc.flow > 0:
-                    week_num = int(arc.dest_vert.name)
-                    # make sure we didn't assign a week off
-                    assert week_num not in self.clinicians[clinician]['weeks_off']
-                    self.clinicians[clinician]['weeks_assigned'].append(
-                        week_num)
+        for clin in self.clinicians.values():
+            for j in range(NUM_WEEKS):
+                if clin.get_var(j).solution_value() == 1.0:
+                    clin.weeks_assigned.append(j)
 
         # create events for weeks assigned
-        for clinician in self.clinicians:
-            for week_num in self.clinicians[clinician]['weeks_assigned']:
-                # format: year/week_num/week_day/time
+        for clin in self.clinicians.values():
+            for week_num in clin.weeks_assigned:
                 week_start = datetime.strptime(
-                    '2019/{0:02d}/1/08:00/'.format(week_num),
+                    '2019/{0:02d}/1/08:00/'.format(week_num + 1),
                     '%G/%V/%u/%H:%M/')
                 week_end = week_start + timedelta(hours=WEEK_HOURS)
-                email = self.clinicians[clinician]['email']
-                summary = '%s - on call' % (clinician)
+                summary = '{} - on call'.format(clin.name)
                 self._API.create_event(
                     week_start.isoformat(),
                     week_end.isoformat(),
-                    [email],
-                    summary)
+                    [clin.email],
+                    summary
+                )
 
 
 class API:
