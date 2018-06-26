@@ -1,14 +1,14 @@
 import os
 import time
 
+import scheduler
 from netflow import FlowNetwork
-from scheduler import Scheduler, NUM_WEEKS
 from settings import SettingsManager
 from strategy import ConsecutiveStrategy, RandomStrategy
 
 
 def main(settings, data_path=None):
-    sched = Scheduler(settings)
+    sched = scheduler.Scheduler(settings)
     sched.read_clinic_conf()
     if data_path:
         sched.populate_weeks_off_from_file(build_path(data_path))
@@ -17,7 +17,9 @@ def main(settings, data_path=None):
     sched.build_lp()
     sched.solve_lp()
 
-    for j in range(NUM_WEEKS):
+    # sched.assign_weeks()
+
+    for j in range(scheduler.NUM_WEEKS):
         for clin in sched.clinicians.values():
             if clin.get_value(j) == 1.0:
                 print(clin.name)
@@ -34,9 +36,12 @@ if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('--file')
+    parser.add_argument('--weeks', type=int)
     args = parser.parse_args()
 
     start_time = time.clock()
     with SettingsManager(build_path('../config/settings.json')) as settings:
+        if args.weeks: 
+            scheduler.NUM_WEEKS = int(args.weeks)
         main(settings, args.file)
     print('time =', time.clock() - start_time, 'seconds')
