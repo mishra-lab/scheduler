@@ -91,8 +91,8 @@ class Scheduler:
 
             if covers_week:
                 if creator in self.clinicians:
-                    week_range = range(start.isocalendar()[
-                                       1], end.isocalendar()[1] + 1, 2)
+                    week_range = range(start.isocalendar()[1],
+                                       end.isocalendar()[1] + 1, BLOCK_SIZE)
                     for week in week_range:
                         self.clinicians[creator].blocks_off.append(
                             math.ceil(week / BLOCK_SIZE)
