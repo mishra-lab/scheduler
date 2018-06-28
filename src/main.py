@@ -11,9 +11,9 @@ def main(settings, data_path=None):
     sched = scheduler.Scheduler(settings)
     sched.read_clinic_conf()
     if data_path:
-        sched.populate_weeks_off_from_file(build_path(data_path))
+        sched.populate_blocks_off_from_file(build_path(data_path))
     else:
-        sched.populate_weeks_off()
+        sched.populate_blocks_off()
     sched.build_lp()
     sched.solve_lp()
 
