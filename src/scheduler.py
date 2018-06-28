@@ -16,27 +16,27 @@ BLOCK_SIZE = 2
 
 
 class Clinician:
-    def __init__(self, name, min_, max_, email, weeks_off):
+    def __init__(self, name, min_, max_, email, blocks_off):
         self.name = name
         self.min = min_
         self.max = max_
         self.email = email
-        self.weeks_off = weeks_off
-        self.weeks_assigned = []
+        self.blocks_off = blocks_off
+        self.blocks_assigned = []
 
-        self._vars = [[]] * NUM_WEEKS
+        self._vars = [[]] * NUM_BLOCKS
 
     def get_vars(self):
         return self._vars
 
-    def get_var(self, week):
-        return self._vars[week]
+    def get_var(self, block):
+        return self._vars[block]
 
-    def set_var(self, week, val):
-        self._vars[week] = val
+    def set_var(self, block, val):
+        self._vars[block] = val
 
-    def get_value(self, week):
-        return self._vars[week].solution_value()
+    def get_value(self, block):
+        return self._vars[block].solution_value()
 
 
 class Scheduler:
@@ -96,6 +96,7 @@ class Scheduler:
                     break
                 curr += timedelta(days=1)
 
+            # TODO: get rid of covers_week; add needed weeks to list instead
             if covers_week:
                 if creator in self.clinicians:
                     week_range = range(start.isocalendar()[1],
@@ -106,16 +107,15 @@ class Scheduler:
                         )
 
     def build_lp(self):
-        helpers = {}
-
+        # initialize clinician variables
         for clinician in self.clinicians.values():
-            for j in range(NUM_WEEKS):
+            for j in range(NUM_BLOCKS):
                 clinician.set_var(j, self.lpSolver.IntVar(
                     0, 1, '{},{}'.format(clinician.name, j)
                 ))
 
         # no holes + no overlap
-        for j in range(NUM_WEEKS):
+        for j in range(NUM_BLOCKS):
             vars_ = []
             for clinician in self.clinicians.values():
                 vars_.append(clinician.get_var(j))
@@ -128,49 +128,47 @@ class Scheduler:
             self.lpSolver.Add(-self.lpSolver.Sum(clinician.get_vars())
                               <= -clinician.min)
 
-        # at most 2 consective weeks of work
+        # at most 1 consecutive block of work
         for clinician in self.clinicians.values():
-            for j in range(NUM_WEEKS - 2):
-                self.lpSolver.Add(clinician.get_var(
-                    j) + clinician.get_var(j + 1) + clinician.get_var(j + 2) <= 2)
-
-        # initialize helper vars used to maximize product of vars
-        for clinician in self.clinicians.values():
-            helpers[clinician.name] = []
-            for j in range(NUM_WEEKS - 1):
-                helpers[clinician.name].append(self.lpSolver.IntVar(
-                    0, 1, '{0},{1}*{0},{2}'.format(clinician.name, j, j+1)))
+            for j in range(NUM_BLOCKS - 1):
                 self.lpSolver.Add(
-                    helpers[clinician.name][j] <= clinician.get_var(j))
-                self.lpSolver.Add(
-                    helpers[clinician.name][j] <= clinician.get_var(j))
+                    clinician.get_var(j) + clinician.get_var(j + 1) <= 1)
 
-        # build objective function
-        block_count = self.lpSolver.Sum(
-            (helpers[clin.name][j]) for clin in self.clinicians.values() for j in range(NUM_WEEKS - 1)
-        )
+        # # initialize helper vars used to maximize product of vars
+        # for clinician in self.clinicians.values():
+        #     helpers[clinician.name] = []
+        #     for j in range(NUM_BLOCKS - 1):
+        #         helpers[clinician.name].append(self.lpSolver.IntVar(
+        #             0, 1, '{0},{1}*{0},{2}'.format(clinician.name, j, j+1)))
+        #         self.lpSolver.Add(
+        #             helpers[clinician.name][j] <= clinician.get_var(j))
+        #         self.lpSolver.Add(
+        #             helpers[clinician.name][j] <= clinician.get_var(j))
+
+        # # build objective function
+        # block_count = self.lpSolver.Sum(
+        #     (helpers[clin.name][j]) for clin in self.clinicians.values() for j in range(NUM_WEEKS - 1)
+        # )
         appeasement_count = self.lpSolver.Sum(
-            (0 if j in clin.weeks_off else clin.get_var(j)) for clin in self.clinicians.values() for j in range(NUM_WEEKS))
-        self.lpSolver.Maximize(
-            0.5 * appeasement_count +
-            0.5 * block_count)
+            (0 if j in clin.blocks_off else clin.get_var(j)) for clin in self.clinicians.values() for j in range(NUM_BLOCKS))
+        self.lpSolver.Maximize(appeasement_count)
 
     def solve_lp(self):
         self.lpSolver.Solve()
 
-    def assign_weeks(self):
+    def assign_blocks(self):
         for clin in self.clinicians.values():
-            for j in range(NUM_WEEKS):
+            for j in range(NUM_BLOCKS):
                 if clin.get_value(j) == 1.0:
-                    clin.weeks_assigned.append(j)
+                    clin.blocks_assigned.append(j)
 
-        # create events for weeks assigned
+        # create events for blocks assigned
         for clin in self.clinicians.values():
             for block_num in clin.blocks_assigned:
                 for j in range(BLOCK_SIZE, 0, -1):
                     week_start = datetime.strptime(
                         '2019/{0:02d}/1/08:00/'.format(
-                            BLOCK_SIZE * block_num - (j - 1)),
+                            BLOCK_SIZE * (block_num + 1) - (j - 1)),
                         '%G/%V/%u/%H:%M/')
                     week_end = week_start + timedelta(hours=WEEK_HOURS)
                     summary = '{} - on call'.format(clin.name)

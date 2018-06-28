@@ -17,11 +17,12 @@ def main(settings, data_path=None):
     sched.build_lp()
     sched.solve_lp()
 
-    # sched.assign_weeks()
+    sched.assign_blocks()
 
-    for j in range(scheduler.NUM_WEEKS):
+    for j in range(scheduler.NUM_BLOCKS):
         for clin in sched.clinicians.values():
             if clin.get_value(j) == 1.0:
+                print(clin.name)
                 print(clin.name)
                 break
     
@@ -36,12 +37,12 @@ if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('--file')
-    parser.add_argument('--weeks', type=int)
+    parser.add_argument('--blocks', type=int)
     args = parser.parse_args()
 
     start_time = time.clock()
     with SettingsManager(build_path('../config/settings.json')) as settings:
-        if args.weeks: 
-            scheduler.NUM_WEEKS = int(args.weeks)
+        if args.blocks: 
+            scheduler.NUM_BLOCKS = int(args.blocks)
         main(settings, args.file)
     print('time =', time.clock() - start_time, 'seconds')
