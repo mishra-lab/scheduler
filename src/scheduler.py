@@ -88,23 +88,20 @@ class Scheduler:
 
             # figure out if this time-off request covers a week
             # if not, we can safely ignore it
-            covers_week = False
+            weeks = []
             curr = start
             while curr < end:
                 if curr.isoweekday() in range(1, 6):
-                    covers_week = True
-                    break
+                    week = curr.isocalendar()[1]
+                    if week not in weeks:
+                        weeks.append(week)
+
                 curr += timedelta(days=1)
 
-            # TODO: get rid of covers_week; add needed weeks to list instead
-            if covers_week:
-                if creator in self.clinicians:
-                    week_range = range(start.isocalendar()[1],
-                                       end.isocalendar()[1] + 1, BLOCK_SIZE)
-                    for week in week_range:
-                        self.clinicians[creator].blocks_off.append(
-                            math.ceil(week / BLOCK_SIZE)
-                        )
+            for week in weeks:
+                block_num = math.ceil(week / BLOCK_SIZE)
+                if block_num not in self.clinicians[creator].blocks_off:
+                    self.clinicians[creator].blocks_off.append(block_num)
 
     def build_lp(self):
         # initialize clinician variables
@@ -134,21 +131,6 @@ class Scheduler:
                 self.lpSolver.Add(
                     clinician.get_var(j) + clinician.get_var(j + 1) <= 1)
 
-        # # initialize helper vars used to maximize product of vars
-        # for clinician in self.clinicians.values():
-        #     helpers[clinician.name] = []
-        #     for j in range(NUM_BLOCKS - 1):
-        #         helpers[clinician.name].append(self.lpSolver.IntVar(
-        #             0, 1, '{0},{1}*{0},{2}'.format(clinician.name, j, j+1)))
-        #         self.lpSolver.Add(
-        #             helpers[clinician.name][j] <= clinician.get_var(j))
-        #         self.lpSolver.Add(
-        #             helpers[clinician.name][j] <= clinician.get_var(j))
-
-        # # build objective function
-        # block_count = self.lpSolver.Sum(
-        #     (helpers[clin.name][j]) for clin in self.clinicians.values() for j in range(NUM_WEEKS - 1)
-        # )
         appeasement_count = self.lpSolver.Sum(
             (0 if j in clin.blocks_off else clin.get_var(j)) for clin in self.clinicians.values() for j in range(NUM_BLOCKS))
         self.lpSolver.Maximize(appeasement_count)
