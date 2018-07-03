@@ -40,7 +40,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--file')
     parser.add_argument('--blocks', type=int)
-    parser.add_argument('--publish', type=bool)
+    parser.add_argument('--publish', action='store_true', default=False)
     args = parser.parse_args()
 
     start_time = time.clock()
