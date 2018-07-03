@@ -7,7 +7,7 @@ from httplib2 import Http
 from oauth2client import client, file, tools
 from ortools.linear_solver import pywraplp
 
-NUM_BLOCKS = 3
+NUM_BLOCKS = 26
 # mon 8am + 105 hours = fri 5pm
 # 105 = 4 * 24hr + (17hr - 8hr)
 WEEK_HOURS = 24 * 4 + (17 - 8)
@@ -154,7 +154,7 @@ class Scheduler:
         self.lpSolver.Maximize(appeasement_count)
 
     def solve_lp(self):
-        self.lpSolver.Solve()
+        return self.lpSolver.Solve() == self.lpSolver.OPTIMAL
 
     def assign_blocks(self):
         for clin in self.clinicians.values():

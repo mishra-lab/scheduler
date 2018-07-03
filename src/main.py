@@ -7,7 +7,7 @@ from settings import SettingsManager
 from strategy import ConsecutiveStrategy, RandomStrategy
 
 
-def main(settings, data_path=None):
+def main(settings, data_path=None, publish=False):
     sched = scheduler.Scheduler(settings)
     sched.read_clinic_conf()
     if data_path:
@@ -15,16 +15,18 @@ def main(settings, data_path=None):
     else:
         sched.populate_blocks_off()
     sched.build_lp()
-    sched.solve_lp()
+    
+    if (sched.solve_lp()):
+        if (publish): sched.assign_blocks()
 
-    sched.assign_blocks()
-
-    for j in range(scheduler.NUM_BLOCKS):
-        for clin in sched.clinicians.values():
-            if clin.get_value(j) == 1.0:
-                print(clin.name)
-                print(clin.name)
-                break
+        for j in range(scheduler.NUM_BLOCKS):
+            for clin in sched.clinicians.values():
+                if clin.get_value(j) == 1.0:
+                    print(clin.name)
+                    print(clin.name)
+                    break
+    else:
+        print('could not find solution')
     
 
 def build_path(rel_path):
@@ -38,11 +40,12 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--file')
     parser.add_argument('--blocks', type=int)
+    parser.add_argument('--publish', type=bool)
     args = parser.parse_args()
 
     start_time = time.clock()
     with SettingsManager(build_path('../config/settings.json')) as settings:
         if args.blocks: 
             scheduler.NUM_BLOCKS = int(args.blocks)
-        main(settings, args.file)
+        main(settings, args.file, args.publish)
     print('time =', time.clock() - start_time, 'seconds')
