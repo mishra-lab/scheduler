@@ -15,28 +15,111 @@ WEEK_HOURS = 24 * 4 + (17 - 8)
 BLOCK_SIZE = 2
 
 
-class Clinician:
-    def __init__(self, name, min_, max_, email, blocks_off):
+class Variable:
+    def __init__(self):
+        raise NotImplementedError()
+
+    def get_value(self):
+        raise NotImplementedError()
+
+
+class WeekendVariable(Variable):
+    def __init__(self, clinician, week_num, lpSolver):
+        self.clinician = clinician
+        self.week_num = week_num
+
+        self._var = lpSolver.IntVar(
+            0, 1, '{},weekend:{}'.format(
+                self.clinician.name, self.week_num
+            )
+        )
+
+    def get_var(self):
+        return self._var
+
+    def get_value(self):
+        return self._var.solution_value()
+
+
+class BlockVariable(Variable):
+    def __init__(self, clinician, block_num, division, lpSolver):
+        self.clinician = clinician
+        self.block_num = block_num
+        self.division = division
+
+        # register variable in LP solver
+        self._var = lpSolver.IntVar(
+            0, 1, '{},div:{},block:{}'.format(
+                self.clinician.name, self.division, self.block_num))
+
+    def get_var(self):
+        return self._var
+
+    def get_value(self):
+        return self._var.solution_value()
+
+
+class Division:
+    def __init__(self, name):
         self.name = name
-        self.min = min_
-        self.max = max_
+        self.clinicians = []
+        self.bound_dict = dict()
+
+        self.assignments = []
+
+    def add_clinician(self, clinician, min_, max_):
+        if clinician not in self.clinicians:
+            self.clinicians.append(clinician)
+            self.bound_dict[clinician.name] = (min_, max_)
+
+    def remove_clinician(self, clinician, min_, max_):
+        if clinician in self.clinicians:
+            del self.bound_dict[clinician.name]
+            self.clinicians.remove(clinician)
+
+    def get_vars(self):
+        """
+        Returns all BlockVariables corresponding to this division, across all
+        clinicians.
+        """
+        block_vars = [
+            _ for clinician in self.clinicians for _ in clinician.get_block_vars()]
+        return list(filter(lambda x: x.division == self.name, block_vars))
+
+    def get_vars_by_block_num(self, block_num):
+        return list(filter(lambda x: x.block_num == block_num, self.get_vars()))
+
+    def get_vars_by_name(self, name):
+        return list(filter(lambda x: x.clinician.name == name, self.get_vars()))
+
+
+class Clinician:
+    def __init__(self, name, email, blocks_off=[], weekends_off=[]):
+        self.name = name
         self.email = email
         self.blocks_off = blocks_off
         self.blocks_assigned = []
+        self.weekends_off = weekends_off
+        self.weekends_assigned = []
 
-        self._vars = [[]] * NUM_BLOCKS
+        self._vars = []
 
-    def get_vars(self):
-        return self._vars
+    def add_var(self, var):
+        if var not in self._vars:
+            self._vars.append(var)
 
-    def get_var(self, block):
-        return self._vars[block]
+    def remove_var(self, var):
+        if var in self._vars:
+            self._vars.remove(var)
 
-    def set_var(self, block, val):
-        self._vars[block] = val
+    def get_vars(self, predicate=None):
+        return list(filter(predicate, self._vars))
 
-    def get_value(self, block):
-        return self._vars[block].solution_value()
+    def get_block_vars(self, predicate=None):
+        return list(filter(predicate, self.get_vars(lambda x: type(x) is BlockVariable)))
+
+    def get_weekend_vars(self, predicate=None):
+        return list(filter(predicate, self.get_vars(lambda x: type(x) is WeekendVariable)))
 
 
 class Scheduler:
@@ -46,34 +129,39 @@ class Scheduler:
 
         secret_path = settings.get_path_from_key('secret_path')
         calendar_id = settings['calendar_id']
-        self.clinic_conf = settings.get_path_from_key('clinician_config_path')
+        self.config_file = settings.get_path_from_key('clinician_config_path')
 
         self._API = API(secret_path, calendar_id, settings)
         self.clinicians = {}
-        # self.network = FlowNetwork()
+        self.divisions = {}
         self.lpSolver = pywraplp.Solver(
             'scheduler', pywraplp.Solver.CBC_MIXED_INTEGER_PROGRAMMING)
 
-    def read_clinic_conf(self):
-        with open(self.clinic_conf, 'r') as f:
+    def read_config(self):
+        with open(self.config_file, 'r') as f:
             data = json.load(f)
-            for clinician in data:
-                self.clinicians[clinician] = \
-                    Clinician(
-                        name=clinician,
-                        min_=data[clinician]['min'],
-                        max_=data[clinician]['max'],
-                        email=data[clinician]['email'] if 'email' in data[clinician] else '',
-                        blocks_off=[]
-                )
+            try:
+                for clinician in data["CLINICIANS"]:
+                    self.clinicians[clinician] = \
+                        Clinician(
+                            name=clinician,
+                            email=data["CLINICIANS"][clinician]["email"],
+                            blocks_off=data["CLINICIANS"][clinician]["blocks_off"],
+                            weekends_off=data["CLINICIANS"][clinician]["weekends_off"])
 
-    def populate_blocks_off_from_file(self, data_file):
-        with open(data_file, 'r') as f:
-            data = json.load(f)
-            for clinician in data:
-                self.clinicians[clinician].blocks_off = data[clinician]['blocks_off']
+                for division in data["DIVISIONS"]:
+                    self.divisions[division] = Division(division)
+                    for clinician in data["DIVISIONS"][division]:
+                        self.divisions[division].add_clinician(
+                            clinician=self.clinicians[clinician],
+                            min_=data["DIVISIONS"][division][clinician]["min"],
+                            max_=data["DIVISIONS"][division][clinician]["max"],
+                        )
 
-    def populate_blocks_off(self):
+            except KeyError as err:
+                print('Invalid config file: missing key {}'.format(str(err)))
+
+    def read_calendar(self):
         now = datetime.utcnow().isoformat() + 'Z'
         events = self._API.get_events(start=now)
 
@@ -86,65 +174,152 @@ class Scheduler:
                 '%Y-%m-%d')
             creator = event['creator'].get('displayName')
 
-            # figure out if this time-off request covers a week
-            # if not, we can safely ignore it
-            weeks = []
-            curr = start
-            while curr < end:
-                if curr.isoweekday() in range(1, 6):
-                    week = curr.isocalendar()[1]
-                    if week not in weeks:
-                        weeks.append(week)
+            if creator in self.clinicians:
+                clinician = self.clinicians[creator]
+                # figure out if this time-off request covers a week
+                # if not, we can safely ignore it
+                weeks = []
+                weekends = []
+                curr = start
+                while curr < end:
+                    week_num = curr.isocalendar()[1]
+                    if curr.isoweekday() in range(1, 6):
+                        if week_num not in weeks:
+                            weeks.append(week_num)
+                    else:
+                        if week_num not in weekends:
+                            weekends.append(week_num)
 
-                curr += timedelta(days=1)
+                    curr += timedelta(days=1)
 
-            for week in weeks:
-                block_num = math.ceil(week / BLOCK_SIZE)
-                if block_num not in self.clinicians[creator].blocks_off:
-                    self.clinicians[creator].blocks_off.append(block_num)
+                for week_num in weeks:
+                    block_num = math.ceil(week_num / BLOCK_SIZE)
+                    if block_num not in clinician.blocks_off:
+                        clinician.blocks_off.append(block_num)
+                for week_num in weekends:
+                    if week_num not in clinician.weekends_off:
+                        clinician.weekends_off.append(week_num)
+            else:
+                print('Event creator {} was not found in clinicians'.format(creator))
 
     def build_lp(self):
-        # initialize clinician variables
-        for clinician in self.clinicians.values():
-            for j in range(NUM_BLOCKS):
-                clinician.set_var(j, self.lpSolver.IntVar(
-                    0, 1, '{},{}'.format(clinician.name, j)
-                ))
+        # create clinician BlockVariables
+        for div in self.divisions.values():
+            for clinician in div.clinicians:
+                for block_num in range(NUM_BLOCKS):
+                    clinician.add_var(
+                        BlockVariable(clinician, block_num,
+                                      div.name, self.lpSolver)
+                    )
+        # create clinician WeekendVariables
+        # for clinician in self.clinicians.values():
+        #     for week_num in range(NUM_BLOCKS * BLOCK_SIZE):
+        #         clinician.add_var(
+        #             WeekendVariable(clinician, week_num, self.lpSolver)
+        #         )
 
-        # no holes + no overlap
-        for j in range(NUM_BLOCKS):
-            vars_ = []
-            for clinician in self.clinicians.values():
-                vars_.append(clinician.get_var(j))
-            self.lpSolver.Add(self.lpSolver.Sum(vars_) == 1)
-
-        # mins/maxes
-        for clinician in self.clinicians.values():
-            self.lpSolver.Add(self.lpSolver.Sum(
-                clinician.get_vars()) <= clinician.max)
-            self.lpSolver.Add(-self.lpSolver.Sum(clinician.get_vars())
-                              <= -clinician.min)
-
-        # at most 1 consecutive block of work
-        for clinician in self.clinicians.values():
-            for j in range(NUM_BLOCKS - 1):
+        # no holes + no overlap over all divisions (BLOCKS)
+        for div in self.divisions.values():
+            for block_num in range(NUM_BLOCKS):
                 self.lpSolver.Add(
-                    clinician.get_var(j) + clinician.get_var(j + 1) <= 1)
+                    self.lpSolver.Sum(
+                        [_.get_var()
+                         for _ in div.get_vars_by_block_num(block_num)]
+                    ) == 1
+                )
 
-        appeasement_count = self.lpSolver.Sum(
-            (0 if j in clin.blocks_off else clin.get_var(j)) for clin in self.clinicians.values() for j in range(NUM_BLOCKS))
-        self.lpSolver.Maximize(appeasement_count)
+        # no holes + no overlap (WEEKENDS)
+        # for clinician in self.clinicians.values():
+        #     for week_num in range(NUM_BLOCKS * BLOCK_SIZE):
+        #         vars_ = clinician.get_weekend_vars(lambda x, week_num=week_num: x.week_num == week_num)
+        #         self.lpSolver.Add(self.lpSolver.Sum([_.get_var() for _ in vars_]) == 1)
+
+        # mins/maxes per division
+        for div in self.divisions.values():
+            for clinician in div.clinicians:
+                (min_, max_) = div.bound_dict[clinician.name]
+                sum_ = self.lpSolver.Sum(
+                    [_.get_var() for _ in div.get_vars_by_name(clinician.name)])
+                self.lpSolver.Add(sum_ <= max_)
+                self.lpSolver.Add(-sum_ <= -min_)
+
+        for clinician in self.clinicians.values():
+            for block_num in range(NUM_BLOCKS - 1):
+                # if a clinician works a given blocks, they should not work any
+                # adjacent block (even in a different division)
+                sum_ = self.lpSolver.Sum(
+                    [_.get_var() for _ in clinician.get_block_vars(
+                        lambda x, block_num=block_num: x.block_num in (block_num, block_num + 1))]
+                )
+                self.lpSolver.Add(sum_ <= 1)
+
+            # at most 1 consecutive weekend of work
+            # for week_num in range((NUM_BLOCKS * BLOCK_SIZE) - 1):
+            #     sum_ = self.lpSolver.Sum(
+            #         [_.get_var() for _ in clinician.get_weekend_vars(lambda x, week_num=week_num: x.week_num in (week_num, week_num + 1))]
+            #     )
+            #     self.lpSolver.Add(sum_ <= 1)
+
+        # objective functions
+        ba_variables = []
+        for clinician in self.clinicians.values():
+            ba_variables.extend(
+                [_.get_var() for _ in clinician.get_block_vars(
+                    lambda x, clinician=clinician: x.block_num not in clinician.blocks_off)]
+            )
+
+            ba_variables.extend(
+                [-_.get_var() for _ in clinician.get_block_vars(lambda x,
+                                                                clinician=clinician: x.block_num in clinician.blocks_off)]
+            )
+        block_appeasement_count = self.lpSolver.Sum(ba_variables)
+
+        # wa_variables = []
+        # for clinician in self.clinicians.values():
+        #     wa_variables.extend(
+        #         [_.get_var() for _ in clinician.get_weekend_vars(lambda x, clinician=clinician: x.week_num not in clinician.weekends_off)]
+        #     )
+
+        #     wa_variables.extend(
+        #         [-_.get_var() for _ in clinician.get_weekend_vars(lambda x, clinician=clinician: x.week_num in clinician.weekends_off)]
+        #     )
+        # weekend_appeasement_count = self.lpSolver.Sum(wa_variables)
+
+        self.lpSolver.Maximize(
+            block_appeasement_count
+            # + weekend_appeasement_count
+        )
 
     def solve_lp(self):
-        return self.lpSolver.Solve() == self.lpSolver.OPTIMAL
+        ret = self.lpSolver.Solve() == self.lpSolver.OPTIMAL
+        print('objective value = {}'.format(self.lpSolver.Objective().Value()))
+        print('conflicts per doc:')
+        for clinician in self.clinicians.values():
+            print(clinician.name)
+            assigned_blocksoff = clinician.get_block_vars(
+                lambda x, clinician=clinician: x.block_num in clinician.blocks_off and x.get_value() == 1.0)
+            assigned_weekendsoff = clinician.get_weekend_vars(
+                lambda x, clinician=clinician: x.week_num in clinician.weekends_off and x.get_value() == 1.0)
+            print('\t{} out of {} blocks'.format(
+                len(assigned_blocksoff), len(clinician.blocks_off)))
+            print('\t{} out of {} weekends'.format(
+                len(assigned_weekendsoff), len(clinician.weekends_off)))
+        print()
+        return ret
 
-    def assign_blocks(self):
-        for clin in self.clinicians.values():
-            for j in range(NUM_BLOCKS):
-                if clin.get_value(j) == 1.0:
-                    clin.blocks_assigned.append(j)
+    def assign_schedule(self):
+        for div in self.divisions.values():
+            for block_num in range(NUM_BLOCKS):
+                assignments = list(filter(lambda x: x.get_value(
+                ) == 1.0, div.get_vars_by_block_num(block_num)))
+                div.assignments.extend(assignments)
 
-        # create events for blocks assigned
+        for clinician in self.clinicians.values():
+            clinician.weekends_assigned = clinician.get_weekend_vars(
+                lambda x: x.get_value() == 1.0)
+
+    def publish_schedule(self):
+        # create events for blocks, weekends assigned
         for clin in self.clinicians.values():
             for block_num in clin.blocks_assigned:
                 for j in range(BLOCK_SIZE, 0, -1):
