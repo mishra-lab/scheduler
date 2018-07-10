@@ -12,6 +12,9 @@ NUM_BLOCKS = 26
 # 105 = 4 * 24hr + (17hr - 8hr)
 WEEK_HOURS = 24 * 4 + (17 - 8)
 
+# fri 5pm + 63 hours = mon 8am
+WEEKEND_HOURS = 24 * 2 + 24 - (17 - 8)
+
 BLOCK_SIZE = 2
 
 NUM_WEEKENDS = BLOCK_SIZE * NUM_BLOCKS
@@ -100,7 +103,6 @@ class Clinician:
         self.name = name
         self.email = email
         self.blocks_off = blocks_off
-        self.blocks_assigned = []
         self.weekends_off = weekends_off
         self.weekends_assigned = []
 
@@ -321,8 +323,8 @@ class Scheduler:
                 )
 
         for clinician in self.clinicians.values():
-            clinician.weekends_assigned = clinician.get_weekend_vars(
-                lambda x: x.get_value() == 1.0)
+            vars_ = clinician.get_weekend_vars(lambda x: x.get_value() == 1.0)
+            clinician.weekends_assigned = [_.week_num for _ in vars_]
 
     def publish_schedule(self):
         for division in self.divisions.values():
@@ -341,6 +343,20 @@ class Scheduler:
                         [clinician.email],
                         summary
                     )
+        
+        for clinician in self.clinicians.values():
+            for week_num in clinician.weekends_assigned:
+                weekend_start = datetime.strptime(
+                    '2019/{0:02d}/5/17:00/'.format(week_num),
+                    '%G/%V/%u/%H:%M/')
+                weekend_end = weekend_start + timedelta(hours=WEEKEND_HOURS)
+                summary = '{} - on call'.format(clinician.name)
+                self._API.create_event(
+                    weekend_start.isoformat(),
+                    weekend_end.isoformat(),
+                    [clinician.email],
+                    summary
+                )
 
 
 class API:

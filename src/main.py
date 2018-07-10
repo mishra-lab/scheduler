@@ -59,5 +59,6 @@ if __name__ == '__main__':
     with SettingsManager(build_path('../config/settings.json')) as settings:
         if args.blocks: 
             scheduler.NUM_BLOCKS = int(args.blocks)
+            scheduler.NUM_WEEKENDS = scheduler.NUM_BLOCKS * scheduler.BLOCK_SIZE
         main(settings, args.config, args.publish)
     print('time =', time.clock() - start_time, 'seconds')
