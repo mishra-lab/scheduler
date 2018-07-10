@@ -12,7 +12,7 @@ def main(settings, config_path=None, publish=False):
     if config_path: sched.config_file = config_path
 
     sched.read_config()
-    if (publish): sched.read_calendar()
+    if (not config_path): sched.read_calendar()
     sched.build_lp()
     
     if (sched.solve_lp()):
@@ -21,8 +21,8 @@ def main(settings, config_path=None, publish=False):
 
         for division in sched.divisions.values():
             print('\n{}\n----'.format(division.name))
-            for block_var in division.assignments:
-                print(block_var.clinician.name)
+            for clinician in division.assignments:
+                print(clinician.name)
 
     else:
         print('could not find solution')

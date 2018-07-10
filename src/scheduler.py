@@ -206,7 +206,7 @@ class Scheduler:
         # create clinician BlockVariables
         for div in self.divisions.values():
             for clinician in div.clinicians:
-                for block_num in range(NUM_BLOCKS):
+                for block_num in range(1, NUM_BLOCKS + 1):
                     clinician.add_var(
                         BlockVariable(clinician, block_num,
                                       div.name, self.lpSolver)
@@ -220,7 +220,7 @@ class Scheduler:
 
         # no holes + no overlap over all divisions (BLOCKS)
         for div in self.divisions.values():
-            for block_num in range(NUM_BLOCKS):
+            for block_num in range(1, NUM_BLOCKS + 1):
                 self.lpSolver.Add(
                     self.lpSolver.Sum(
                         [_.get_var()
@@ -244,7 +244,7 @@ class Scheduler:
                 self.lpSolver.Add(-sum_ <= -min_)
 
         for clinician in self.clinicians.values():
-            for block_num in range(NUM_BLOCKS - 1):
+            for block_num in range(1, NUM_BLOCKS):
                 # if a clinician works a given blocks, they should not work any
                 # adjacent block (even in a different division)
                 sum_ = self.lpSolver.Sum(
@@ -309,30 +309,32 @@ class Scheduler:
 
     def assign_schedule(self):
         for div in self.divisions.values():
-            for block_num in range(NUM_BLOCKS):
+            for block_num in range(1, NUM_BLOCKS + 1):
                 assignments = list(filter(lambda x: x.get_value(
                 ) == 1.0, div.get_vars_by_block_num(block_num)))
-                div.assignments.extend(assignments)
+                div.assignments.extend(
+                    [_.clinician for _ in assignments]
+                )
 
         for clinician in self.clinicians.values():
             clinician.weekends_assigned = clinician.get_weekend_vars(
                 lambda x: x.get_value() == 1.0)
 
     def publish_schedule(self):
-        # create events for blocks, weekends assigned
-        for clin in self.clinicians.values():
-            for block_num in clin.blocks_assigned:
+        for division in self.divisions.values():
+            for block_num in range(len(division.assignments)):
+                clinician = division.assignments[block_num]
                 for j in range(BLOCK_SIZE, 0, -1):
                     week_start = datetime.strptime(
                         '2019/{0:02d}/1/08:00/'.format(
                             BLOCK_SIZE * (block_num + 1) - (j - 1)),
                         '%G/%V/%u/%H:%M/')
                     week_end = week_start + timedelta(hours=WEEK_HOURS)
-                    summary = '{} - on call'.format(clin.name)
+                    summary = '{} - DIV:{} on call'.format(clinician.name, division.name)
                     self._API.create_event(
                         week_start.isoformat(),
                         week_end.isoformat(),
-                        [clin.email],
+                        [clinician.email],
                         summary
                     )
 
