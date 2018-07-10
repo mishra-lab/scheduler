@@ -23,6 +23,19 @@ def main(settings, config_path=None, publish=False):
             print('\n{}\n----'.format(division.name))
             for clinician in division.assignments:
                 print(clinician.name)
+                print(clinician.name)
+
+        print('\nweekends\n----')
+        weekend_assignments = [
+            _ for clinician in sched.clinicians.values() 
+                for _ in clinician.get_weekend_vars(
+                    lambda x: x.get_value() == 1.0
+                )
+        ]
+        weekend_assignments.sort(key=lambda x: x.week_num)
+        for wa in weekend_assignments:
+            print(wa.clinician.name)
+            
 
     else:
         print('could not find solution')

@@ -14,6 +14,8 @@ WEEK_HOURS = 24 * 4 + (17 - 8)
 
 BLOCK_SIZE = 2
 
+NUM_WEEKENDS = BLOCK_SIZE * NUM_BLOCKS
+
 
 class Variable:
     def __init__(self):
@@ -212,11 +214,11 @@ class Scheduler:
                                       div.name, self.lpSolver)
                     )
         # create clinician WeekendVariables
-        # for clinician in self.clinicians.values():
-        #     for week_num in range(NUM_BLOCKS * BLOCK_SIZE):
-        #         clinician.add_var(
-        #             WeekendVariable(clinician, week_num, self.lpSolver)
-        #         )
+        for clinician in self.clinicians.values():
+            for week_num in range(1, NUM_WEEKENDS + 1):
+                clinician.add_var(
+                    WeekendVariable(clinician, week_num, self.lpSolver)
+                )
 
         # no holes + no overlap over all divisions (BLOCKS)
         for div in self.divisions.values():
@@ -229,10 +231,11 @@ class Scheduler:
                 )
 
         # no holes + no overlap (WEEKENDS)
-        # for clinician in self.clinicians.values():
-        #     for week_num in range(NUM_BLOCKS * BLOCK_SIZE):
-        #         vars_ = clinician.get_weekend_vars(lambda x, week_num=week_num: x.week_num == week_num)
-        #         self.lpSolver.Add(self.lpSolver.Sum([_.get_var() for _ in vars_]) == 1)
+        for week_num in range(1, NUM_WEEKENDS + 1):
+            vars_ = [_ for clinician in self.clinicians.values() for _ in clinician.get_weekend_vars(
+                lambda x, week_num=week_num: x.week_num == week_num
+            )]
+            self.lpSolver.Add(self.lpSolver.Sum([_.get_var() for _ in vars_]) == 1)
 
         # mins/maxes per division
         for div in self.divisions.values():
@@ -254,11 +257,11 @@ class Scheduler:
                 self.lpSolver.Add(sum_ <= 1)
 
             # at most 1 consecutive weekend of work
-            # for week_num in range((NUM_BLOCKS * BLOCK_SIZE) - 1):
-            #     sum_ = self.lpSolver.Sum(
-            #         [_.get_var() for _ in clinician.get_weekend_vars(lambda x, week_num=week_num: x.week_num in (week_num, week_num + 1))]
-            #     )
-            #     self.lpSolver.Add(sum_ <= 1)
+            for week_num in range(1, NUM_WEEKENDS):
+                sum_ = self.lpSolver.Sum(
+                    [_.get_var() for _ in clinician.get_weekend_vars(lambda x, week_num=week_num: x.week_num in (week_num, week_num + 1))]
+                )
+                self.lpSolver.Add(sum_ <= 1)
 
         # objective functions
         ba_variables = []
@@ -269,25 +272,26 @@ class Scheduler:
             )
 
             ba_variables.extend(
-                [-_.get_var() for _ in clinician.get_block_vars(lambda x,
-                                                                clinician=clinician: x.block_num in clinician.blocks_off)]
+                [-_.get_var() for _ in clinician.get_block_vars(
+                    lambda x, clinician=clinician: x.block_num in clinician.blocks_off)]
             )
         block_appeasement_count = self.lpSolver.Sum(ba_variables)
 
-        # wa_variables = []
-        # for clinician in self.clinicians.values():
-        #     wa_variables.extend(
-        #         [_.get_var() for _ in clinician.get_weekend_vars(lambda x, clinician=clinician: x.week_num not in clinician.weekends_off)]
-        #     )
+        wa_variables = []
+        for clinician in self.clinicians.values():
+            wa_variables.extend(
+                [_.get_var() for _ in clinician.get_weekend_vars(
+                    lambda x, clinician=clinician: x.week_num not in clinician.weekends_off)]
+            )
 
-        #     wa_variables.extend(
-        #         [-_.get_var() for _ in clinician.get_weekend_vars(lambda x, clinician=clinician: x.week_num in clinician.weekends_off)]
-        #     )
-        # weekend_appeasement_count = self.lpSolver.Sum(wa_variables)
+            wa_variables.extend(
+                [-_.get_var() for _ in clinician.get_weekend_vars(
+                    lambda x, clinician=clinician: x.week_num in clinician.weekends_off)]
+            )
+        weekend_appeasement_count = self.lpSolver.Sum(wa_variables)
 
         self.lpSolver.Maximize(
-            block_appeasement_count
-            # + weekend_appeasement_count
+            block_appeasement_count + weekend_appeasement_count
         )
 
     def solve_lp(self):
