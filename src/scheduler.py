@@ -208,6 +208,7 @@ class Scheduler:
         self._API = API(secret_path, calendar_id, settings)
         self.clinicians = {}
         self.divisions = {}
+        self.long_weekends = []
         self.lpSolver = pywraplp.Solver(
             'scheduler', pywraplp.Solver.CBC_MIXED_INTEGER_PROGRAMMING)
 
@@ -284,6 +285,13 @@ class Scheduler:
             else:
                 print('Event creator {} was not found in clinicians'.format(creator))
 
+    def read_long_weekends(self):
+        """
+        Retrieves set of long weekends (week numbers) from Google calendar.
+        """
+        # TODO: Implement!
+        raise NotImplementedError()
+
     def build_lp(self):
         """
         Constructs an LP program based on the clinician, division data.
@@ -331,7 +339,7 @@ class Scheduler:
                 sum_ = self.lpSolver.Sum(
                     [_.get_var() for _ in div.get_vars_by_name(clinician.name)])
                 self.lpSolver.Add(sum_ <= max_)
-                self.lpSolver.Add(-sum_ <= -min_)
+                self.lpSolver.Add(sum_ >= min_)
 
         for clinician in self.clinicians.values():
             for block_num in range(1, NUM_BLOCKS):
@@ -352,6 +360,18 @@ class Scheduler:
                     )]
                 )
                 self.lpSolver.Add(sum_ <= 1)
+
+        # equal distribution of long weekends
+        max_long_weekends = math.ceil(len(self.long_weekends) / len(self.clinicians))
+        min_long_weekends = math.floor(len(self.long_weekends) / len(self.clinicians))
+        for clinician in self.clinicians.values():
+            sum_ = self.lpSolver.Sum(
+                [_.get_var() for _ in clinician.get_weekend_vars(
+                    lambda x, l=self.long_weekends: x.week_num in l
+                )]
+            )
+            self.lpSolver.Add(sum_ <= max_long_weekends)
+            self.lpSolver.Add(sum_ >= min_long_weekends)
 
         # objective functions
         ba_variables = []
