@@ -489,6 +489,7 @@ class API:
         
         When possible, reads info from the settings file.
         """
+        # pylint: disable=maybe-no-member
         tz = self.settings['time_zone']
         if tz:
             return tz
@@ -503,6 +504,7 @@ class API:
         Returns a list of at most `max_res` events whose start date is
         at the earliest `start`.
         """
+        # pylint: disable=maybe-no-member
         result = self._service.events().list(
             calendarId=self.calendar_id,
             timeMin=start,
@@ -532,6 +534,7 @@ class API:
             ]
         }
 
+        # pylint: disable=maybe-no-member
         self._service.events().insert(
             calendarId=self.calendar_id,
             body=event
