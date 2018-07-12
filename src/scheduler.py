@@ -370,10 +370,11 @@ class Scheduler:
 
         # block-adjacent weekends
         # -----------------------
-        # for each pair (block_num, week_num = block_num * 2) we define
-        # a helper variable, used to maximize the product:
+        # for each pair (block_num, week_num) where 
+        #   week_num = block_num * BLOCK_SIZE - 1
+        # we define a helper variable, used to maximize the product:
         #   BlockVariable[block_num] * WeekendVariable[week_num]
-        # Moreover, we constrain the helper variable to be at most
+        # moreover, we constrain the helper variable to be at most
         # BlockVariable[block_num] and WeekendVariable[week_num]
         #
         # note: maximizing a product of variables is NOT a linear program
