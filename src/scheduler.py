@@ -21,29 +21,21 @@ NUM_WEEKENDS = BLOCK_SIZE * NUM_BLOCKS
 
 
 class Variable:
-    def __init__(self):
-        raise NotImplementedError()
-
-    def get_var(self):
-        raise NotImplementedError()
-
-    def get_value(self):
-        raise NotImplementedError()
-
-
-class WeekendVariable(Variable):
     """
-    Represents an LP variable corresponding to a single weekend.
+    Represents an LP variable.
     """
 
-    def __init__(self, clinician, week_num, lpSolver):
-        self.clinician = clinician
-        self.week_num = week_num
+    def __init__(self, name, min_, max_, lpSolver):
+        self.name = name
+        self.min = min_
+        self.max = max_
 
+        self._init_var(lpSolver)
+
+    def _init_var(self, lpSolver):
+        # register variable in LP solver
         self._var = lpSolver.IntVar(
-            0, 1, '{},weekend:{}'.format(
-                self.clinician.name, self.week_num
-            )
+            self.min, self.max, self.name
         )
 
     def get_var(self):
@@ -59,6 +51,20 @@ class WeekendVariable(Variable):
         return self._var.solution_value()
 
 
+class WeekendVariable(Variable):
+    """
+    Represents an LP variable corresponding to a single weekend.
+    """
+
+    def __init__(self, clinician, week_num, lpSolver):
+        self.clinician = clinician
+        self.week_num = week_num
+
+        Variable.__init__(self, '{},weekend:{}'.format(
+            self.clinician.name, self.week_num
+        ), 0, 1, lpSolver)
+
+
 class BlockVariable(Variable):
     """
     Represents an LP variable corresponding to a block of length
@@ -70,22 +76,9 @@ class BlockVariable(Variable):
         self.block_num = block_num
         self.division = division
 
-        # register variable in LP solver
-        self._var = lpSolver.IntVar(
-            0, 1, '{},div:{},block:{}'.format(
-                self.clinician.name, self.division, self.block_num))
-
-    def get_var(self):
-        """
-        Returns the underlying `pywraplp` variable.
-        """
-        return self._var
-
-    def get_value(self):
-        """
-        Returns the value of the variable.
-        """
-        return self._var.solution_value()
+        Variable.__init__(self, '{},div:{},block:{}'.format(
+            self.clinician.name, self.division, self.block_num
+        ), 0, 1, lpSolver)
 
 
 class Division:
@@ -362,8 +355,10 @@ class Scheduler:
                 self.lpSolver.Add(sum_ <= 1)
 
         # equal distribution of long weekends
-        max_long_weekends = math.ceil(len(self.long_weekends) / len(self.clinicians))
-        min_long_weekends = math.floor(len(self.long_weekends) / len(self.clinicians))
+        max_long_weekends = math.ceil(
+            len(self.long_weekends) / len(self.clinicians))
+        min_long_weekends = math.floor(
+            len(self.long_weekends) / len(self.clinicians))
         for clinician in self.clinicians.values():
             sum_ = self.lpSolver.Sum(
                 [_.get_var() for _ in clinician.get_weekend_vars(
@@ -372,6 +367,41 @@ class Scheduler:
             )
             self.lpSolver.Add(sum_ <= max_long_weekends)
             self.lpSolver.Add(sum_ >= min_long_weekends)
+
+        # block-adjacent weekends
+        # -----------------------
+        # for each pair (block_num, week_num = block_num * 2) we define
+        # a helper variable, used to maximize the product:
+        #   BlockVariable[block_num] * WeekendVariable[week_num]
+        # Moreover, we constrain the helper variable to be at most
+        # BlockVariable[block_num] and WeekendVariable[week_num]
+        #
+        # note: maximizing a product of variables is NOT a linear program
+        # which is precisely why we need a helper variable.
+        for div in self.divisions.values():
+            for clinician in div.clinicians:
+                for block_num in range(1, NUM_BLOCKS + 1):
+                    week_num = block_num * BLOCK_SIZE - 1
+
+                    block_var = clinician.get_block_vars(
+                        lambda x, d=div.name, b=block_num:
+                            x.block_num == b and
+                            x.division == d
+                    )[0].get_var()
+                    weekend_var = clinician.get_weekend_vars(
+                        lambda x, w=week_num: x.week_num == w)[0].get_var()
+
+                    var_ = Variable(
+                        '{}:helper,div:{},block:{}*weekend:{}'.format(
+                            clinician.name,
+                            div.name,
+                            block_num,
+                            week_num
+                        ),
+                        0, 1, self.lpSolver)
+                    clinician.add_var(var_)
+                    self.lpSolver.Add(var_.get_var() <= block_var)
+                    self.lpSolver.Add(var_.get_var() <= weekend_var)
 
         # objective functions
         ba_variables = []
@@ -404,8 +434,19 @@ class Scheduler:
             )
         weekend_appeasement_count = self.lpSolver.Sum(wa_variables)
 
+        adjacency_vars = []
+        for clinician in self.clinicians.values():
+            adjacency_vars.extend(
+                [_.get_var() for _ in clinician.get_vars(
+                    lambda x: 'helper' in x.name
+                )]
+            )
+        adjacency_count = self.lpSolver.Sum(adjacency_vars)
+
         self.lpSolver.Maximize(
-            block_appeasement_count + weekend_appeasement_count
+            (1/3) * block_appeasement_count +
+            (1/3) * weekend_appeasement_count +
+            (1/3) * adjacency_count
         )
 
     def solve_lp(self):
