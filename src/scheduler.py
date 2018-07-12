@@ -24,11 +24,18 @@ class Variable:
     def __init__(self):
         raise NotImplementedError()
 
+    def get_var(self):
+        raise NotImplementedError()
+
     def get_value(self):
         raise NotImplementedError()
 
 
 class WeekendVariable(Variable):
+    """
+    Represents an LP variable corresponding to a single weekend.
+    """
+
     def __init__(self, clinician, week_num, lpSolver):
         self.clinician = clinician
         self.week_num = week_num
@@ -40,13 +47,24 @@ class WeekendVariable(Variable):
         )
 
     def get_var(self):
+        """
+        Returns the underlying `pywraplp` variable.
+        """
         return self._var
 
     def get_value(self):
+        """
+        Returns the value of the variable.
+        """
         return self._var.solution_value()
 
 
 class BlockVariable(Variable):
+    """
+    Represents an LP variable corresponding to a block of length
+    `BLOCK_SIZE`.
+    """
+
     def __init__(self, clinician, block_num, division, lpSolver):
         self.clinician = clinician
         self.block_num = block_num
@@ -58,13 +76,23 @@ class BlockVariable(Variable):
                 self.clinician.name, self.division, self.block_num))
 
     def get_var(self):
+        """
+        Returns the underlying `pywraplp` variable.
+        """
         return self._var
 
     def get_value(self):
+        """
+        Returns the value of the variable.
+        """
         return self._var.solution_value()
 
 
 class Division:
+    """
+    Stores data regarding a given division.
+    """
+
     def __init__(self, name):
         self.name = name
         self.clinicians = []
@@ -73,18 +101,25 @@ class Division:
         self.assignments = []
 
     def add_clinician(self, clinician, min_, max_):
+        """
+        Adds a clinician to this division with block assignment  bounds 
+        `min_` and `max_`.
+        """
         if clinician not in self.clinicians:
             self.clinicians.append(clinician)
             self.bound_dict[clinician.name] = (min_, max_)
 
-    def remove_clinician(self, clinician, min_, max_):
+    def remove_clinician(self, clinician):
+        """
+        Removes an existing clinician from this division.
+        """
         if clinician in self.clinicians:
             del self.bound_dict[clinician.name]
             self.clinicians.remove(clinician)
 
     def get_vars(self):
         """
-        Returns all BlockVariables corresponding to this division, across all
+        Returns all block variables corresponding to this division, across all
         clinicians.
         """
         block_vars = [
@@ -92,13 +127,25 @@ class Division:
         return list(filter(lambda x: x.division == self.name, block_vars))
 
     def get_vars_by_block_num(self, block_num):
+        """
+        Returns all block variables corresponding to this division, across all
+        clinicians whose block number is equal to `block_num`.
+        """
         return list(filter(lambda x: x.block_num == block_num, self.get_vars()))
 
     def get_vars_by_name(self, name):
+        """
+        Returns all block variables corresponding to this division with
+        a clinician whose name is equal to `name`.
+        """
         return list(filter(lambda x: x.clinician.name == name, self.get_vars()))
 
 
 class Clinician:
+    """
+    Stores data regarding a given clinician.
+    """
+
     def __init__(self, name, email, blocks_off=[], weekends_off=[]):
         self.name = name
         self.email = email
@@ -109,24 +156,47 @@ class Clinician:
         self._vars = []
 
     def add_var(self, var):
+        """
+        Adds a new LP variable to this clinician.
+        """
         if var not in self._vars:
             self._vars.append(var)
 
     def remove_var(self, var):
+        """
+        Removes an existing LP variable from this clinician.
+        """
         if var in self._vars:
             self._vars.remove(var)
 
     def get_vars(self, predicate=None):
+        """
+        Returns a list of all variables from this clinician that satisfy
+        the supplied predicate.
+        """
         return list(filter(predicate, self._vars))
 
     def get_block_vars(self, predicate=None):
+        """
+        Returns a list of all block variables from this clinician that
+        satisfy the supplied predicate.
+        """
         return list(filter(predicate, self.get_vars(lambda x: type(x) is BlockVariable)))
 
     def get_weekend_vars(self, predicate=None):
+        """
+        Returns a list of all weekend variables from this clinician that
+        satisfy the supplied predicate.
+        """
         return list(filter(predicate, self.get_vars(lambda x: type(x) is WeekendVariable)))
 
 
 class Scheduler:
+    """
+    Implements a scheduling algorithm using LP in order to create a fair
+    schedule based on the supplied clinician and division data.
+    """
+
     def __init__(self, settings):
         secret_path = '../config/client_secret.json'
         calendar_id = 'primary'
@@ -142,6 +212,10 @@ class Scheduler:
             'scheduler', pywraplp.Solver.CBC_MIXED_INTEGER_PROGRAMMING)
 
     def read_config(self):
+        """
+        Retrieves static data about clinicians and divisions from a 
+        config file.
+        """
         with open(self.config_file, 'r') as f:
             data = json.load(f)
             try:
@@ -165,7 +239,11 @@ class Scheduler:
             except KeyError as err:
                 print('Invalid config file: missing key {}'.format(str(err)))
 
-    def read_calendar(self):
+    def read_timeoff(self):
+        """
+        Retrieves timeoff events for each clinician in self.clinicians
+        from Google calendar.
+        """
         now = datetime.utcnow().isoformat() + 'Z'
         events = self._API.get_events(start=now)
 
@@ -207,6 +285,9 @@ class Scheduler:
                 print('Event creator {} was not found in clinicians'.format(creator))
 
     def build_lp(self):
+        """
+        Constructs an LP program based on the clinician, division data.
+        """
         # create clinician BlockVariables
         for div in self.divisions.values():
             for clinician in div.clinicians:
@@ -234,10 +315,14 @@ class Scheduler:
 
         # no holes + no overlap (WEEKENDS)
         for week_num in range(1, NUM_WEEKENDS + 1):
-            vars_ = [_ for clinician in self.clinicians.values() for _ in clinician.get_weekend_vars(
-                lambda x, week_num=week_num: x.week_num == week_num
-            )]
-            self.lpSolver.Add(self.lpSolver.Sum([_.get_var() for _ in vars_]) == 1)
+            vars_ = \
+                [_ for clinician in self.clinicians.values()
+                    for _ in clinician.get_weekend_vars(
+                        lambda x, week_num=week_num: x.week_num == week_num
+                )
+                ]
+            self.lpSolver.Add(self.lpSolver.Sum(
+                [_.get_var() for _ in vars_]) == 1)
 
         # mins/maxes per division
         for div in self.divisions.values():
@@ -250,7 +335,7 @@ class Scheduler:
 
         for clinician in self.clinicians.values():
             for block_num in range(1, NUM_BLOCKS):
-                # if a clinician works a given blocks, they should not work any
+                # if a clinician works a given block, they should not work any
                 # adjacent block (even in a different division)
                 sum_ = self.lpSolver.Sum(
                     [_.get_var() for _ in clinician.get_block_vars(
@@ -261,7 +346,10 @@ class Scheduler:
             # at most 1 consecutive weekend of work
             for week_num in range(1, NUM_WEEKENDS):
                 sum_ = self.lpSolver.Sum(
-                    [_.get_var() for _ in clinician.get_weekend_vars(lambda x, week_num=week_num: x.week_num in (week_num, week_num + 1))]
+                    [_.get_var() for _ in clinician.get_weekend_vars(
+                        lambda x, week_num=week_num: x.week_num in (
+                            week_num, week_num + 1)
+                    )]
                 )
                 self.lpSolver.Add(sum_ <= 1)
 
@@ -270,12 +358,14 @@ class Scheduler:
         for clinician in self.clinicians.values():
             ba_variables.extend(
                 [_.get_var() for _ in clinician.get_block_vars(
-                    lambda x, clinician=clinician: x.block_num not in clinician.blocks_off)]
+                    lambda x, clinician=clinician: x.block_num not in clinician.blocks_off)
+                 ]
             )
 
             ba_variables.extend(
                 [-_.get_var() for _ in clinician.get_block_vars(
-                    lambda x, clinician=clinician: x.block_num in clinician.blocks_off)]
+                    lambda x, clinician=clinician: x.block_num in clinician.blocks_off)
+                 ]
             )
         block_appeasement_count = self.lpSolver.Sum(ba_variables)
 
@@ -283,12 +373,14 @@ class Scheduler:
         for clinician in self.clinicians.values():
             wa_variables.extend(
                 [_.get_var() for _ in clinician.get_weekend_vars(
-                    lambda x, clinician=clinician: x.week_num not in clinician.weekends_off)]
+                    lambda x, clinician=clinician: x.week_num not in clinician.weekends_off)
+                 ]
             )
 
             wa_variables.extend(
                 [-_.get_var() for _ in clinician.get_weekend_vars(
-                    lambda x, clinician=clinician: x.week_num in clinician.weekends_off)]
+                    lambda x, clinician=clinician: x.week_num in clinician.weekends_off)
+                 ]
             )
         weekend_appeasement_count = self.lpSolver.Sum(wa_variables)
 
@@ -297,6 +389,9 @@ class Scheduler:
         )
 
     def solve_lp(self):
+        """
+        Solves LP program and prints information regarding solution.
+        """
         ret = self.lpSolver.Solve() == self.lpSolver.OPTIMAL
         print('objective value = {}'.format(self.lpSolver.Objective().Value()))
         print('conflicts per doc:')
@@ -314,6 +409,10 @@ class Scheduler:
         return ret
 
     def assign_schedule(self):
+        """
+        Assigns blocks and weekends to clinicians using the results of
+        the LP program solution.
+        """
         for div in self.divisions.values():
             for block_num in range(1, NUM_BLOCKS + 1):
                 assignments = list(filter(lambda x: x.get_value(
@@ -327,6 +426,10 @@ class Scheduler:
             clinician.weekends_assigned = [_.week_num for _ in vars_]
 
     def publish_schedule(self):
+        """
+        Publishes the block and weekend assignments as events to Google 
+        calendar.
+        """
         for division in self.divisions.values():
             for block_num in range(len(division.assignments)):
                 clinician = division.assignments[block_num]
@@ -336,14 +439,15 @@ class Scheduler:
                             BLOCK_SIZE * (block_num + 1) - (j - 1)),
                         '%G/%V/%u/%H:%M/')
                     week_end = week_start + timedelta(hours=WEEK_HOURS)
-                    summary = '{} - DIV:{} on call'.format(clinician.name, division.name)
+                    summary = '{} - DIV:{} on call'.format(
+                        clinician.name, division.name)
                     self._API.create_event(
                         week_start.isoformat(),
                         week_end.isoformat(),
                         [clinician.email],
                         summary
                     )
-        
+
         for clinician in self.clinicians.values():
             for week_num in clinician.weekends_assigned:
                 weekend_start = datetime.strptime(
@@ -360,6 +464,9 @@ class Scheduler:
 
 
 class API:
+    """
+    A helper class that wraps some of the API methods of Google calendar.
+    """
     SCOPE = 'https://www.googleapis.com/auth/calendar'
 
     def __init__(self, secret_path, calendar_id, settings):
@@ -378,9 +485,9 @@ class API:
 
     def get_timezone(self):
         """
-        Returns the timezone of the calendar given by calendar_id.
+        Returns the timezone of the calendar given by `calendar_id`.
         
-        When possible, reads info from settings file.
+        When possible, reads info from the settings file.
         """
         tz = self.settings['time_zone']
         if tz:
@@ -393,7 +500,8 @@ class API:
 
     def get_events(self, start, max_res=100):
         """
-        Returns a list of at most max_res events beginning >= start.
+        Returns a list of at most `max_res` events whose start date is
+        at the earliest `start`.
         """
         result = self._service.events().list(
             calendarId=self.calendar_id,
@@ -406,8 +514,8 @@ class API:
 
     def create_event(self, start, end, attendees, summary):
         """
-        Creates a new event from start to end with the given attendees
-        list and summary
+        Creates a new event starting at `start` and ending at `end` with
+        the given `attendees` and `summary`
         """
         event = {
             'summary': summary,

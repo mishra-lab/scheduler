@@ -12,7 +12,7 @@ def main(settings, config_path=None, publish=False):
     if config_path: sched.config_file = config_path
 
     sched.read_config()
-    if (not config_path): sched.read_calendar()
+    if (not config_path): sched.read_timeoff()
     sched.build_lp()
     
     if (sched.solve_lp()):

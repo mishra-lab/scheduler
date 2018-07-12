@@ -6,7 +6,7 @@ class SettingsManager:
     """
     Allows to easily read and write to settings file.
 
-    Use inside ```with``` statement
+    Use inside `with` statement
     """
 
     def __init__(self, settings_file):
