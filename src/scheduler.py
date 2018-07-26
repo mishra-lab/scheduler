@@ -8,17 +8,7 @@ from httplib2 import Http
 from oauth2client import client, file, tools
 from ortools.linear_solver import pywraplp
 
-NUM_BLOCKS = 26
-# mon 8am + 105 hours = fri 5pm
-# 105 = 4 * 24hr + (17hr - 8hr)
-WEEK_HOURS = 24 * 4 + (17 - 8)
-
-# fri 5pm + 63 hours = mon 8am
-WEEKEND_HOURS = 24 * 2 + 24 - (17 - 8)
-
-BLOCK_SIZE = 2
-
-NUM_WEEKENDS = BLOCK_SIZE * NUM_BLOCKS
+from constants import *
 
 
 class Variable:
@@ -217,20 +207,14 @@ class Scheduler:
     schedule based on the supplied clinician and division data.
     """
 
-    def __init__(self, settings):
-        secret_path = '../config/client_secret.json'
-        calendar_id = 'primary'
-
-        secret_path = settings.get_path_from_key('secret_path')
-        calendar_id = settings['calendar_id']
-        self.config_file = settings.get_path_from_key('clinician_config_path')
-
-        self._API = API(secret_path, calendar_id, settings)
+    def __init__(self, config_path):
+        self.config_file = config_path
         self.clinicians = {}
         self.divisions = {}
         self.long_weekends = []
         self.solver = pywraplp.Solver(
             'scheduler', pywraplp.Solver.CBC_MIXED_INTEGER_PROGRAMMING)
+        self.read_config()
 
     def read_config(self):
         """
@@ -260,14 +244,11 @@ class Scheduler:
             except KeyError as err:
                 print('Invalid config file: missing key {}'.format(str(err)))
 
-    def read_timeoff(self):
+    def set_timeoff(self, events):
         """
-        Retrieves timeoff events for each clinician in self.clinicians
-        from Google calendar.
+        Populates timeoff for each clinician in self.clinicians based
+        on the supplied list of events.
         """
-        now = datetime.utcnow().isoformat() + 'Z'
-        events = self._API.get_events(start=now)
-
         for event in events:
             start = datetime.strptime(
                 event['start'].get('date'),
@@ -305,12 +286,11 @@ class Scheduler:
             else:
                 print('Event creator {} was not found in clinicians'.format(creator))
 
-    def read_long_weekends(self):
+    def set_long_weekends(self, long_weekends):
         """
-        Retrieves set of long weekends (week numbers) from Google calendar.
+        Populates set of long weekends (week numbers).
         """
-        # TODO: Implement!
-        raise NotImplementedError()
+        self.long_weekends = long_weekends
 
     def build_lp(self):
         """
@@ -331,7 +311,7 @@ class Scheduler:
         appeasement_objs = self._build_appeasement_objectives(clinicians)
 
         self.solver.Maximize(
-              (1/3) * appeasement_objs[0]
+            (1/3) * appeasement_objs[0]
             + (1/3) * appeasement_objs[1]
             + (1/3) * self._build_adjacency_objective(clinicians)
         )
@@ -369,8 +349,8 @@ class Scheduler:
                 [_ for clinician in clinicians
                     for _ in clinician.get_weekend_vars(
                         lambda x, week_num=week_num: x.week_num == week_num
-                )
-                ]
+                    )
+                 ]
             self.solver.Add(self.solver.Sum(
                 [_.get_var() for _ in vars_]) == 1)
 
@@ -406,24 +386,25 @@ class Scheduler:
                 self.solver.Add(sum_ <= 1)
 
     def _build_longweekend_constraints(self, clinicians):
-        # equal distribution of long weekends
-        max_long_weekends = math.ceil(
-            len(self.long_weekends) / len(self.clinicians))
-        min_long_weekends = math.floor(
-            len(self.long_weekends) / len(self.clinicians))
-        for clinician in clinicians:
-            sum_ = self.solver.Sum(
-                [_.get_var() for _ in clinician.get_weekend_vars(
-                    lambda x, l=self.long_weekends: x.week_num in l
-                )]
-            )
-            self.solver.Add(sum_ <= max_long_weekends)
-            self.solver.Add(sum_ >= min_long_weekends)
+        if self.long_weekends:
+            # equal distribution of long weekends
+            max_long_weekends = math.ceil(
+                len(self.long_weekends) / len(self.clinicians))
+            min_long_weekends = math.floor(
+                len(self.long_weekends) / len(self.clinicians))
+            for clinician in clinicians:
+                sum_ = self.solver.Sum(
+                    [_.get_var() for _ in clinician.get_weekend_vars(
+                        lambda x, l=self.long_weekends: x.week_num in l
+                    )]
+                )
+                self.solver.Add(sum_ <= max_long_weekends)
+                self.solver.Add(sum_ >= min_long_weekends)
 
     def _build_adjacency_variables(self, divisions):
         # block-adjacent weekends
         # -----------------------
-        # for each pair (block_num, week_num) where 
+        # for each pair (block_num, week_num) where
         #   week_num = block_num * BLOCK_SIZE - 1
         # we define a helper variable, used to maximize the product:
         #   BlockVariable[block_num] * WeekendVariable[week_num]
@@ -540,43 +521,6 @@ class Scheduler:
             vars_ = clinician.get_weekend_vars(lambda x: x.get_value() == 1.0)
             clinician.weekends_assigned = [_.week_num for _ in vars_]
 
-    def publish_schedule(self):
-        """
-        Publishes the block and weekend assignments as events to Google 
-        calendar.
-        """
-        for division in self.divisions.values():
-            for block_num in range(len(division.assignments)):
-                clinician = division.assignments[block_num]
-                for j in range(BLOCK_SIZE, 0, -1):
-                    week_start = datetime.strptime(
-                        '2019/{0:02d}/1/08:00/'.format(
-                            BLOCK_SIZE * (block_num + 1) - (j - 1)),
-                        '%G/%V/%u/%H:%M/')
-                    week_end = week_start + timedelta(hours=WEEK_HOURS)
-                    summary = '{} - DIV:{} on call'.format(
-                        clinician.name, division.name)
-                    self._API.create_event(
-                        week_start.isoformat(),
-                        week_end.isoformat(),
-                        [clinician.email],
-                        summary
-                    )
-
-        for clinician in self.clinicians.values():
-            for week_num in clinician.weekends_assigned:
-                weekend_start = datetime.strptime(
-                    '2019/{0:02d}/5/17:00/'.format(week_num),
-                    '%G/%V/%u/%H:%M/')
-                weekend_end = weekend_start + timedelta(hours=WEEKEND_HOURS)
-                summary = '{} - on call'.format(clinician.name)
-                self._API.create_event(
-                    weekend_start.isoformat(),
-                    weekend_end.isoformat(),
-                    [clinician.email],
-                    summary
-                )
-
 
 class API:
     """
@@ -584,45 +528,38 @@ class API:
     """
     SCOPE = 'https://www.googleapis.com/auth/calendar'
 
-    def __init__(self, secret_path, calendar_id, settings):
+    def __init__(self, calendar_id):
         self._store = file.Storage('credentials.json')
         self._creds = self._store.get()
         if not self._creds or self._creds.invalid:
             self._flow = client.flow_from_clientsecrets(
-                secret_path, API.SCOPE)
+                './client_secret.json', API.SCOPE)
             self._creds = tools.run_flow(self._flow, self._store)
         self._service = build(
             'calendar', 'v3', http=self._creds.authorize(Http()))
 
         self.calendar_id = calendar_id
-        self.settings = settings
         self.time_zone = self.get_timezone()
 
     def get_timezone(self):
         """
         Returns the timezone of the calendar given by `calendar_id`.
-        
-        When possible, reads info from the settings file.
         """
         # pylint: disable=maybe-no-member
-        tz = self.settings['time_zone']
-        if tz:
-            return tz
-        else:
-            result = self._service.calendars().get(
-                calendarId=self.calendar_id).execute()
-            self.settings['time_zone'] = result.get('timeZone')
-            return self.settings['time_zone']
+        result = self._service.calendars().get(
+            calendarId=self.calendar_id).execute()
+        return result.get('timeZone')
 
-    def get_events(self, start, max_res=100):
+    def get_events(self, start, end, max_res=1000):
         """
-        Returns a list of at most `max_res` events whose start date is
-        at the earliest `start`.
+        Returns a list of at most `max_res` events with dates between 
+        start and end.
         """
         # pylint: disable=maybe-no-member
         result = self._service.events().list(
             calendarId=self.calendar_id,
             timeMin=start,
+            timeMax=end,
             maxResults=max_res,
             singleEvents=True,
             orderBy='startTime').execute()
