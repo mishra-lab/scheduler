@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from googleapiclient.discovery import build
 from httplib2 import Http
 from oauth2client import client, file, tools
-from ortools.linear_solver import pywraplp
+from pulp import *
 
 from constants import *
 
@@ -21,23 +21,22 @@ class Variable:
         max (float): The maximum value that the variable can take
     """
 
-    def __init__(self, name, min_, max_, solver):
+    def __init__(self, name, min_, max_):
         self.name = name
         self.min = min_
         self.max = max_
 
-        self._init_var(solver)
+        self._init_var()
 
-    def _init_var(self, solver):
-        # register variable in LP solver
-        self._var = solver.IntVar(
-            self.min, self.max, self.name
+    def _init_var(self):
+        self._var = LpVariable(
+            self.name, lowBound=self.min, upBound=self.max, cat="Integer"
         )
 
     def get_var(self):
         """
         Returns:
-            The underlying `pywraplp` variable.
+            The underlying `pulp` variable.
         """
         return self._var
 
@@ -46,7 +45,7 @@ class Variable:
         Returns:
             The value of the variable.
         """
-        return self._var.solution_value()
+        return self._var.varValue
 
 
 class WeekendVariable(Variable):
@@ -59,13 +58,13 @@ class WeekendVariable(Variable):
         week_num (int): The week number corresponding to this weekend assignment
     """
 
-    def __init__(self, clinician, week_num, solver):
+    def __init__(self, clinician, week_num):
         self.clinician = clinician
         self.week_num = week_num
 
         Variable.__init__(self, '{},weekend:{}'.format(
             self.clinician.name, self.week_num
-        ), 0, 1, solver)
+        ), 0, 1)
 
 
 class BlockVariable(Variable):
@@ -80,14 +79,14 @@ class BlockVariable(Variable):
         division (Division): The division corresponding to this block assignment
     """
 
-    def __init__(self, clinician, block_num, division, solver):
+    def __init__(self, clinician, block_num, division):
         self.clinician = clinician
         self.block_num = block_num
         self.division = division
 
         Variable.__init__(self, '{},div:{},block:{}'.format(
             self.clinician.name, self.division, self.block_num
-        ), 0, 1, solver)
+        ), 0, 1)
 
 
 class Division:
@@ -214,8 +213,7 @@ class Scheduler:
         self.clinicians = {}
         self.divisions = {}
         self.long_weekends = []
-        self.solver = pywraplp.Solver(
-            'scheduler', pywraplp.Solver.CBC_MIXED_INTEGER_PROGRAMMING)
+        self.problem = LpProblem('scheduler', sense=LpMaximize)
         self.read_config()
 
     def read_config(self):
@@ -315,10 +313,10 @@ class Scheduler:
         self._build_adjacency_variables(divisions)
         appeasement_objs = self._build_appeasement_objectives(clinicians)
 
-        self.solver.Maximize(
-            (1/3) * appeasement_objs[0]
-            + (1/3) * appeasement_objs[1]
-            + (1/3) * self._build_adjacency_objective(clinicians)
+        self.problem.setObjective(
+            (1 / 3) * appeasement_objs[0]
+            + (1 / 3) * appeasement_objs[1]
+            + (1 / 3) * self._build_adjacency_objective(clinicians)
         )
 
     def _build_clinician_variables(self, divisions, clinicians):
@@ -328,21 +326,21 @@ class Scheduler:
                 for block_num in range(1, self.num_blocks + 1):
                     clinician.add_var(
                         BlockVariable(clinician, block_num,
-                                      div.name, self.solver)
+                                      div.name)
                     )
         # create clinician WeekendVariables
         for clinician in clinicians:
             for week_num in range(1, self.num_weekends + 1):
                 clinician.add_var(
-                    WeekendVariable(clinician, week_num, self.solver)
+                    WeekendVariable(clinician, week_num)
                 )
 
     def _build_coverage_constraints(self, divisions, clinicians):
         # no holes + no overlap over all divisions (BLOCKS)
         for div in divisions:
             for block_num in range(1, self.num_blocks + 1):
-                self.solver.Add(
-                    self.solver.Sum(
+                self.problem.add(
+                    lpSum(
                         [_.get_var()
                          for _ in div.get_vars_by_block_num(block_num)]
                     ) == 1
@@ -356,7 +354,7 @@ class Scheduler:
                         lambda x, week_num=week_num: x.week_num == week_num
                     )
                  ]
-            self.solver.Add(self.solver.Sum(
+            self.problem.add(lpSum(
                 [_.get_var() for _ in vars_]) == 1)
 
     def _build_minmax_constraints(self, divisions):
@@ -364,31 +362,31 @@ class Scheduler:
         for div in divisions:
             for clinician in div.clinicians:
                 (min_, max_) = div.bound_dict[clinician.name]
-                sum_ = self.solver.Sum(
+                sum_ = lpSum(
                     [_.get_var() for _ in div.get_vars_by_name(clinician.name)])
-                self.solver.Add(sum_ <= max_)
-                self.solver.Add(sum_ >= min_)
+                self.problem.add(sum_ <= max_)
+                self.problem.add(sum_ >= min_)
 
     def _build_consec_constraints(self, clinicians):
         for clinician in clinicians:
             for block_num in range(1, self.num_blocks):
                 # if a clinician works a given block, they should not work any
                 # adjacent block (even in a different division)
-                sum_ = self.solver.Sum(
+                sum_ = lpSum(
                     [_.get_var() for _ in clinician.get_block_vars(
                         lambda x, block_num=block_num: x.block_num in (block_num, block_num + 1))]
                 )
-                self.solver.Add(sum_ <= 1)
+                self.problem.add(sum_ <= 1)
 
             # at most 1 consecutive weekend of work
             for week_num in range(1, self.num_weekends):
-                sum_ = self.solver.Sum(
+                sum_ = lpSum(
                     [_.get_var() for _ in clinician.get_weekend_vars(
                         lambda x, week_num=week_num: x.week_num in (
                             week_num, week_num + 1)
                     )]
                 )
-                self.solver.Add(sum_ <= 1)
+                self.problem.add(sum_ <= 1)
 
     def _build_longweekend_constraints(self, clinicians):
         if self.long_weekends:
@@ -398,13 +396,13 @@ class Scheduler:
             min_long_weekends = math.floor(
                 len(self.long_weekends) / len(self.clinicians))
             for clinician in clinicians:
-                sum_ = self.solver.Sum(
+                sum_ = lpSum(
                     [_.get_var() for _ in clinician.get_weekend_vars(
                         lambda x, l=self.long_weekends: x.week_num in l
                     )]
                 )
-                self.solver.Add(sum_ <= max_long_weekends)
-                self.solver.Add(sum_ >= min_long_weekends)
+                self.problem.add(sum_ <= max_long_weekends)
+                self.problem.add(sum_ >= min_long_weekends)
 
     def _build_adjacency_variables(self, divisions):
         # block-adjacent weekends
@@ -418,7 +416,6 @@ class Scheduler:
         #
         # note: maximizing a product of variables is NOT a linear program
         # which is precisely why we need a helper variable.
-        # for div in self.divisions.values():
         for div in divisions:
             for clinician in div.clinicians:
                 for block_num in range(1, self.num_blocks + 1):
@@ -439,10 +436,10 @@ class Scheduler:
                             block_num,
                             week_num
                         ),
-                        0, 1, self.solver)
+                        0, 1)
                     clinician.add_var(var_)
-                    self.solver.Add(var_.get_var() <= block_var)
-                    self.solver.Add(var_.get_var() <= weekend_var)
+                    self.problem.add(var_.get_var() <= block_var)
+                    self.problem.add(var_.get_var() <= weekend_var)
 
     def _build_adjacency_objective(self, clinicians):
         adjacency_vars = []
@@ -452,7 +449,7 @@ class Scheduler:
                     lambda x: 'adjacency' in x.name
                 )]
             )
-        return self.solver.Sum(adjacency_vars)
+        return lpSum(adjacency_vars)
 
     def _build_appeasement_objectives(self, clinicians):
         wa_variables = []
@@ -468,7 +465,6 @@ class Scheduler:
                     lambda x, clinician=clinician: x.week_num in clinician.weekends_off)
                  ]
             )
-        weekend_appeasement_count = self.solver.Sum(wa_variables)
 
         ba_variables = []
         for clinician in clinicians:
@@ -485,16 +481,16 @@ class Scheduler:
             )
 
         return (
-            self.solver.Sum(wa_variables),
-            self.solver.Sum(ba_variables)
+            lpSum(wa_variables),
+            lpSum(ba_variables)
         )
 
     def solve_lp(self):
         """
         Solves LP program and prints information regarding solution.
         """
-        ret = self.solver.Solve() == self.solver.OPTIMAL
-        print('objective value = {}'.format(self.solver.Objective().Value()))
+        ret = self.problem.solve() == LpStatusOptimal
+        print('objective value = {}'.format(value(self.problem.objective)))
         print('conflicts per doc:')
         for clinician in self.clinicians.values():
             print(clinician.name)

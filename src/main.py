@@ -6,9 +6,6 @@ from openpyxl import Workbook
 
 import scheduler
 from constants import *
-from netflow import FlowNetwork
-from settings import SettingsManager
-from strategy import ConsecutiveStrategy, RandomStrategy
 
 
 def publish_sched(sched, api, year):
@@ -86,7 +83,7 @@ def write_to_excel(scheduler, year):
 
 
 def main(config_path, year, calendar_id=None, publish=False):
-    sched = scheduler.Scheduler(config_path)
+    sched = scheduler.Scheduler(config_path, NUM_BLOCKS)
     events = []
     long_weekends = []
 
@@ -123,7 +120,10 @@ if __name__ == '__main__':
     parser.add_argument('year', type=int)
     parser.add_argument('--calendar', type=str, default=None)
     parser.add_argument('--publish', action='store_true', default=False)
+    parser.add_argument('--blocks', type=int)
     args = parser.parse_args()
+
+    if args.blocks: NUM_BLOCKS = args.blocks
 
     start_time = time.clock()
     main(args.config, args.year, args.calendar, args.publish)
