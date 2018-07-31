@@ -1,4 +1,4 @@
-NUM_BLOCKS = 3
+NUM_BLOCKS = 26
 # mon 8am + 105 hours = fri 5pm
 # 105 = 4 * 24hr + (17hr - 8hr)
 WEEK_HOURS = 24 * 4 + (17 - 8)

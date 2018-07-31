@@ -207,8 +207,10 @@ class Scheduler:
     schedule based on the supplied clinician and division data.
     """
 
-    def __init__(self, config_path):
+    def __init__(self, config_path, num_blocks):
         self.config_file = config_path
+        self.num_blocks = num_blocks
+        self.num_weekends = num_blocks * BLOCK_SIZE
         self.clinicians = {}
         self.divisions = {}
         self.long_weekends = []
@@ -225,12 +227,17 @@ class Scheduler:
             data = json.load(f)
             try:
                 for clinician in data["CLINICIANS"]:
+                    blocks_off, weekends_off = [], []
+                    if "blocks_off" in data["CLINICIANS"][clinician]:
+                        blocks_off = data["CLINICIANS"][clinician]["blocks_off"]
+                    if "weekends_off" in data["CLINICIANS"][clinician]:
+                        weekends_off = data["CLINICIANS"][clinician]["weekends_off"]
                     self.clinicians[clinician] = \
                         Clinician(
                             name=clinician,
                             email=data["CLINICIANS"][clinician]["email"],
-                            blocks_off=data["CLINICIANS"][clinician]["blocks_off"],
-                            weekends_off=data["CLINICIANS"][clinician]["weekends_off"])
+                            blocks_off=blocks_off,
+                            weekends_off=weekends_off)
 
                 for division in data["DIVISIONS"]:
                     self.divisions[division] = Division(division)
@@ -243,6 +250,7 @@ class Scheduler:
 
             except KeyError as err:
                 print('Invalid config file: missing key {}'.format(str(err)))
+                raise err
 
     def set_timeoff(self, events):
         """
@@ -299,9 +307,6 @@ class Scheduler:
         divisions = list(self.divisions.values())
         clinicians = list(self.clinicians.values())
 
-        # random.shuffle(divisions)
-        # random.shuffle(clinicians)
-
         self._build_clinician_variables(divisions, clinicians)
         self._build_coverage_constraints(divisions, clinicians)
         self._build_minmax_constraints(divisions)
@@ -320,14 +325,14 @@ class Scheduler:
         # create clinician BlockVariables
         for div in divisions:
             for clinician in div.clinicians:
-                for block_num in range(1, NUM_BLOCKS + 1):
+                for block_num in range(1, self.num_blocks + 1):
                     clinician.add_var(
                         BlockVariable(clinician, block_num,
                                       div.name, self.solver)
                     )
         # create clinician WeekendVariables
         for clinician in clinicians:
-            for week_num in range(1, NUM_WEEKENDS + 1):
+            for week_num in range(1, self.num_weekends + 1):
                 clinician.add_var(
                     WeekendVariable(clinician, week_num, self.solver)
                 )
@@ -335,7 +340,7 @@ class Scheduler:
     def _build_coverage_constraints(self, divisions, clinicians):
         # no holes + no overlap over all divisions (BLOCKS)
         for div in divisions:
-            for block_num in range(1, NUM_BLOCKS + 1):
+            for block_num in range(1, self.num_blocks + 1):
                 self.solver.Add(
                     self.solver.Sum(
                         [_.get_var()
@@ -344,7 +349,7 @@ class Scheduler:
                 )
 
         # no holes + no overlap (WEEKENDS)
-        for week_num in range(1, NUM_WEEKENDS + 1):
+        for week_num in range(1, self.num_weekends + 1):
             vars_ = \
                 [_ for clinician in clinicians
                     for _ in clinician.get_weekend_vars(
@@ -366,7 +371,7 @@ class Scheduler:
 
     def _build_consec_constraints(self, clinicians):
         for clinician in clinicians:
-            for block_num in range(1, NUM_BLOCKS):
+            for block_num in range(1, self.num_blocks):
                 # if a clinician works a given block, they should not work any
                 # adjacent block (even in a different division)
                 sum_ = self.solver.Sum(
@@ -376,7 +381,7 @@ class Scheduler:
                 self.solver.Add(sum_ <= 1)
 
             # at most 1 consecutive weekend of work
-            for week_num in range(1, NUM_WEEKENDS):
+            for week_num in range(1, self.num_weekends):
                 sum_ = self.solver.Sum(
                     [_.get_var() for _ in clinician.get_weekend_vars(
                         lambda x, week_num=week_num: x.week_num in (
@@ -416,7 +421,7 @@ class Scheduler:
         # for div in self.divisions.values():
         for div in divisions:
             for clinician in div.clinicians:
-                for block_num in range(1, NUM_BLOCKS + 1):
+                for block_num in range(1, self.num_blocks + 1):
                     week_num = block_num * BLOCK_SIZE - 1
 
                     block_var = clinician.get_block_vars(
@@ -510,7 +515,7 @@ class Scheduler:
         the LP program solution.
         """
         for div in self.divisions.values():
-            for block_num in range(1, NUM_BLOCKS + 1):
+            for block_num in range(1, self.num_blocks + 1):
                 assignments = list(filter(lambda x: x.get_value(
                 ) == 1.0, div.get_vars_by_block_num(block_num)))
                 div.assignments.extend(
