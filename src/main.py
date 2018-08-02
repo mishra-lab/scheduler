@@ -84,11 +84,12 @@ def write_to_excel(scheduler, year):
 
 
 def generate_schedule(args):
+    global NUM_BLOCKS
     if args.blocks: NUM_BLOCKS = args.blocks
 
     sched = scheduler.Scheduler(args.config, NUM_BLOCKS)
-    events = []
-    long_weekends = []
+    requests_off = []
+    long_weekends = set()
 
     if args.calendar:
         print("Retrieving {} calendar events from {}...".format(args.year, args.calendar))
@@ -97,11 +98,27 @@ def generate_schedule(args):
         end_date = start_date + timedelta(weeks=52)
         events = api.get_events(
             start_date.isoformat() + 'Z', end_date.isoformat() + 'Z')
-        # TODO: read long weekends from api
+
+        requests_off = list(filter(lambda x: '[request] ' in x['summary'], events))
+        # populate long weekends
+        lw_events = list(filter(lambda x: '[holiday] ' in x['summary'], events))
+        for evt in lw_events:
+            start = datetime.strptime(
+                evt['start'].get('date'),
+                '%Y-%m-%d'
+            )
+
+            # Fri statutory holidays are associated with their regular weeknum
+            # Mon statutory holidays are associated with their weeknum - 1
+            #   (i.e.: the previous weeknum)
+            if start.isoweekday() == 1:
+                long_weekends.add(start.isocalendar()[1] - 1)
+            elif start.isoweekday() == 5:
+                long_weekends.add(start.isocalendar()[1])
 
     print("Populating scheduler...")
-    sched.set_timeoff(events)
-    sched.set_long_weekends(long_weekends)
+    sched.set_timeoff(requests_off)
+    sched.set_long_weekends(list(long_weekends))
     sched.build_lp()
     if sched.solve_lp():
         print("Found a feasible schedule!")
@@ -123,7 +140,7 @@ def clear_schedule(args):
 
     print("Clearing previously generated {} schedule from {}...".format(args.year, args.calendar))
     api.delete_events(start_date.isoformat() + 'Z',
-                      end_date.isoformat() + 'Z', search_str="[scheduler]")
+                      end_date.isoformat() + 'Z', search_str='[scheduler] ')
 
 if __name__ == '__main__':
     import argparse

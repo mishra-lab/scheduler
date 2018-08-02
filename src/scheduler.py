@@ -271,16 +271,19 @@ class Scheduler:
         for event in events:
             start = datetime.strptime(
                 event['start'].get('date'),
-                '%Y-%m-%d')
+                '%Y-%m-%d'
+            )
             end = datetime.strptime(
                 event['end'].get('date'),
-                '%Y-%m-%d')
-            creator = event['creator'].get('displayName')
+                '%Y-%m-%d'
+            )
+            # creator = event['creator'].get('displayName')
+            creator = event['summary'].replace('[request] ', '')
 
             if creator in self.clinicians:
                 clinician = self.clinicians[creator]
-                # figure out if this time-off request covers a week
-                # if not, we can safely ignore it
+                # figure out whether this timeoff request intersects a 
+                # week or a weekend
                 weeks = []
                 weekends = []
                 curr = start
