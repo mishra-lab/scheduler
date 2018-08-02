@@ -24,7 +24,7 @@ def publish_sched(sched, api, year):
                         BLOCK_SIZE * (block_num + 1) - (j - 1)),
                     '%G/%V/%u/%H:%M/')
                 week_end = week_start + timedelta(hours=WEEK_HOURS)
-                summary = '{} - DIV:{} on call'.format(
+                summary = '[scheduler] {} - DIV:{} on call'.format(
                     clinician.name, division.name)
                 api.create_event(
                     week_start.isoformat(),
@@ -41,7 +41,7 @@ def publish_sched(sched, api, year):
                     week_num),
                 '%G/%V/%u/%H:%M/')
             weekend_end = weekend_start + timedelta(hours=WEEKEND_HOURS)
-            summary = '{} - on call'.format(clinician.name)
+            summary = '[scheduler] {} - on call'.format(clinician.name)
             api.create_event(
                 weekend_start.isoformat(),
                 weekend_end.isoformat(),
@@ -83,15 +83,17 @@ def write_to_excel(scheduler, year):
     wb.save('{}-schedule.xlsx'.format(year))
 
 
-def main(config_path, year, calendar_id=None, publish=False, args=None):
-    sched = scheduler.Scheduler(config_path, NUM_BLOCKS)
+def generate_schedule(args):
+    if args.blocks: NUM_BLOCKS = args.blocks
+
+    sched = scheduler.Scheduler(args.config, NUM_BLOCKS)
     events = []
     long_weekends = []
 
-    if calendar_id:
-        print("Retrieving {} calendar events from {}...".format(year, calendar_id))
-        api = scheduler.API(calendar_id, args)
-        start_date = datetime(year, 1, 1)
+    if args.calendar:
+        print("Retrieving {} calendar events from {}...".format(args.year, args.calendar))
+        api = scheduler.API(args.calendar, args)
+        start_date = datetime(args.year, 1, 1)
         end_date = start_date + timedelta(weeks=52)
         events = api.get_events(
             start_date.isoformat() + 'Z', end_date.isoformat() + 'Z')
@@ -104,28 +106,45 @@ def main(config_path, year, calendar_id=None, publish=False, args=None):
     if sched.solve_lp():
         print("Found a feasible schedule!")
         sched.assign_schedule()
-        write_to_excel(sched, year)
+        write_to_excel(sched, args.year)
 
-        if publish:
-            print("Publishing {} schedule to {}...".format(year, calendar_id))
-            publish_sched(sched, api, year)
+        if args.publish:
+            print("Publishing {} schedule to {}...".format(args.year, args.calendar))
+            publish_sched(sched, api, args.year)
     else:
         print("ERROR: Could not find a feasible schedule.")
         print("Try adjusting min/max values for clinicians.")
 
 
+def clear_schedule(args):
+    api = scheduler.API(args.calendar, args)
+    start_date = datetime(args.year, 1, 1)
+    end_date = start_date + timedelta(weeks=52)
+
+    print("Clearing previously generated {} schedule from {}...".format(args.year, args.calendar))
+    api.delete_events(start_date.isoformat() + 'Z',
+                      end_date.isoformat() + 'Z', search_str="[scheduler]")
+
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(parents=[tools.argparser])
-    parser.add_argument('config')
-    parser.add_argument('year', type=int)
-    parser.add_argument('--calendar', type=str, default=None)
-    parser.add_argument('--publish', action='store_true', default=False)
-    parser.add_argument('--blocks', type=int)
+    subparsers = parser.add_subparsers()
+
+    parser_gen = subparsers.add_parser('generate', help='generate a schedule')
+    parser_gen.add_argument('config')
+    parser_gen.add_argument('year', type=int)
+    parser_gen.add_argument('--calendar', type=str, default=None)
+    parser_gen.add_argument('--publish', action='store_true', default=False)
+    parser_gen.add_argument('--blocks', type=int)
+    parser_gen.set_defaults(func=generate_schedule)
+
+    parser_clear = subparsers.add_parser('clear', help='clear generated schedule')
+    parser_clear.add_argument('calendar', type=str)
+    parser_clear.add_argument('year', type=int)
+    parser_clear.set_defaults(func=clear_schedule)
+
     args = parser.parse_args()
 
-    if args.blocks: NUM_BLOCKS = args.blocks
-
     start_time = time.clock()
-    main(args.config, args.year, args.calendar, args.publish, args)
+    args.func(args)
     print('time = {} seconds'.format(time.clock() - start_time))

@@ -577,7 +577,7 @@ class API:
             calendarId=self.calendar_id).execute()
         return result.get('timeZone')
 
-    def get_events(self, start, end, max_res=1000):
+    def get_events(self, start, end, search_str='', max_res=1000):
         """
         Returns a list of at most `max_res` events with dates between 
         start and end.
@@ -591,7 +591,8 @@ class API:
             singleEvents=True,
             orderBy='startTime').execute()
 
-        return result.get('items', [])
+        events = result.get('items', [])
+        return list(filter(lambda x, s=search_str: s in x['summary'], events))
 
     def create_event(self, start, end, attendees, summary):
         """
@@ -618,3 +619,17 @@ class API:
             calendarId=self.calendar_id,
             body=event
         ).execute()
+
+    def delete_event(self, event_id):
+        # pylint: disable=maybe-no-member
+        self._service.events().delete(
+            calendarId=self.calendar_id,
+            eventId=event_id
+        ).execute()
+
+    def delete_events(self, start, end, search_str=''):
+        events = self.get_events(start, end, search_str)
+
+        for event in events:
+            id_ = event['id']
+            self.delete_event(id_)
