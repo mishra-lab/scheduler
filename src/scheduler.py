@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 
 from googleapiclient.discovery import build
 from httplib2 import Http
-from oauth2client import client, file, tools
+from oauth2client import file as oauth_file, client, tools
 from pulp import *
 
 from constants import *
@@ -215,6 +215,19 @@ class Scheduler:
         self.long_weekends = []
         self.problem = LpProblem('scheduler', sense=LpMaximize)
         self.read_config()
+        self.setup_solver()
+
+    def setup_solver(self):
+        import sys
+        if getattr(sys, 'frozen', False):
+            # running in a bundle
+            cwd = os.getcwd()
+            exe = 'cbc-2.9.9-x86\\bin\\cbc.exe'
+            solverdir = os.path.join(cwd, exe)
+            self.solver = COIN_CMD(path=solverdir)
+        else:
+            # running from source
+            self.solver = LpSolverDefault
 
     def read_config(self):
         """
@@ -489,7 +502,7 @@ class Scheduler:
         """
         Solves LP program and prints information regarding solution.
         """
-        ret = self.problem.solve() == LpStatusOptimal
+        ret = self.problem.solve(self.solver) == LpStatusOptimal
         print('objective value = {}'.format(value(self.problem.objective)))
         print('conflicts per doc:')
         for clinician in self.clinicians.values():
@@ -529,18 +542,31 @@ class API:
     """
     SCOPE = 'https://www.googleapis.com/auth/calendar'
 
-    def __init__(self, calendar_id):
-        self._store = file.Storage('credentials.json')
-        self._creds = self._store.get()
-        if not self._creds or self._creds.invalid:
-            self._flow = client.flow_from_clientsecrets(
-                './client_secret.json', API.SCOPE)
-            self._creds = tools.run_flow(self._flow, self._store)
-        self._service = build(
-            'calendar', 'v3', http=self._creds.authorize(Http()))
+    def __init__(self, calendar_id, flags):
+        # retrieve credentials / create new
+        store = oauth_file.Storage('token.json')
+        creds = store.get()
+        if not creds or creds.invalid:
+            flow = client.flow_from_clientsecrets(
+                self.get_client_secret(), API.SCOPE)
+            creds = tools.run_flow(flow, store, flags)
 
+        # discover calendar API
+        self._service = build(
+            'calendar', 'v3', http=creds.authorize(Http()))
         self.calendar_id = calendar_id
         self.time_zone = self.get_timezone()
+
+    def get_client_secret(self):
+        import sys
+        if getattr(sys, 'frozen', False):
+            # running in a bundle
+            cwd = os.getcwd()
+            file = 'credentials.json'
+            return os.path.join(cwd, file)
+        else:
+            # running from source
+            return 'credentials.json'
 
     def get_timezone(self):
         """

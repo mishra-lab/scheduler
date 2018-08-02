@@ -6,6 +6,7 @@ from openpyxl import Workbook
 
 import scheduler
 from constants import *
+from oauth2client import tools
 
 
 def publish_sched(sched, api, year):
@@ -82,14 +83,14 @@ def write_to_excel(scheduler, year):
     wb.save('{}-schedule.xlsx'.format(year))
 
 
-def main(config_path, year, calendar_id=None, publish=False):
+def main(config_path, year, calendar_id=None, publish=False, args=None):
     sched = scheduler.Scheduler(config_path, NUM_BLOCKS)
     events = []
     long_weekends = []
 
     if calendar_id:
         print("Retrieving {} calendar events from {}...".format(year, calendar_id))
-        api = scheduler.API(calendar_id)
+        api = scheduler.API(calendar_id, args)
         start_date = datetime(year, 1, 1)
         end_date = start_date + timedelta(weeks=52)
         events = api.get_events(
@@ -115,7 +116,7 @@ def main(config_path, year, calendar_id=None, publish=False):
 
 if __name__ == '__main__':
     import argparse
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(parents=[tools.argparser])
     parser.add_argument('config')
     parser.add_argument('year', type=int)
     parser.add_argument('--calendar', type=str, default=None)
@@ -126,5 +127,5 @@ if __name__ == '__main__':
     if args.blocks: NUM_BLOCKS = args.blocks
 
     start_time = time.clock()
-    main(args.config, args.year, args.calendar, args.publish)
+    main(args.config, args.year, args.calendar, args.publish, args)
     print('time = {} seconds'.format(time.clock() - start_time))
