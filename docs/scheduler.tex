@@ -1,0 +1,133 @@
+\documentclass[]{article}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{hyperref}
+
+\newcommand{\mc}{\mathcal}
+\newcommand{\bb}{\mathbb}
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+
+%opening
+\title{Application of Network Flow and Linear Programming to Scheduling of Clinicians}
+\author{David Landsman}
+
+\begin{document}
+\maketitle
+
+\section{Problem} \label{problem}
+A group of clinicians are working on-call at a clinic each day of the year, including weekends and holidays, at multiple divisions. When a clinician is assigned to work during the week, they work from 8 A.M. on Monday to 5 P.M. on Friday. During weekends, a clinician works the complement period of time, that is, Friday 5 P.M. to Monday 8 A.M. Each clinician can request not to work certain weeks and weekends of the year. We refer to this as the clinician's \textit{time-off}.
+
+\subsection{Constraints} \label{constraints}
+We formalize the constraints of the problem to be able to describe them mathematically later on.
+	\begin{enumerate}
+		\item Each division needs to have one and only one clinician that covers a every block
+		\item Every weekend needs to have one and only one clinician that covers it
+		\item For each division, each clinician can only work between the minimum and maximum number of weeks they are allowed (note: these may be different for different divisions)
+		\item Each clinician should work a given number of long weekends. Roughly, this is the number of long weekends divided by the number of clinicians
+		\item A clinician cannot work two consecutive blocks (either in the same division, or in different divisions)
+		\item A clinician cannot work two consecutive weekends
+	\end{enumerate}
+
+\subsection{Objectives} \label{objectives}
+Since it is not always possible to accommodate all time-off requests from all clinicians, we decided to use this metric as an objective instead of a constraint. 
+	\begin{enumerate}
+		\item Minimize the number of blocks assigned to a clinician that they requested as time-off
+		\item Minimize the number of weekends assigned to a clinician that they requested as time-off
+		\item Maximize the adjacency between blocks and weekends assigned for a given clinician. In particular, if a clinician is assigned to work a given block in a given division, we will prefer it if the clinician also works in the weekend between the weeks of the block.
+	\end{enumerate}	
+
+\section{Linear Programming Formulation}
+The problem described in \ref{problem} corresponds to an Assignment Problem between clinicians and blocks/weekends. Such a problem can be presented as an Integer Linear Program (ILP).  \\ \\
+We begin by defining the sets, constants, and indices that will be used in this formulation.
+	\begin{align*}
+		\mc{D}\coloneqq &\text{ the set of all divisions, indexed by } i \\
+		\mc{C}\coloneqq &\text{ the set of all clinicians, indexed by } j \\
+		\mc{B}\coloneqq &\text{ the set of all blocks, indexed by } k \\
+		\mc{W}\coloneqq &\text{ the set of all weekends, indexed by } l \\
+		\mc{W} \supset \mc{L}\coloneqq &\text{ the set of all long weekends} \\
+		\mc{B} \supset \mc{S}_j\coloneqq &\text{ the set of blocks clinician } j \text{ requested off} \\
+		\mc{W} \supset \mc{T}_j\coloneqq &\text{ the set of weekends clinician } j \text{ requested off} \\
+		m^i_j \coloneqq &\text{ the minimum number of blocks clinician } j \text{ should work in division } i \\
+		M^i_j \coloneqq &\text{ the maximum number of blocks clinician } j \text{ should work in division } i
+	\end{align*}
+We also define the set of 0-1 variables $X^i_{j,k}$ and $Y_{j,l}$ that we will solve for in the ILP.
+	\begin{alignat}{2}
+		&X^i_{j,k} \in \{0, 1\}: &&\text{ clinician } j \text{ covers block } k \text{ for division } i \\
+		&Y_{j, l} \in \{0, 1\}: &&\text{ clinician } j \text{ covers weekend } l
+	\end{alignat}
+Now we can write the constraints in \ref{constraints} mathematically.
+	\begin{enumerate}
+		\item 
+			\begin{equation}
+				\sum_j X^i_{j, k} = 1 \text{ for each } i, k
+			\end{equation}
+		\item
+			\begin{equation}
+				\sum_j Y_{j, l} = 1 \text{ for each } l
+			\end{equation}
+		\item 
+			\begin{equation}
+				m^i_j \leq \sum_{k} X^i_{j, k} \leq M^i_j \text{ for each } i, j
+			\end{equation}
+		\item
+			\begin{equation}
+				\floor*{\frac{|\mc{L}|}{|\mc{C}|}} \leq \sum_{l \in \mc{L}} Y_{j, l} \leq \ceil*{\frac{|\mc{L}|}{|\mc{C}|}}
+			\end{equation}
+		\item
+			\begin{equation}
+				\sum_i \left(X^i_{j, k} + X^i_{j, k+1}\right) \leq 1 \text{ for each } j,k \text{ where } k \leq |\mc{B}| - 1
+			\end{equation}
+		\item
+			\begin{equation}
+				Y_{j, l} + Y_{j, l+1} \leq 1 \text{ for each } j, l \text{ where } l \leq |\mc{W}| - 1
+			\end{equation}
+	\end{enumerate}
+Note that in ILP we can only have a single objective function. Since we have multiple objectives in \ref{objectives}, we will need to combine them in an appropriate manner. Assuming each objective can be summarized as a linear function of the variables defined above, say $Obj_n\left(X^i_{j, k}, Y_{j, l}\right)$, $1 \leq n \leq N$, then we shall define the overall objective function as a linear combination of $Obj_n$'s:
+	\begin{equation}
+		Obj\left(X^i_{j, k}, Y_{j, l}\right) \coloneqq \frac{Obj_1 + \ldots + Obj_N}{N} 
+	\end{equation}
+This ensures that all objectives have an equal weight of $\frac{1}{N}$. It is also necessary to choose whether we minimize or maximize $Obj$, so we will need to convert the minimization objectives. In particular, we can define the following objectives:
+	\begin{enumerate}
+		\item We will maximize the number of blocks assigned to a clinician that are \textit{not} requested for time-off:
+			\begin{equation}
+				Obj_1\left(X^i_{j, k}, Y_{j, l}\right) \coloneqq \sum_i \sum_j \sum_k
+					\begin{cases}
+					X^i_{j, k} &\text{ if } k \in \mc{S}_j \\
+					-X^i_{j, k} &\text{ otherwise }
+					\end{cases}
+			\end{equation}
+		\item We will maximize the number of weekends assigned to a clinician that are \textit{not} requested for time-off
+			\begin{equation}
+				Obj_2\left(X^i_{j, k}, Y_{j, l}\right) \coloneqq \sum_j \sum_l 
+					\begin{cases}
+					Y_{j, l} &\text{ if } l \in \mc{T}_j \\
+					-Y_{j, l} &\text{ otherwise }
+					\end{cases}
+			\end{equation}
+		\item We want to maximize the number of adjacent blocks and weekends. Since our variables are 0-1, we can accomplish this by maximizing the product of $X^i_{j, k} \cdot Y_{j, l}$ where $k$ and $l$ are adjacent. When both variables are assigned a value of 1, they contribute a single unit to the objective. Otherwise, they contribute nothing. \\
+		However, this objective is \textit{not} linear. To make it linear, we introduce a set of helper variables:
+			\begin{equation}
+				Z^i_{j, k} \in \{0, 1\}: \text{represents the product }X^i_{j, k} \cdot Y_{j, 2k+1}
+			\end{equation}
+		with constraints:
+			\begin{align}
+				Z^i_{j, k} &\leq X^i_{j, k} \\
+				Z^i_{j, k} &\leq Y_{j, 2k+1} \text{ for each } i
+			\end{align}
+		This gives us the third objective:
+			\begin{equation}
+				Obj_3\left(Z^i_{j, k}\right) \coloneqq \sum_i \sum_j \sum_k Z^i_{j, k}
+			\end{equation}
+	\end{enumerate}
+	Putting all the components above together, we get a linear program defined as:
+		\begin{equation}
+			\begin{split}
+			&\text{maximize } \frac{Obj_1 + Obj_2 + Obj_3}{3} \\
+			&\text{subject to } (3)\text{-}(8)
+			\end{split}
+		\end{equation}
+\end{document}
