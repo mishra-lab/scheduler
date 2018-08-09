@@ -20,7 +20,6 @@ To package the program into executables, we make use of [PyInstaller](http://www
 ```sh
 > git clone git@github.com:c-uhs/scheduler.git
 > cd scheduler
-> git checkout lp-blocks        # currently, the main branch of the code
 > cd scripts\
 > sh make_exe32.sh              # this will create a folder called `dist_32` under scheduler with 2 exe files
 ```
@@ -29,7 +28,6 @@ To package the program into executables, we make use of [PyInstaller](http://www
 ```sh
 > git clone git@github.com:c-uhs/scheduler.git
 > cd scheduler
-> git checkout lp-blocks        # currently, the main branch of the code
 > cd scripts\
 > sh make_exe64.sh              # this will create a folder called `dist_64` under scheduler with 2 exe files
 ```
