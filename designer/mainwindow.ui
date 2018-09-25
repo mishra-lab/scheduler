@@ -75,7 +75,7 @@
   </action>
   <action name="actionNew_Clinician">
    <property name="text">
-    <string>New Clinician</string>
+    <string>New/Edit Clinician</string>
    </property>
    <property name="toolTip">
     <string>Add a new clinician to the configuration file...</string>

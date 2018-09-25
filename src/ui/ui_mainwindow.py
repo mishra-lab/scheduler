@@ -54,6 +54,6 @@ class Ui_MainWindow(object):
         self.actionNew.setToolTip(_translate("MainWindow", "Create new configuration file..."))
         self.actionSave.setText(_translate("MainWindow", "Save"))
         self.actionSave.setToolTip(_translate("MainWindow", "Save changes to configuration file..."))
-        self.actionNew_Clinician.setText(_translate("MainWindow", "New Clinician"))
+        self.actionNew_Clinician.setText(_translate("MainWindow", "New/Edit Clinician"))
         self.actionNew_Clinician.setToolTip(_translate("MainWindow", "Add a new clinician to the configuration file..."))
 
