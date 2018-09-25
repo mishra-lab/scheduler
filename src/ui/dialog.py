@@ -66,10 +66,13 @@ class DialogWindow(QDialog, Ui_Dialog):
         self.data['CLINICIANS'][clinName] = dict()
         self.data['CLINICIANS'][clinName]['email'] = clinEmail
 
-        for i in range(1, self.divisionTable.rowCount()):
-            divName = self.divisionTable.item(i, 0).data()
-            divMin = self.divisionTable.item(i, 1).data()
-            divMax = self.divisionTable.item(i, 2).data()
+        for i in range(self.divisionTable.rowCount()):
+            divName = self.divisionTable.item(i, 0).text()
+            divMin = self.divisionTable.item(i, 1).text()
+            divMax = self.divisionTable.item(i, 2).text()
+
+            if divName not in self.data['DIVISIONS']:
+                self.data['DIVISIONS'][divName] = dict()
 
             self.data['DIVISIONS'][divName][clinName] = dict()
             self.data['DIVISIONS'][divName][clinName]['min'] = divMin
