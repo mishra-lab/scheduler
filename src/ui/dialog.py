@@ -25,7 +25,7 @@ class DialogWindow(QDialog, Ui_Dialog):
             2,
             self.maxDelegate)
 
-        # setup triggers
+        # setup connects
         self.actionAddDivision.triggered.connect(self.addDivision)
         self.actionRemoveDivision.triggered.connect(self.removeDivision)
 
@@ -47,3 +47,33 @@ class DialogWindow(QDialog, Ui_Dialog):
         rowIdx = self.divisionTable.currentRow()
         if rowIdx >= 0:
             self.divisionTable.removeRow(rowIdx)
+
+    def checkInput(self):
+        if not self.nameLineEdit.text():
+            QMessageBox.critical(self, "Input Error", "Missing clinician name!")
+            return False
+
+        return True
+
+    def accept(self):
+        # validate data
+        if not self.checkInput():
+            return
+
+        # create new clinician in self.data
+        clinName = self.nameLineEdit.text()
+        clinEmail = self.emailLineEdit.text()
+        self.data['CLINICIANS'][clinName] = dict()
+        self.data['CLINICIANS'][clinName]['email'] = clinEmail
+
+        for i in range(1, self.divisionTable.rowCount()):
+            divName = self.divisionTable.item(i, 0).data()
+            divMin = self.divisionTable.item(i, 1).data()
+            divMax = self.divisionTable.item(i, 2).data()
+
+            self.data['DIVISIONS'][divName][clinName] = dict()
+            self.data['DIVISIONS'][divName][clinName]['min'] = divMin
+            self.data['DIVISIONS'][divName][clinName]['max'] = divMax
+
+        QDialog.accept(self)
+

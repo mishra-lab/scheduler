@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'mainwindow.ui'
+# Form implementation generated from reading ui file '..\designer\mainwindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.2
 #
@@ -29,13 +29,13 @@ class Ui_MainWindow(object):
         MainWindow.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar)
         self.actionOpen = QtWidgets.QAction(MainWindow)
         self.actionOpen.setObjectName("actionOpen")
-        self.actionCreate = QtWidgets.QAction(MainWindow)
-        self.actionCreate.setObjectName("actionCreate")
+        self.actionNew = QtWidgets.QAction(MainWindow)
+        self.actionNew.setObjectName("actionNew")
         self.actionSave = QtWidgets.QAction(MainWindow)
         self.actionSave.setObjectName("actionSave")
         self.actionNew_Clinician = QtWidgets.QAction(MainWindow)
         self.actionNew_Clinician.setObjectName("actionNew_Clinician")
-        self.toolBar.addAction(self.actionCreate)
+        self.toolBar.addAction(self.actionNew)
         self.toolBar.addAction(self.actionOpen)
         self.toolBar.addAction(self.actionSave)
         self.toolBar.addSeparator()
@@ -50,8 +50,8 @@ class Ui_MainWindow(object):
         self.toolBar.setWindowTitle(_translate("MainWindow", "toolBar"))
         self.actionOpen.setText(_translate("MainWindow", "Open"))
         self.actionOpen.setToolTip(_translate("MainWindow", "Open configuration file..."))
-        self.actionCreate.setText(_translate("MainWindow", "Create"))
-        self.actionCreate.setToolTip(_translate("MainWindow", "Create new configuration file..."))
+        self.actionNew.setText(_translate("MainWindow", "New"))
+        self.actionNew.setToolTip(_translate("MainWindow", "Create new configuration file..."))
         self.actionSave.setText(_translate("MainWindow", "Save"))
         self.actionSave.setToolTip(_translate("MainWindow", "Save changes to configuration file..."))
         self.actionNew_Clinician.setText(_translate("MainWindow", "New Clinician"))

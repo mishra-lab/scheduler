@@ -23,6 +23,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.actionOpen.triggered.connect(self.open)
         self.actionSave.triggered.connect(self.save)
+        self.actionNew.triggered.connect(self.new)
         self.actionNew_Clinician.triggered.connect(self.createNewClinician)
 
         # self.path = ''
@@ -39,9 +40,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             try:
                 with open(path, 'r') as f:
                     self.data = json.load(f)
-                    self.model.clear()
-                    self.convertDictToTree(self.model.rootItem, self.data)
-                    self.treeView.reset()
+                    self.syncTreeView()
 
             except Exception as ex:
                 QMessageBox.information(self, "Unable to open file", str(ex))
@@ -61,10 +60,32 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             except Exception as ex:
                 QMessageBox.information(self, "Unable to save file", str(ex))
 
+    def new(self):
+        # clear data
+        self.data = {}
+        self.data['CLINICIANS'] = dict()
+        self.data['DIVISIONS'] = dict()
+        
+        # build treeview
+        self.syncTreeView()
+
     def createNewClinician(self):
+        if len(self.data.keys()) < 2:
+            QMessageBox.critical(self, "Configuration not loaded",
+                              "Please open a configuration file or create a new one.")
+            return
+
         dialog = DialogWindow()
         dialog.setData(self.data)
         dialog.exec_()
+
+        # reset treeview
+        self.syncTreeView()
+
+    def syncTreeView(self):
+        self.model.clear()
+        self.convertDictToTree(self.model.rootItem, self.data)
+        self.treeView.reset()
 
     def convertDictToTree(self, root, data):
         for key in data:
