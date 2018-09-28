@@ -37,12 +37,15 @@ class Ui_MainWindow(object):
         self.actionNew_Clinician.setObjectName("actionNew_Clinician")
         self.actionEdit_Clinician = QtWidgets.QAction(MainWindow)
         self.actionEdit_Clinician.setObjectName("actionEdit_Clinician")
+        self.actionDelete_Clinician = QtWidgets.QAction(MainWindow)
+        self.actionDelete_Clinician.setObjectName("actionDelete_Clinician")
         self.toolBar.addAction(self.actionNew)
         self.toolBar.addAction(self.actionOpen)
         self.toolBar.addAction(self.actionSave)
         self.toolBar.addSeparator()
         self.toolBar.addAction(self.actionNew_Clinician)
         self.toolBar.addAction(self.actionEdit_Clinician)
+        self.toolBar.addAction(self.actionDelete_Clinician)
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -61,4 +64,6 @@ class Ui_MainWindow(object):
         self.actionNew_Clinician.setToolTip(_translate("MainWindow", "Add a new clinician to the configuration file..."))
         self.actionEdit_Clinician.setText(_translate("MainWindow", "Edit Clinician"))
         self.actionEdit_Clinician.setToolTip(_translate("MainWindow", "Edit the selected clinician"))
+        self.actionDelete_Clinician.setText(_translate("MainWindow", "Delete Clinician"))
+        self.actionDelete_Clinician.setToolTip(_translate("MainWindow", "Delete the selected clinician"))
 

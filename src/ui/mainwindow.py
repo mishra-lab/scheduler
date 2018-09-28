@@ -26,6 +26,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.actionNew.triggered.connect(self.new)
         self.actionNew_Clinician.triggered.connect(self.createNewClinician)
         self.actionEdit_Clinician.triggered.connect(self.editClinician)
+        self.actionDelete_Clinician.triggered.connect(self.deleteClinician)
 
         # self.path = ''
         self.data = {}
@@ -77,16 +78,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.syncTreeView()
 
     def editClinician(self):
-        idxes = self.treeView.selectedIndexes()
-        if len(idxes) > 0:
-            # find clinician associated with selected index
-            selectedItem = idxes[0].internalPointer()
-            parent = selectedItem.parentItem
-
-            while parent.parentItem is not None:
-                selectedItem = parent
-                parent = selectedItem.parentItem
-
+        selectedItem = self.getSelectedClinician()
+        if selectedItem:
             clinData = {}
             self.convertTreeToDict(selectedItem, clinData)
             clinData["name"] = selectedItem.itemData[0]
@@ -99,10 +92,39 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
             self.syncTreeView()
 
+    def deleteClinician(self):
+        selectedItem = self.getSelectedClinician()
+        if selectedItem:
+            clinName = selectedItem.itemData[0]
+            reply = QMessageBox.question(
+                self, 
+                "Delete Warning", 
+                "This action will delete the current data stored for {}. Are you sure you want to continue?".format(
+                    clinName)
+                , QMessageBox.Yes | QMessageBox.No)
+            if reply == QMessageBox.No: return
+
+            del self.data[clinName]
+            self.syncTreeView()
+
     def syncTreeView(self):
         self.model.clear()
         self.convertDictToTree(self.model.rootItem, self.data)
         self.treeView.reset()
+
+    def getSelectedClinician(self):
+        idxes = self.treeView.selectedIndexes()
+        if len(idxes) > 0:
+            # find clinician associated with selected index
+            selectedItem = idxes[0].internalPointer()
+            parent = selectedItem.parentItem
+
+            while parent.parentItem is not None:
+                selectedItem = parent
+                parent = selectedItem.parentItem
+
+            return selectedItem
+        return None
 
     def convertDictToTree(self, root, data):
         for key in data:

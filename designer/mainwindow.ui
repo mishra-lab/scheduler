@@ -49,6 +49,7 @@
    <addaction name="separator"/>
    <addaction name="actionNew_Clinician"/>
    <addaction name="actionEdit_Clinician"/>
+   <addaction name="actionDelete_Clinician"/>
   </widget>
   <action name="actionOpen">
    <property name="text">
@@ -88,6 +89,14 @@
    </property>
    <property name="toolTip">
     <string>Edit the selected clinician</string>
+   </property>
+  </action>
+  <action name="actionDelete_Clinician">
+   <property name="text">
+    <string>Delete Clinician</string>
+   </property>
+   <property name="toolTip">
+    <string>Delete the selected clinician</string>
    </property>
   </action>
  </widget>
