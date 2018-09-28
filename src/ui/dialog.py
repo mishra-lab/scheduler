@@ -62,21 +62,36 @@ class DialogWindow(QDialog, Ui_Dialog):
 
         # create new clinician in self.data
         clinName = self.nameLineEdit.text()
-        clinEmail = self.emailLineEdit.text()
-        self.data['CLINICIANS'][clinName] = dict()
-        self.data['CLINICIANS'][clinName]['email'] = clinEmail
+        clinician = dict()
 
+        if clinName in self.data:
+            # warn user that data will be overwritten for that clinician
+            reply = QMessageBox.question(
+                self, 
+                "Overwrite Warning", 
+                "This action will overwrite the current data stored for {}. Are you sure you want to continue?".format(
+                    clinName)
+                , QMessageBox.Yes | QMessageBox.No)
+
+            if reply == QMessageBox.No: return
+
+        # assume no data exists about current clinician
+        clinEmail = self.emailLineEdit.text()
+        clinician['email'] = clinEmail
+        clinician['divisions'] = dict()
+        
         for i in range(self.divisionTable.rowCount()):
+            division = dict()
+
+            # extract data
             divName = self.divisionTable.item(i, 0).text()
             divMin = self.divisionTable.item(i, 1).text()
             divMax = self.divisionTable.item(i, 2).text()
 
-            if divName not in self.data['DIVISIONS']:
-                self.data['DIVISIONS'][divName] = dict()
+            division['min'] = divMin
+            division['max'] = divMax
+            clinician['divisions'][divName] = division
 
-            self.data['DIVISIONS'][divName][clinName] = dict()
-            self.data['DIVISIONS'][divName][clinName]['min'] = divMin
-            self.data['DIVISIONS'][divName][clinName]['max'] = divMax
-
+        self.data[clinName] = clinician
         QDialog.accept(self)
 

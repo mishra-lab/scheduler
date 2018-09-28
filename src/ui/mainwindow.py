@@ -63,18 +63,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def new(self):
         # clear data
         self.data = {}
-        self.data['CLINICIANS'] = dict()
-        self.data['DIVISIONS'] = dict()
         
         # build treeview
         self.syncTreeView()
 
     def createNewClinician(self):
-        if len(self.data.keys()) < 2:
-            QMessageBox.critical(self, "Configuration not loaded",
-                              "Please open a configuration file or create a new one.")
-            return
-
         dialog = DialogWindow()
         dialog.setData(self.data)
         dialog.exec_()
