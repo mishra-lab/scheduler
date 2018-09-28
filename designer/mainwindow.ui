@@ -34,7 +34,7 @@
            </sizepolicy>
           </property>
           <property name="title">
-           <string>GroupBox</string>
+           <string>Actions</string>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout">
            <item>
