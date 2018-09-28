@@ -33,8 +33,21 @@ class DialogWindow(QDialog, Ui_Dialog):
         self.addButton.setDefaultAction(self.actionAddDivision)
         self.removeButton.setDefaultAction(self.actionRemoveDivision)
 
-    def setData(self, data):
-        self.data = data
+    def setClinicianDictionary(self, clinDict):
+        self.clinDict = clinDict
+
+    def setClinician(self, data):
+        self.nameLineEdit.setText(data['name'])
+        self.emailLineEdit.setText(data['email'])
+        
+        for divName in data['divisions']:
+            rowCount = self.divisionTable.rowCount()
+            self.divisionTable.insertRow(rowCount)
+
+            divObject = data['divisions'][divName]
+            self.divisionTable.setItem(rowCount, 0, QTableWidgetItem(divName))
+            self.divisionTable.setItem(rowCount, 1, QTableWidgetItem(str(divObject['min'])))
+            self.divisionTable.setItem(rowCount, 2, QTableWidgetItem(str(divObject['max'])))
 
     def addDivision(self):
         try:
@@ -64,7 +77,7 @@ class DialogWindow(QDialog, Ui_Dialog):
         clinName = self.nameLineEdit.text()
         clinician = dict()
 
-        if clinName in self.data:
+        if clinName in self.clinDict:
             # warn user that data will be overwritten for that clinician
             reply = QMessageBox.question(
                 self, 
@@ -92,6 +105,6 @@ class DialogWindow(QDialog, Ui_Dialog):
             division['max'] = divMax
             clinician['divisions'][divName] = division
 
-        self.data[clinName] = clinician
+        self.clinDict[clinName] = clinician
         QDialog.accept(self)
 

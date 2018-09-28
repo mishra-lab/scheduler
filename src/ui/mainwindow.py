@@ -25,6 +25,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.actionSave.triggered.connect(self.save)
         self.actionNew.triggered.connect(self.new)
         self.actionNew_Clinician.triggered.connect(self.createNewClinician)
+        self.actionEdit_Clinician.triggered.connect(self.editClinician)
 
         # self.path = ''
         self.data = {}
@@ -69,11 +70,34 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def createNewClinician(self):
         dialog = DialogWindow()
-        dialog.setData(self.data)
+        dialog.setClinicianDictionary(self.data)
         dialog.exec_()
 
         # reset treeview
         self.syncTreeView()
+
+    def editClinician(self):
+        idxes = self.treeView.selectedIndexes()
+        if len(idxes) > 0:
+            # find clinician associated with selected index
+            selectedItem = idxes[0].internalPointer()
+            parent = selectedItem.parentItem
+
+            while parent.parentItem is not None:
+                selectedItem = parent
+                parent = selectedItem.parentItem
+
+            clinData = {}
+            self.convertTreeToDict(selectedItem, clinData)
+            clinData["name"] = selectedItem.itemData[0]
+
+            # transfer clinData to edit dialog
+            dialog = DialogWindow()
+            dialog.setClinicianDictionary(self.data)
+            dialog.setClinician(clinData)
+            dialog.exec_()
+
+            self.syncTreeView()
 
     def syncTreeView(self):
         self.model.clear()

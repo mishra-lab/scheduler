@@ -48,6 +48,7 @@
    <addaction name="actionSave"/>
    <addaction name="separator"/>
    <addaction name="actionNew_Clinician"/>
+   <addaction name="actionEdit_Clinician"/>
   </widget>
   <action name="actionOpen">
    <property name="text">
@@ -75,10 +76,18 @@
   </action>
   <action name="actionNew_Clinician">
    <property name="text">
-    <string>New/Edit Clinician</string>
+    <string>New Clinician</string>
    </property>
    <property name="toolTip">
     <string>Add a new clinician to the configuration file...</string>
+   </property>
+  </action>
+  <action name="actionEdit_Clinician">
+   <property name="text">
+    <string>Edit Clinician</string>
+   </property>
+   <property name="toolTip">
+    <string>Edit the selected clinician</string>
    </property>
   </action>
  </widget>
