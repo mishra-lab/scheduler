@@ -236,32 +236,39 @@ class Scheduler:
         """
         with open(self.config_file, 'r') as f:
             data = json.load(f)
-            try:
-                for clinician in data["CLINICIANS"]:
-                    blocks_off, weekends_off = [], []
-                    if "blocks_off" in data["CLINICIANS"][clinician]:
-                        blocks_off = data["CLINICIANS"][clinician]["blocks_off"]
-                    if "weekends_off" in data["CLINICIANS"][clinician]:
-                        weekends_off = data["CLINICIANS"][clinician]["weekends_off"]
-                    self.clinicians[clinician] = \
-                        Clinician(
-                            name=clinician,
-                            email=data["CLINICIANS"][clinician]["email"],
-                            blocks_off=blocks_off,
-                            weekends_off=weekends_off)
 
-                for division in data["DIVISIONS"]:
-                    self.divisions[division] = Division(division)
-                    for clinician in data["DIVISIONS"][division]:
-                        self.divisions[division].add_clinician(
-                            clinician=self.clinicians[clinician],
-                            min_=data["DIVISIONS"][division][clinician]["min"],
-                            max_=data["DIVISIONS"][division][clinician]["max"],
-                        )
+            for clin_name in data:
+                clin_object = data[clin_name]
 
-            except KeyError as err:
-                print('Invalid config file: missing key {}'.format(str(err)))
-                raise err
+                # populate blocks/weekends off
+                blocks_off, weekends_off = [], []
+                if 'blocks_off' in clin_object:
+                    blocks_off = clin_object['blocks_off']
+                if 'weekends_off' in clin_object:
+                    blocks_off = clin_object['weekends_off']
+
+                clinician = Clinician(
+                    name=clin_name,
+                    email=clin_object['email'],
+                    blocks_off=blocks_off,
+                    weekends_off=weekends_off
+                )
+                # save to local dict
+                self.clinicians[clin_name] = clinician
+
+                # parse divisions
+                for div_name in clin_object['divisions']:
+                    div_object = clin_object['divisions'][div_name]
+                    # create division in local dict, if necessary
+                    if div_name not in self.divisions:
+                        self.divisions[div_name] = Division(div_name)
+                        
+                    # save to local dict
+                    self.divisions[div_name].add_clinician(
+                        clinician=clinician,
+                        min_=div_object['min'],
+                        max_=div_object['max']
+                    )
 
     def set_timeoff(self, events):
         """
