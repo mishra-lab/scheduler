@@ -152,9 +152,17 @@ class Ui_MainWindow(object):
         self.actionEdit_Clinician.setObjectName("actionEdit_Clinician")
         self.actionDelete_Clinician = QtWidgets.QAction(MainWindow)
         self.actionDelete_Clinician.setObjectName("actionDelete_Clinician")
+        self.actionGenerate_Schedule = QtWidgets.QAction(MainWindow)
+        self.actionGenerate_Schedule.setObjectName("actionGenerate_Schedule")
+        self.actionExport_Schedule = QtWidgets.QAction(MainWindow)
+        self.actionExport_Schedule.setObjectName("actionExport_Schedule")
+        self.actionPublish = QtWidgets.QAction(MainWindow)
+        self.actionPublish.setObjectName("actionPublish")
+        self.actionClear_Calendar = QtWidgets.QAction(MainWindow)
+        self.actionClear_Calendar.setObjectName("actionClear_Calendar")
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         self.newButton.clicked['bool'].connect(self.actionNew.trigger)
         self.openButton.clicked['bool'].connect(self.actionOpen.trigger)
         self.saveButton.clicked['bool'].connect(self.actionSave.trigger)
@@ -162,6 +170,10 @@ class Ui_MainWindow(object):
         self.editClinicianButton.clicked['bool'].connect(self.actionEdit_Clinician.trigger)
         self.deleteClinicianButton.clicked['bool'].connect(self.actionDelete_Clinician.trigger)
         self.loadButton.clicked['bool'].connect(self.actionOpen.trigger)
+        self.generateScheduleButton.clicked['bool'].connect(self.actionGenerate_Schedule.trigger)
+        self.exportScheduleButton.clicked['bool'].connect(self.actionExport_Schedule.trigger)
+        self.publishCalendarButton.clicked['bool'].connect(self.actionPublish.trigger)
+        self.clearCalendarButton.clicked['bool'].connect(self.actionClear_Calendar.trigger)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -212,4 +224,8 @@ class Ui_MainWindow(object):
         self.actionEdit_Clinician.setToolTip(_translate("MainWindow", "Edit the selected clinician"))
         self.actionDelete_Clinician.setText(_translate("MainWindow", "Delete Clinician"))
         self.actionDelete_Clinician.setToolTip(_translate("MainWindow", "Delete the selected clinician"))
+        self.actionGenerate_Schedule.setText(_translate("MainWindow", "Generate Schedule"))
+        self.actionExport_Schedule.setText(_translate("MainWindow", "Export Schedule"))
+        self.actionPublish.setText(_translate("MainWindow", "Publish"))
+        self.actionClear_Calendar.setText(_translate("MainWindow", "Clear Calendar"))
 

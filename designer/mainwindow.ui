@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="configurationTab">
        <attribute name="title">
@@ -337,6 +337,26 @@
     <string>Delete the selected clinician</string>
    </property>
   </action>
+  <action name="actionGenerate_Schedule">
+   <property name="text">
+    <string>Generate Schedule</string>
+   </property>
+  </action>
+  <action name="actionExport_Schedule">
+   <property name="text">
+    <string>Export Schedule</string>
+   </property>
+  </action>
+  <action name="actionPublish">
+   <property name="text">
+    <string>Publish</string>
+   </property>
+  </action>
+  <action name="actionClear_Calendar">
+   <property name="text">
+    <string>Clear Calendar</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections>
@@ -445,6 +465,70 @@
     <hint type="sourcelabel">
      <x>356</x>
      <y>92</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>generateScheduleButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>actionGenerate_Schedule</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>85</x>
+     <y>231</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>exportScheduleButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>actionExport_Schedule</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>189</x>
+     <y>231</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>publishCalendarButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>actionPublish</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>317</x>
+     <y>231</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>clearCalendarButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>actionClear_Calendar</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>421</x>
+     <y>231</y>
     </hint>
     <hint type="destinationlabel">
      <x>-1</x>
