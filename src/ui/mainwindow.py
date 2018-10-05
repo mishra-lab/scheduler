@@ -42,7 +42,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.actionDelete_Clinician.triggered.connect(self.deleteClinician)
 
     def setupSchedulerTab(self):
-        self.scheduler = scheduler.Scheduler(num_blocks=2)
+        self.scheduler = scheduler.Scheduler()
         # action setup
         self.actionGenerate_Schedule.triggered.connect(self.generateSchedule)
         self.actionExport_Schedule.triggered.connect(self.exportSchedule)

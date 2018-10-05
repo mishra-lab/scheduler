@@ -1,0 +1,54 @@
+{
+    "Michael": {
+        "email": "michael@example.com",
+        "divisions": {
+            "A": {
+                "min": 0,
+                "max": 100
+            },
+            "B": {
+                "min": 0,
+                "max": 100
+            }
+        }
+    },
+    "Jane": {
+        "email": "",
+        "divisions": {
+            "A": {
+                "min": 0,
+                "max": 100
+            },
+            "B": {
+                "min": 0,
+                "max": 100
+            }
+        }
+    },
+    "Bob": {
+        "email": "bob@bob.com",
+        "divisions": {
+            "A": {
+                "min": 0,
+                "max": 100
+            },
+            "B": {
+                "min": 0,
+                "max": 100
+            }
+        }
+    },
+    "Alice": {
+        "email": "alice@example.com",
+        "divisions": {
+            "A": {
+                "min": 0,
+                "max": 100
+            },
+            "B": {
+                "min": 0,
+                "max": 100
+            }
+        }
+    }
+}

@@ -231,9 +231,6 @@ class Scheduler:
     def generate(self, debug=False):
         self.setup_solver()
         self.setup_problem()
-
-        LpSolverDefault.msg = 1
-
         ret = self.problem.solve(self.solver) == LpStatusOptimal
 
         if debug:
