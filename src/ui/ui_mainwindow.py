@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'designer\mainwindow.ui'
+# Form implementation generated from reading ui file '..\designer\mainwindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.2
 #
@@ -138,6 +138,7 @@ class Ui_MainWindow(object):
         self.scheduleTable.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.scheduleTable.setHorizontalHeaderItem(0, item)
+        self.scheduleTable.verticalHeader().setVisible(False)
         self.verticalLayout_2.addWidget(self.scheduleTable)
         self.tabWidget.addTab(self.schedulerTab, "")
         self.gridLayout.addWidget(self.tabWidget, 0, 0, 1, 1)

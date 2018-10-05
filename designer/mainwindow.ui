@@ -282,6 +282,9 @@
         </item>
         <item>
          <widget class="QTableWidget" name="scheduleTable">
+          <attribute name="verticalHeaderVisible">
+           <bool>false</bool>
+          </attribute>
           <column>
            <property name="text">
             <string>Week Number</string>
