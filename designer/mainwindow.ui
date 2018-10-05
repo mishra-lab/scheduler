@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="configurationTab">
        <attribute name="title">
@@ -281,7 +281,13 @@
          </layout>
         </item>
         <item>
-         <widget class="QTableWidget" name="scheduleTable"/>
+         <widget class="QTableWidget" name="scheduleTable">
+          <column>
+           <property name="text">
+            <string>Week Number</string>
+           </property>
+          </column>
+         </widget>
         </item>
        </layout>
       </widget>

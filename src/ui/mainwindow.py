@@ -11,6 +11,9 @@ from ui.helpers import UiHelper
 from ui.dialog import DialogWindow
 from ui.ui_mainwindow import Ui_MainWindow
 
+import scheduler
+import constants
+
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, *args, **kwargs):
@@ -39,6 +42,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.actionDelete_Clinician.triggered.connect(self.deleteClinician)
 
     def setupSchedulerTab(self):
+        self.scheduler = scheduler.Scheduler(num_blocks=2)
         # action setup
         self.actionGenerate_Schedule.triggered.connect(self.generateSchedule)
         self.actionExport_Schedule.triggered.connect(self.exportSchedule)
@@ -55,6 +59,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 with open(path, 'r') as f:
                     self.data = json.load(f)
                     UiHelper.syncTreeView(self.treeView, self.model, self.data)
+                    self.scheduler.set_data(self.data)
 
             except Exception as ex:
                 QMessageBox.information(self, "Unable to open file", str(ex))
@@ -120,8 +125,41 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             UiHelper.syncTreeView(self.treeView, self.model, self.data)
 
     def generateSchedule(self):
-        # TODO:
-        pass
+        self.clearScheduleTable()
+        schedule = self.scheduler.generate(debug=True)
+        if schedule is None:
+            QMessageBox.critical(self, "Could not generate schedule!",
+                "Could not generate a schedule based on the given constraints and configuration. Try adjusting min/max values in the configuration tab.")
+        
+        else:
+            divAssignments = schedule[0]
+            weekendAssignments = schedule[1]
+            
+            # create rows for each week num
+            for weekNum in range(1, len(weekendAssignments) + 1):
+                rowCount = self.scheduleTable.rowCount()
+                self.scheduleTable.insertRow(rowCount)
+                self.scheduleTable.setItem(rowCount, 0, QTableWidgetItem(str(weekNum)))
+
+            for divName in divAssignments:
+                # create division columns
+                assignments = divAssignments[divName]
+                columnCount = self.scheduleTable.columnCount()
+                self.scheduleTable.insertColumn(columnCount)
+                self.scheduleTable.setHorizontalHeaderItem(columnCount, QTableWidgetItem(divName))
+
+                for i in range(len(assignments)):
+                    clinName = assignments[i]
+                    self.scheduleTable.setItem(i, columnCount, QTableWidgetItem(clinName))
+
+            weekendCol = self.scheduleTable.columnCount()
+            self.scheduleTable.insertColumn(weekendCol)
+            self.scheduleTable.setHorizontalHeaderItem(weekendCol, QTableWidgetItem("Weekend"))
+
+            for i in range(len(weekendAssignments)):
+                clinName = weekendAssignments[i]
+                self.scheduleTable.setItem(i, weekendCol, QTableWidgetItem(clinName))
+                    
     
     def exportSchedule(self):
         # TODO:
@@ -134,6 +172,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def clearCalendar(self):
         # TODO:
         pass
+
+    def clearScheduleTable(self):
+        while self.scheduleTable.rowCount() > 0:
+            lastRow = self.scheduleTable.rowCount()
+            self.scheduleTable.removeRow(lastRow - 1)
+
+        while self.scheduleTable.columnCount() > 1:
+            lastColumn = self.scheduleTable.columnCount()
+            self.scheduleTable.removeColumn(lastColumn - 1)
 
 
 if __name__ == "__main__":

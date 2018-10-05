@@ -126,6 +126,12 @@ class Division:
             del self.bound_dict[clinician.name]
             self.clinicians.remove(clinician)
 
+    def reset(self):
+        """
+        Resets division to pre-solving state
+        """
+        self.assignments = []
+
     def get_vars(self):
         """
         Returns all block variables corresponding to this division, across all
@@ -178,6 +184,13 @@ class Clinician:
         if var in self._vars:
             self._vars.remove(var)
 
+    def reset(self):
+        """
+        Resets clinician to pre-solving state
+        """
+        self._vars = []
+        self.weekends_assigned = []
+
     def get_vars(self, predicate=None):
         """
         Returns a list of all variables from this clinician that satisfy
@@ -206,16 +219,52 @@ class Scheduler:
     schedule based on the supplied clinician and division data.
     """
 
-    def __init__(self, config_path, num_blocks):
-        self.config_file = config_path
+    def __init__(self, config_path=None, num_blocks=NUM_BLOCKS):
         self.num_blocks = num_blocks
         self.num_weekends = num_blocks * BLOCK_SIZE
         self.clinicians = {}
         self.divisions = {}
         self.long_weekends = []
-        self.problem = LpProblem('scheduler', sense=LpMaximize)
-        self.read_config()
+
+        if config_path: self.read_config(config_path)
+
+    def generate(self, debug=False):
         self.setup_solver()
+        self.setup_problem()
+
+        LpSolverDefault.msg = 1
+
+        ret = self.problem.solve(self.solver) == LpStatusOptimal
+
+        if debug:
+            print('objective value = {}'.format(value(self.problem.objective)))
+            print('conflicts per doc:')
+            for clinician in self.clinicians.values():
+                print(clinician.name)
+                assigned_blocksoff = clinician.get_block_vars(
+                    lambda x, clinician=clinician: x.block_num in clinician.blocks_off and x.get_value() == 1.0)
+                assigned_weekendsoff = clinician.get_weekend_vars(
+                    lambda x, clinician=clinician: x.week_num in clinician.weekends_off and x.get_value() == 1.0)
+                print('\t{} out of {} blocks'.format(
+                    len(assigned_blocksoff), len(clinician.blocks_off)))
+                print('\t{} out of {} weekends'.format(
+                    len(assigned_weekendsoff), len(clinician.weekends_off)))
+                    
+        if ret:
+            self.assign_schedule()
+            # only keep assignments mapping
+            divAssignments = dict.fromkeys(self.divisions.keys())
+            for key in self.divisions.keys():
+                div = self.divisions[key]
+                divAssignments[key] = [clin.name for clin in div.assignments]
+
+            weekendAssignments = [None] * self.num_weekends
+            for clinician in self.clinicians.values():
+                for week_num in clinician.weekends_assigned:
+                    i = week_num - 1
+                    weekendAssignments[i] = clinician.name
+
+            return (divAssignments, weekendAssignments)
 
     def setup_solver(self):
         import sys
@@ -229,46 +278,54 @@ class Scheduler:
             # running from source
             self.solver = LpSolverDefault
 
-    def read_config(self):
+    def set_data(self, data):
+        """
+        Converts data to a form useable by LP solver
+        """
+        self.clinicians = {}
+        self.divisions = {}
+
+        for clin_name in data:
+            clin_object = data[clin_name]
+
+            # populate blocks/weekends off
+            blocks_off, weekends_off = [], []
+            if 'blocks_off' in clin_object:
+                blocks_off = clin_object['blocks_off']
+            if 'weekends_off' in clin_object:
+                blocks_off = clin_object['weekends_off']
+
+            clinician = Clinician(
+                name=clin_name,
+                email=clin_object['email'],
+                blocks_off=blocks_off,
+                weekends_off=weekends_off
+            )
+            # save to local dict
+            self.clinicians[clin_name] = clinician
+
+            # parse divisions
+            for div_name in clin_object['divisions']:
+                div_object = clin_object['divisions'][div_name]
+                # create division in local dict, if necessary
+                if div_name not in self.divisions:
+                    self.divisions[div_name] = Division(div_name)
+
+                # save to local dict
+                self.divisions[div_name].add_clinician(
+                    clinician=clinician,
+                    min_=div_object['min'],
+                    max_=div_object['max']
+                )
+
+    def read_config(self, config_path):
         """
         Retrieves static data about clinicians and divisions from a 
         config file.
         """
-        with open(self.config_file, 'r') as f:
+        with open(config_path, 'r') as f:
             data = json.load(f)
-
-            for clin_name in data:
-                clin_object = data[clin_name]
-
-                # populate blocks/weekends off
-                blocks_off, weekends_off = [], []
-                if 'blocks_off' in clin_object:
-                    blocks_off = clin_object['blocks_off']
-                if 'weekends_off' in clin_object:
-                    blocks_off = clin_object['weekends_off']
-
-                clinician = Clinician(
-                    name=clin_name,
-                    email=clin_object['email'],
-                    blocks_off=blocks_off,
-                    weekends_off=weekends_off
-                )
-                # save to local dict
-                self.clinicians[clin_name] = clinician
-
-                # parse divisions
-                for div_name in clin_object['divisions']:
-                    div_object = clin_object['divisions'][div_name]
-                    # create division in local dict, if necessary
-                    if div_name not in self.divisions:
-                        self.divisions[div_name] = Division(div_name)
-                        
-                    # save to local dict
-                    self.divisions[div_name].add_clinician(
-                        clinician=clinician,
-                        min_=div_object['min'],
-                        max_=div_object['max']
-                    )
+            self.set_data(data)
 
     def set_timeoff(self, events):
         """
@@ -321,10 +378,15 @@ class Scheduler:
         """
         self.long_weekends = long_weekends
 
-    def build_lp(self):
+    def setup_problem(self):
         """
         Constructs an LP program based on the clinician, division data.
         """
+        self.problem = LpProblem('scheduler', sense=LpMaximize)
+
+        for clinician in self.clinicians.values(): clinician.reset()
+        for division in self.divisions.values(): division.reset()
+
         divisions = list(self.divisions.values())
         clinicians = list(self.clinicians.values())
 
@@ -508,26 +570,6 @@ class Scheduler:
             lpSum(ba_variables)
         )
 
-    def solve_lp(self):
-        """
-        Solves LP program and prints information regarding solution.
-        """
-        ret = self.problem.solve(self.solver) == LpStatusOptimal
-        print('objective value = {}'.format(value(self.problem.objective)))
-        print('conflicts per doc:')
-        for clinician in self.clinicians.values():
-            print(clinician.name)
-            assigned_blocksoff = clinician.get_block_vars(
-                lambda x, clinician=clinician: x.block_num in clinician.blocks_off and x.get_value() == 1.0)
-            assigned_weekendsoff = clinician.get_weekend_vars(
-                lambda x, clinician=clinician: x.week_num in clinician.weekends_off and x.get_value() == 1.0)
-            print('\t{} out of {} blocks'.format(
-                len(assigned_blocksoff), len(clinician.blocks_off)))
-            print('\t{} out of {} weekends'.format(
-                len(assigned_weekendsoff), len(clinician.weekends_off)))
-        print()
-        return ret
-
     def assign_schedule(self):
         """
         Assigns blocks and weekends to clinicians using the results of
@@ -537,9 +579,11 @@ class Scheduler:
             for block_num in range(1, self.num_blocks + 1):
                 assignments = list(filter(lambda x: x.get_value(
                 ) == 1.0, div.get_vars_by_block_num(block_num)))
-                div.assignments.extend(
-                    [_.clinician for _ in assignments]
-                )
+
+                for _ in range(BLOCK_SIZE):
+                    div.assignments.extend(
+                        [__.clinician for __ in assignments]
+                    )
 
         for clinician in self.clinicians.values():
             vars_ = clinician.get_weekend_vars(lambda x: x.get_value() == 1.0)
