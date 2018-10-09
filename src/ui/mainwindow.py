@@ -7,7 +7,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 from ui import delegates, models
-from ui.helpers import UiHelper
+from ui.helpers import UiHelper, ExcelHelper
 from ui.dialog import DialogWindow
 from ui.ui_mainwindow import Ui_MainWindow
 
@@ -66,7 +66,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def saveConfig(self):
         fileName, _ = QFileDialog.getSaveFileName(
-            self, "Save Configuration", "", ""
+            self, "Save Configuration", "", "JSON files (*.json)"
         )
 
         if fileName != '':
@@ -162,8 +162,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     
     
     def exportSchedule(self):
-        # TODO:
-        pass
+        # open save dialog to let user choose folder + filename
+        fileName, _ = QFileDialog.getSaveFileName(
+            self, "Save Excel file", "", "Excel file (*.xlsx)"
+        )
+
+        if not fileName:
+            return
+
+        ExcelHelper.saveToFile(fileName, self.scheduleTable)
 
     def publishSchedule(self):
         # TODO:
