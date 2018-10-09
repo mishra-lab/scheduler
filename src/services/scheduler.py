@@ -1,12 +1,16 @@
 import json
 import math
+import os
 import random
+import sys
 from datetime import datetime, timedelta
 
+import pulp
 from googleapiclient.discovery import build
 from httplib2 import Http
-from oauth2client import file as oauth_file, client, tools
-from pulp import *
+from oauth2client import client
+from oauth2client import file as oauth_file
+from oauth2client import tools
 
 from constants import *
 
@@ -29,7 +33,7 @@ class Variable:
         self._init_var()
 
     def _init_var(self):
-        self._var = LpVariable(
+        self._var = pulp.LpVariable(
             self.name, lowBound=self.min, upBound=self.max, cat="Integer"
         )
 
@@ -231,10 +235,10 @@ class Scheduler:
     def generate(self, debug=False):
         self.setup_solver()
         self.setup_problem()
-        ret = self.problem.solve(self.solver) == LpStatusOptimal
+        ret = self.problem.solve(self.solver) == pulp.LpStatusOptimal
 
         if debug:
-            print('objective value = {}'.format(value(self.problem.objective)))
+            print('objective value = {}'.format(pulp.value(self.problem.objective)))
             print('conflicts per doc:')
             for clinician in self.clinicians.values():
                 print(clinician.name)
@@ -264,16 +268,15 @@ class Scheduler:
             return (divAssignments, weekendAssignments)
 
     def setup_solver(self):
-        import sys
         if getattr(sys, 'frozen', False):
             # running in a bundle
             cwd = os.getcwd()
             exe = 'cbc-2.9.9-x86\\bin\\cbc.exe'
             solverdir = os.path.join(cwd, exe)
-            self.solver = COIN_CMD(path=solverdir)
+            self.solver = pulp.COIN_CMD(path=solverdir)
         else:
             # running from source
-            self.solver = LpSolverDefault
+            self.solver = pulp.LpSolverDefault
 
     def set_data(self, data):
         """
@@ -379,7 +382,7 @@ class Scheduler:
         """
         Constructs an LP program based on the clinician, division data.
         """
-        self.problem = LpProblem('scheduler', sense=LpMaximize)
+        self.problem = pulp.LpProblem('scheduler', sense=pulp.LpMaximize)
 
         for clinician in self.clinicians.values(): clinician.reset()
         for division in self.divisions.values(): division.reset()
@@ -422,7 +425,7 @@ class Scheduler:
         for div in divisions:
             for block_num in range(1, self.num_blocks + 1):
                 self.problem.add(
-                    lpSum(
+                    pulp.lpSum(
                         [_.get_var()
                          for _ in div.get_vars_by_block_num(block_num)]
                     ) == 1
@@ -436,7 +439,7 @@ class Scheduler:
                         lambda x, week_num=week_num: x.week_num == week_num
                     )
                  ]
-            self.problem.add(lpSum(
+            self.problem.add(pulp.lpSum(
                 [_.get_var() for _ in vars_]) == 1)
 
     def _build_minmax_constraints(self, divisions):
@@ -444,7 +447,7 @@ class Scheduler:
         for div in divisions:
             for clinician in div.clinicians:
                 (min_, max_) = div.bound_dict[clinician.name]
-                sum_ = lpSum(
+                sum_ = pulp.lpSum(
                     [_.get_var() for _ in div.get_vars_by_name(clinician.name)])
                 self.problem.add(sum_ <= max_)
                 self.problem.add(sum_ >= min_)
@@ -454,7 +457,7 @@ class Scheduler:
             for block_num in range(1, self.num_blocks):
                 # if a clinician works a given block, they should not work any
                 # adjacent block (even in a different division)
-                sum_ = lpSum(
+                sum_ = pulp.lpSum(
                     [_.get_var() for _ in clinician.get_block_vars(
                         lambda x, block_num=block_num: x.block_num in (block_num, block_num + 1))]
                 )
@@ -462,7 +465,7 @@ class Scheduler:
 
             # at most 1 consecutive weekend of work
             for week_num in range(1, self.num_weekends):
-                sum_ = lpSum(
+                sum_ = pulp.lpSum(
                     [_.get_var() for _ in clinician.get_weekend_vars(
                         lambda x, week_num=week_num: x.week_num in (
                             week_num, week_num + 1)
@@ -478,7 +481,7 @@ class Scheduler:
             min_long_weekends = math.floor(
                 len(self.long_weekends) / len(self.clinicians))
             for clinician in clinicians:
-                sum_ = lpSum(
+                sum_ = pulp.lpSum(
                     [_.get_var() for _ in clinician.get_weekend_vars(
                         lambda x, l=self.long_weekends: x.week_num in l
                     )]
@@ -531,7 +534,7 @@ class Scheduler:
                     lambda x: 'adjacency' in x.name
                 )]
             )
-        return lpSum(adjacency_vars)
+        return pulp.lpSum(adjacency_vars)
 
     def _build_appeasement_objectives(self, clinicians):
         wa_variables = []
@@ -563,8 +566,8 @@ class Scheduler:
             )
 
         return (
-            lpSum(wa_variables),
-            lpSum(ba_variables)
+            pulp.lpSum(wa_variables),
+            pulp.lpSum(ba_variables)
         )
 
     def assign_schedule(self):
@@ -585,102 +588,3 @@ class Scheduler:
         for clinician in self.clinicians.values():
             vars_ = clinician.get_weekend_vars(lambda x: x.get_value() == 1.0)
             clinician.weekends_assigned = [_.week_num for _ in vars_]
-
-
-class API:
-    """
-    A helper class that wraps some of the API methods of Google calendar.
-    """
-    SCOPE = 'https://www.googleapis.com/auth/calendar'
-
-    def __init__(self, calendar_id, flags):
-        # retrieve credentials / create new
-        store = oauth_file.Storage('token.json')
-        creds = store.get()
-        if not creds or creds.invalid:
-            flow = client.flow_from_clientsecrets(
-                self.get_client_secret(), API.SCOPE)
-            creds = tools.run_flow(flow, store, flags)
-
-        # discover calendar API
-        self._service = build(
-            'calendar', 'v3', http=creds.authorize(Http()))
-        self.calendar_id = calendar_id
-        self.time_zone = self.get_timezone()
-
-    def get_client_secret(self):
-        import sys
-        if getattr(sys, 'frozen', False):
-            # running in a bundle
-            cwd = os.getcwd()
-            file = 'credentials.json'
-            return os.path.join(cwd, file)
-        else:
-            # running from source
-            return 'credentials.json'
-
-    def get_timezone(self):
-        """
-        Returns the timezone of the calendar given by `calendar_id`.
-        """
-        # pylint: disable=maybe-no-member
-        result = self._service.calendars().get(
-            calendarId=self.calendar_id).execute()
-        return result.get('timeZone')
-
-    def get_events(self, start, end, search_str='', max_res=1000):
-        """
-        Returns a list of at most `max_res` events with dates between 
-        start and end.
-        """
-        # pylint: disable=maybe-no-member
-        result = self._service.events().list(
-            calendarId=self.calendar_id,
-            timeMin=start,
-            timeMax=end,
-            maxResults=max_res,
-            singleEvents=True,
-            orderBy='startTime').execute()
-
-        events = result.get('items', [])
-        return list(filter(lambda x, s=search_str: s in x['summary'], events))
-
-    def create_event(self, start, end, attendees, summary):
-        """
-        Creates a new event starting at `start` and ending at `end` with
-        the given `attendees` and `summary`
-        """
-        event = {
-            'summary': summary,
-            'start': {
-                'dateTime': start,
-                'timeZone': self.time_zone
-            },
-            'end': {
-                'dateTime': end,
-                'timeZone': self.time_zone
-            },
-            'attendees': [
-                {'email': _} for _ in attendees
-            ]
-        }
-
-        # pylint: disable=maybe-no-member
-        self._service.events().insert(
-            calendarId=self.calendar_id,
-            body=event
-        ).execute()
-
-    def delete_event(self, event_id):
-        # pylint: disable=maybe-no-member
-        self._service.events().delete(
-            calendarId=self.calendar_id,
-            eventId=event_id
-        ).execute()
-
-    def delete_events(self, start, end, search_str=''):
-        events = self.get_events(start, end, search_str)
-
-        for event in events:
-            id_ = event['id']
-            self.delete_event(id_)
