@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '..\designer\mainwindow.ui'
+# Form implementation generated from reading ui file 'designer\mainwindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.2
 #
@@ -133,6 +133,7 @@ class Ui_MainWindow(object):
         self.schedulerButtonLayout.addItem(spacerItem)
         self.verticalLayout_2.addLayout(self.schedulerButtonLayout)
         self.scheduleTable = QtWidgets.QTableWidget(self.schedulerTab)
+        self.scheduleTable.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.scheduleTable.setObjectName("scheduleTable")
         self.scheduleTable.setColumnCount(1)
         self.scheduleTable.setRowCount(0)
