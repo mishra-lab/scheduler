@@ -197,12 +197,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if reply == QMessageBox.No: return
 
         # call API
-        # TODO: fix problem with credentials file
         startDate = datetime(calendarYear, 1, 1)
         endDate = startDate + timedelta(weeks=52)
-        ApiHelper(calendarId, args).delete_events(
+        ApiHelper(calendarId).delete_events(
             startDate.isoformat() + 'Z',
-            endData.isoformat() + 'Z',
+            endDate.isoformat() + 'Z',
             search_str='[scheduler] '
         )
 

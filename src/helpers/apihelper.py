@@ -14,14 +14,14 @@ class ApiHelper:
     """
     SCOPE = 'https://www.googleapis.com/auth/calendar'
 
-    def __init__(self, calendar_id, flags):
+    def __init__(self, calendar_id):
         # retrieve credentials / create new
         store = oauth_file.Storage('token.json')
         creds = store.get()
         if not creds or creds.invalid:
             flow = client.flow_from_clientsecrets(
                 self.get_client_secret(), ApiHelper.SCOPE)
-            creds = tools.run_flow(flow, store, flags)
+            creds = tools.run_flow(flow, store)
 
         # discover calendar API
         self._service = build(
