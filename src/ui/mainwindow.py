@@ -7,6 +7,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
+from constants import WEEK_HOURS, WEEKEND_HOURS
 from helpers.apihelper import ApiHelper
 from helpers.excelhelper import ExcelHelper
 from helpers.uihelper import UiHelper
@@ -176,8 +177,51 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         ExcelHelper.saveToFile(fileName, self.scheduleTable)
 
     def publishSchedule(self):
-        # TODO:
-        pass
+        calendarYear = self.calendarYearSpinBox.value()
+        calendarId = self.gCalLineEdit.text()
+
+        # confirm user action
+        reply = QMessageBox.question(
+                self, 
+                "Publish Calendar Warning", 
+                "This action will publish the generated schedule to the specified calendar. Are you sure you want to continue?",
+                QMessageBox.Yes | QMessageBox.No)
+        if reply == QMessageBox.No: return
+
+        # TODO: add progress bar so user knows app is still functional
+        # go through table, creating an event per each row, per each column
+        for i in range(1, self.scheduleTable.columnCount()):
+            colHeader = self.scheduleTable.horizontalHeaderItem(i).text()
+            for j in range(self.scheduleTable.rowCount()):
+                weekNum = int(self.scheduleTable.item(j, 0).text())
+                name = self.scheduleTable.item(j, i).text()
+                email = self.data[name]['email']
+
+                # figure out correct event time range
+                if colHeader == 'Weekend':
+                    summary = '[scheduler] {} - on call'.format(name)
+                    start = datetime.strptime(
+                        # year / weekNum / Friday / 5PM
+                        '{0}/{1:02d}/5/17:00'.format(calendarYear, weekNum),
+                        '%G/%V/%u/%H:%M'
+                    )
+                    end = start + timedelta(hours=WEEKEND_HOURS)
+                else:
+                    summary = '[scheduler] {} - on call ({} division)'.format(name, colHeader)
+                    start = datetime.strptime(
+                        # year / weekNum / Monday / 8AM
+                        '{0}/{1:02d}/1/08:00'.format(calendarYear, weekNum),
+                        '%G/%V/%u/%H:%M'
+                    )
+                    end = start + timedelta(hours=WEEK_HOURS)
+
+                # call api to publish event
+                ApiHelper(calendarId).create_event(
+                    start.isoformat(),
+                    end.isoformat(),
+                    [email] if email else [],
+                    summary
+                )
 
     def clearCalendar(self, args):
         calendarYear = self.calendarYearSpinBox.value()
