@@ -46,7 +46,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.actionDelete_Clinician.triggered.connect(self.deleteClinician)
 
     def setupSchedulerTab(self):
-        self.scheduler = scheduler.Scheduler()
+        self.scheduler = scheduler.Scheduler(num_blocks=2)
         # action setup
         self.actionGenerate_Schedule.triggered.connect(self.generateSchedule)
         self.actionExport_Schedule.triggered.connect(self.exportSchedule)
@@ -188,13 +188,30 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 QMessageBox.Yes | QMessageBox.No)
         if reply == QMessageBox.No: return
 
-        # TODO: add progress bar so user knows app is still functional
+
+        rows = self.scheduleTable.rowCount()
+        cols = self.scheduleTable.columnCount()
+
+        # display progress so user knows app is working
+        progress = QProgressDialog(
+            "Publishing schedule...",
+            "",
+            1,
+            # max progress = total # of events to be created
+            (cols - 1) * rows
+        )
+        progress.setCancelButton(None)
+        progress.setWindowModality(Qt.ApplicationModal)
+        progress.setMinimumDuration(0)
+        
         # go through table, creating an event per each row, per each column
-        for i in range(1, self.scheduleTable.columnCount()):
-            colHeader = self.scheduleTable.horizontalHeaderItem(i).text()
-            for j in range(self.scheduleTable.rowCount()):
-                weekNum = int(self.scheduleTable.item(j, 0).text())
-                name = self.scheduleTable.item(j, i).text()
+        for i in range(rows):
+            for j in range(1, cols):
+                progress.setValue(j + (cols - 1) * i)
+                colHeader = self.scheduleTable.horizontalHeaderItem(j).text()
+
+                weekNum = int(self.scheduleTable.item(i, 0).text())
+                name = self.scheduleTable.item(i, j).text()
                 email = self.data[name]['email']
 
                 # figure out correct event time range
@@ -241,13 +258,32 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if reply == QMessageBox.No: return
 
         # call API
+        api = ApiHelper(calendarId)
         startDate = datetime(calendarYear, 1, 1)
         endDate = startDate + timedelta(weeks=52)
-        ApiHelper(calendarId).delete_events(
+
+        events = api.get_events(
             startDate.isoformat() + 'Z',
             endDate.isoformat() + 'Z',
             search_str='[scheduler] '
         )
+
+        # display progress so user knows app is working
+        progress = QProgressDialog(
+            "Clearing schedule...",
+            "",
+            0,
+            # max progress = total # of events to be created
+            len(events) - 1
+        )
+        progress.setCancelButton(None)
+        progress.setWindowModality(Qt.ApplicationModal)
+        progress.setMinimumDuration(0)
+
+        for i in range(len(events)):
+            progress.setValue(i)
+            id_ = events[i]['id']
+            api.delete_event(id_)
 
     def clearScheduleTable(self):
         while self.scheduleTable.rowCount() > 0:
