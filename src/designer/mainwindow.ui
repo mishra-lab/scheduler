@@ -140,7 +140,7 @@
              <item row="0" column="0">
               <widget class="QLabel" name="configFileLabel">
                <property name="text">
-                <string>Configuration File Status: Not Loaded</string>
+                <string>Configuration</string>
                </property>
               </widget>
              </item>

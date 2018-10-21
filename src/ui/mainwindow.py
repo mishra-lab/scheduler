@@ -28,8 +28,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.show()
 
+    @property
+    def configuration(self):
+        return self._configuration
+
+    @configuration.setter
+    def configuration(self, value):
+        if type(value) is dict:
+            self._configuration = value
+            configStatus = len(self._configuration.keys()) > 0
+            self.configFileLabel.setText('Configuration: {}'.format(
+                'loaded' if configStatus else 'not loaded'
+            ))
+        else:
+            raise TypeError(value)
+
     def setupConfigurationTab(self):
-        self.data = {}
+        self.configuration = {}
 
         # treeview setup
         self.model = TreeModel(None)
@@ -60,8 +75,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if path != '':
             try:
                 with open(path, 'r') as f:
-                    self.data = json.load(f)
-                    UiHelper.syncTreeView(self.treeView, self.model, self.data)
+                    self.configuration = json.load(f)
+                    UiHelper.syncTreeView(self.treeView, self.model, self.configuration)
 
             except Exception as ex:
                 QMessageBox.critical(self, "Unable to open file", str(ex))
@@ -83,18 +98,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def newConfig(self):
         # clear data
-        self.data = {}
+        self.configuration = {}
         
         # build treeview
-        UiHelper.syncTreeView(self.treeView, self.model, self.data)
+        UiHelper.syncTreeView(self.treeView, self.model, self.configuration)
 
     def createNewClinician(self):
         dialog = DialogWindow()
-        dialog.setClinicianDictionary(self.data)
+        dialog.setClinicianDictionary(self.configuration)
         dialog.exec_()
 
         # reset treeview
-        UiHelper.syncTreeView(self.treeView, self.model, self.data)
+        UiHelper.syncTreeView(self.treeView, self.model, self.configuration)
 
     def editClinician(self):
         selectedItem = UiHelper.getSelectedRoot(self.treeView)
@@ -105,11 +120,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
             # transfer clinData to edit dialog
             dialog = DialogWindow()
-            dialog.setClinicianDictionary(self.data)
+            dialog.setClinicianDictionary(self.configuration)
             dialog.setClinician(clinData)
             dialog.exec_()
 
-            UiHelper.syncTreeView(self.treeView, self.model, self.data)
+            UiHelper.syncTreeView(self.treeView, self.model, self.configuration)
 
     def deleteClinician(self):
         selectedItem = UiHelper.getSelectedRoot(self.treeView)
@@ -123,8 +138,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 , QMessageBox.Yes | QMessageBox.No)
             if reply == QMessageBox.No: return
 
-            del self.data[clinName]
-            UiHelper.syncTreeView(self.treeView, self.model, self.data)
+            del self.configuration[clinName]
+            UiHelper.syncTreeView(self.treeView, self.model, self.configuration)
 
     def generateSchedule(self):
         self.clearScheduleTable()
@@ -151,7 +166,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # init scheduler with all the given data
         schedule = scheduler.Scheduler(
-            num_blocks=numBlocks, clin_data=self.data, timeoff_data=requests).generate(debug=True)
+            num_blocks=numBlocks, clin_data=self.configuration, timeoff_data=requests).generate(debug=True)
         if schedule is None:
             QMessageBox.critical(self, "Could not generate schedule!",
                 "Could not generate a schedule based on the given constraints and configuration. Try adjusting min/max values in the configuration tab.")
@@ -237,7 +252,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
                 weekNum = int(self.scheduleTable.item(i, 0).text())
                 name = self.scheduleTable.item(i, j).text()
-                email = self.data[name]['email']
+                email = self.configuration[name]['email']
 
                 # figure out correct event time range
                 if colHeader == 'Weekend':

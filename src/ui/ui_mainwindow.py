@@ -213,7 +213,7 @@ class Ui_MainWindow(object):
         self.deleteClinicianButton.setText(_translate("MainWindow", "Delete Clinician"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.configurationTab), _translate("MainWindow", "Configuration"))
         self.settingsGroupBox.setTitle(_translate("MainWindow", "Settings"))
-        self.configFileLabel.setText(_translate("MainWindow", "Configuration File Status: Not Loaded"))
+        self.configFileLabel.setText(_translate("MainWindow", "Configuration"))
         self.loadButton.setToolTip(_translate("MainWindow", "<html><head/><body><p>Open configuration file</p></body></html>"))
         self.loadButton.setText(_translate("MainWindow", "Load"))
         self.calendarYearLabel.setText(_translate("MainWindow", "Calendar Year"))
