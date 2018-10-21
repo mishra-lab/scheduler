@@ -46,7 +46,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.actionDelete_Clinician.triggered.connect(self.deleteClinician)
 
     def setupSchedulerTab(self):
-        self.scheduler = scheduler.Scheduler(num_blocks=2)
         # action setup
         self.actionGenerate_Schedule.triggered.connect(self.generateSchedule)
         self.actionExport_Schedule.triggered.connect(self.exportSchedule)
@@ -63,7 +62,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 with open(path, 'r') as f:
                     self.data = json.load(f)
                     UiHelper.syncTreeView(self.treeView, self.model, self.data)
-                    self.scheduler.set_data(self.data)
 
             except Exception as ex:
                 QMessageBox.critical(self, "Unable to open file", str(ex))
@@ -130,7 +128,30 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def generateSchedule(self):
         self.clearScheduleTable()
-        schedule = self.scheduler.generate(debug=True)
+
+        numBlocks = self.numberOfBlocksSpinBox.value()
+        retrieveTimeOff = self.retrieveTimeOffRequestsCheckBox.isChecked()
+        calendarYear = self.calendarYearSpinBox.value()
+        calendarId = self.gCalLineEdit.text()
+        requests = []
+
+        if retrieveTimeOff:    
+            if not calendarId:
+                QMessageBox.critical(self, "Missing Calendar ID", "Please supply a calendar ID!")
+                return
+
+            # read timeoff requests from gcal
+            startDate = datetime(calendarYear, 1, 1)
+            endDate = startDate + timedelta(weeks=52)
+            requests = ApiHelper(calendarId).get_events(
+                start=startDate.isoformat() + 'Z',
+                end=endDate.isoformat() + 'Z',
+                search_str='[request]'
+            )
+
+        # init scheduler with all the given data
+        schedule = scheduler.Scheduler(
+            num_blocks=numBlocks, clin_data=self.data, timeoff_data=requests).generate(debug=True)
         if schedule is None:
             QMessageBox.critical(self, "Could not generate schedule!",
                 "Could not generate a schedule based on the given constraints and configuration. Try adjusting min/max values in the configuration tab.")
@@ -179,6 +200,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def publishSchedule(self):
         calendarYear = self.calendarYearSpinBox.value()
         calendarId = self.gCalLineEdit.text()
+
+        if not calendarId:
+            QMessageBox.critical(self, "Missing Calendar ID", "Please supply a calendar ID!")
+            return
 
         # confirm user action
         reply = QMessageBox.question(
@@ -265,7 +290,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         events = api.get_events(
             startDate.isoformat() + 'Z',
             endDate.isoformat() + 'Z',
-            search_str='[scheduler] '
+            search_str='[scheduler]'
         )
 
         # display progress so user knows app is working

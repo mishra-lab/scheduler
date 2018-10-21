@@ -223,14 +223,16 @@ class Scheduler:
     schedule based on the supplied clinician and division data.
     """
 
-    def __init__(self, config_path=None, num_blocks=NUM_BLOCKS):
+    def __init__(self, num_blocks, clin_data={}, timeoff_data=[], long_weekends=[]):
         self.num_blocks = num_blocks
         self.num_weekends = num_blocks * BLOCK_SIZE
+
         self.clinicians = {}
         self.divisions = {}
-        self.long_weekends = []
-
-        if config_path: self.read_config(config_path)
+        
+        self.long_weekends = long_weekends
+        self.set_data(clin_data)
+        self.set_timeoff(timeoff_data)
 
     def generate(self, debug=False):
         self.setup_solver()
@@ -371,12 +373,6 @@ class Scheduler:
                         clinician.weekends_off.append(week_num)
             else:
                 print('Event creator {} was not found in clinicians'.format(creator))
-
-    def set_long_weekends(self, long_weekends):
-        """
-        Populates set of long weekends (week numbers).
-        """
-        self.long_weekends = long_weekends
 
     def setup_problem(self):
         """
