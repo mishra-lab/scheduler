@@ -274,7 +274,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 progress.setValue(j + (cols - 1) * i)
                 colHeader = self.scheduleTable.horizontalHeaderItem(j).text()
 
-                weekNum = int(self.scheduleTable.item(i, 0).text())
+                weekText = self.scheduleTable.item(i, 0).text() 
+                weekNum = int(weekText[:-1]) if weekText[-1] == '*' else int(weekText)
                 name = self.scheduleTable.item(i, j).text()
                 email = self.configuration[name]['email']
 
