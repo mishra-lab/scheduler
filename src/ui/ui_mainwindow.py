@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'designer\mainwindow.ui'
+# Form implementation generated from reading ui file 'src\designer\mainwindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.2
 #
@@ -102,12 +102,19 @@ class Ui_MainWindow(object):
         self.settingsForm.setWidget(3, QtWidgets.QFormLayout.FieldRole, self.retrieveTimeOffRequestsCheckBox)
         self.numberOfBlocksLabel = QtWidgets.QLabel(self.settingsGroupBox)
         self.numberOfBlocksLabel.setObjectName("numberOfBlocksLabel")
-        self.settingsForm.setWidget(4, QtWidgets.QFormLayout.LabelRole, self.numberOfBlocksLabel)
+        self.settingsForm.setWidget(5, QtWidgets.QFormLayout.LabelRole, self.numberOfBlocksLabel)
         self.numberOfBlocksSpinBox = QtWidgets.QSpinBox(self.settingsGroupBox)
         self.numberOfBlocksSpinBox.setMaximum(26)
         self.numberOfBlocksSpinBox.setProperty("value", 26)
         self.numberOfBlocksSpinBox.setObjectName("numberOfBlocksSpinBox")
-        self.settingsForm.setWidget(4, QtWidgets.QFormLayout.FieldRole, self.numberOfBlocksSpinBox)
+        self.settingsForm.setWidget(5, QtWidgets.QFormLayout.FieldRole, self.numberOfBlocksSpinBox)
+        self.retrieveLongWeekendsLabel = QtWidgets.QLabel(self.settingsGroupBox)
+        self.retrieveLongWeekendsLabel.setObjectName("retrieveLongWeekendsLabel")
+        self.settingsForm.setWidget(4, QtWidgets.QFormLayout.LabelRole, self.retrieveLongWeekendsLabel)
+        self.retrieveLongWeekendsCheckBox = QtWidgets.QCheckBox(self.settingsGroupBox)
+        self.retrieveLongWeekendsCheckBox.setChecked(True)
+        self.retrieveLongWeekendsCheckBox.setObjectName("retrieveLongWeekendsCheckBox")
+        self.settingsForm.setWidget(4, QtWidgets.QFormLayout.FieldRole, self.retrieveLongWeekendsCheckBox)
         self.horizontalLayout_2.addLayout(self.settingsForm)
         self.verticalLayout_2.addWidget(self.settingsGroupBox)
         self.schedulerButtonLayout = QtWidgets.QHBoxLayout()
@@ -222,6 +229,7 @@ class Ui_MainWindow(object):
         self.gCalLineEdit.setToolTip(_translate("MainWindow", "<html><head/><body><p>Set the calendar ID to retrieve calendar events from and publish generated schedule to</p></body></html>"))
         self.retrieveTimeOffRequestsLabel.setText(_translate("MainWindow", "Retrieve Time-off Requests"))
         self.numberOfBlocksLabel.setText(_translate("MainWindow", "Number of Blocks"))
+        self.retrieveLongWeekendsLabel.setText(_translate("MainWindow", "Retrieve Long Weekends"))
         self.scheduleActions.setTitle(_translate("MainWindow", "Schedule"))
         self.generateScheduleButton.setToolTip(_translate("MainWindow", "<html><head/><body><p>Generate a new schedule using the given configuration file and calendar information</p></body></html>"))
         self.generateScheduleButton.setText(_translate("MainWindow", "Generate"))

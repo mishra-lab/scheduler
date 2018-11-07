@@ -144,11 +144,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def generateSchedule(self):
         self.clearScheduleTable()
 
+        numClinicians = len(self.configuration.keys())
+        if numClinicians <= 0:
+            QMessageBox.critical(self, "No Clinicians Configured", "Please load a configuration file with at least one clinician!")
+            return
+
         numBlocks = self.numberOfBlocksSpinBox.value()
         retrieveTimeOff = self.retrieveTimeOffRequestsCheckBox.isChecked()
+        retrieveLongWeekends = self.retrieveLongWeekendsCheckBox.isChecked()
         calendarYear = self.calendarYearSpinBox.value()
         calendarId = self.gCalLineEdit.text()
+
         requests = []
+        holidays = []
 
         if retrieveTimeOff:    
             if not calendarId:
@@ -164,9 +172,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 search_str='[request]'
             )
 
+        if retrieveLongWeekends:
+            if not calendarId:
+                QMessageBox.critical(self, "Missing Calendar ID", "Please supply a calendar ID!")
+                return
+
+            # read longweekend events from gcal
+            startDate = datetime(calendarYear, 1, 1)
+            endDate = startDate + timedelta(weeks=52)
+            holidays = ApiHelper(calendarId).get_events(
+                start=startDate.isoformat() + 'Z',
+                end=endDate.isoformat() + 'Z',
+                search_str='[holiday]'
+            )
+
         # init scheduler with all the given data
         schedule = scheduler.Scheduler(
-            num_blocks=numBlocks, clin_data=self.configuration, timeoff_data=requests).generate(debug=True)
+            num_blocks=numBlocks, clin_data=self.configuration, timeoff_data=requests, long_weekends=holidays).generate(debug=True)
         if schedule is None:
             QMessageBox.critical(self, "Could not generate schedule!",
                 "Could not generate a schedule based on the given constraints and configuration. Try adjusting min/max values in the configuration tab.")
@@ -174,12 +196,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             divAssignments = schedule[0]
             weekendAssignments = schedule[1]
+            longWeekends = schedule[2]
             
             # create rows for each week num
             for weekNum in range(1, len(weekendAssignments) + 1):
                 rowCount = self.scheduleTable.rowCount()
                 self.scheduleTable.insertRow(rowCount)
-                self.scheduleTable.setItem(rowCount, 0, QTableWidgetItem(str(weekNum)))
+                value = str(weekNum) + '*' if weekNum in longWeekends else str(weekNum)
+                self.scheduleTable.setItem(rowCount, 0, QTableWidgetItem(value))
 
             for divName in divAssignments:
                 # create division columns
