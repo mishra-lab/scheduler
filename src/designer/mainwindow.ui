@@ -268,7 +268,14 @@
                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Export generated schedule as an Excel spreadsheet&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
                <property name="text">
-                <string>Export</string>
+                <string>Export Yearly</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="exportMonthlyButton">
+               <property name="text">
+                <string>Export Monthly</string>
                </property>
               </widget>
              </item>
@@ -412,6 +419,11 @@
   <action name="actionClear_Calendar">
    <property name="text">
     <string>Clear Calendar</string>
+   </property>
+  </action>
+  <action name="actionExport_Monthly">
+   <property name="text">
+    <string>Export Monthly</string>
    </property>
   </action>
  </widget>
@@ -586,6 +598,22 @@
     <hint type="sourcelabel">
      <x>421</x>
      <y>231</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>exportMonthlyButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>actionExport_Monthly</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>296</x>
+     <y>309</y>
     </hint>
     <hint type="destinationlabel">
      <x>-1</x>

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'src\designer\mainwindow.ui'
+# Form implementation generated from reading ui file 'designer\mainwindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.2
 #
@@ -134,6 +134,9 @@ class Ui_MainWindow(object):
         self.exportScheduleButton = QtWidgets.QPushButton(self.scheduleActions)
         self.exportScheduleButton.setObjectName("exportScheduleButton")
         self.horizontalLayout_3.addWidget(self.exportScheduleButton)
+        self.exportMonthlyButton = QtWidgets.QPushButton(self.scheduleActions)
+        self.exportMonthlyButton.setObjectName("exportMonthlyButton")
+        self.horizontalLayout_3.addWidget(self.exportMonthlyButton)
         self.schedulerButtonLayout.addWidget(self.scheduleActions)
         self.calendarActions = QtWidgets.QGroupBox(self.schedulerTab)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Preferred)
@@ -186,6 +189,8 @@ class Ui_MainWindow(object):
         self.actionPublish.setObjectName("actionPublish")
         self.actionClear_Calendar = QtWidgets.QAction(MainWindow)
         self.actionClear_Calendar.setObjectName("actionClear_Calendar")
+        self.actionExport_Monthly = QtWidgets.QAction(MainWindow)
+        self.actionExport_Monthly.setObjectName("actionExport_Monthly")
 
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(1)
@@ -200,6 +205,7 @@ class Ui_MainWindow(object):
         self.exportScheduleButton.clicked['bool'].connect(self.actionExport_Schedule.trigger)
         self.publishCalendarButton.clicked['bool'].connect(self.actionPublish.trigger)
         self.clearCalendarButton.clicked['bool'].connect(self.actionClear_Calendar.trigger)
+        self.exportMonthlyButton.clicked['bool'].connect(self.actionExport_Monthly.trigger)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -234,7 +240,8 @@ class Ui_MainWindow(object):
         self.generateScheduleButton.setToolTip(_translate("MainWindow", "<html><head/><body><p>Generate a new schedule using the given configuration file and calendar information</p></body></html>"))
         self.generateScheduleButton.setText(_translate("MainWindow", "Generate"))
         self.exportScheduleButton.setToolTip(_translate("MainWindow", "<html><head/><body><p>Export generated schedule as an Excel spreadsheet</p></body></html>"))
-        self.exportScheduleButton.setText(_translate("MainWindow", "Export"))
+        self.exportScheduleButton.setText(_translate("MainWindow", "Export Yearly"))
+        self.exportMonthlyButton.setText(_translate("MainWindow", "Export Monthly"))
         self.calendarActions.setTitle(_translate("MainWindow", "Calendar"))
         self.publishCalendarButton.setToolTip(_translate("MainWindow", "<html><head/><body><p>Publish the generated schedule to the calendar</p></body></html>"))
         self.publishCalendarButton.setText(_translate("MainWindow", "Publish"))
@@ -259,4 +266,5 @@ class Ui_MainWindow(object):
         self.actionExport_Schedule.setText(_translate("MainWindow", "Export Schedule"))
         self.actionPublish.setText(_translate("MainWindow", "Publish"))
         self.actionClear_Calendar.setText(_translate("MainWindow", "Clear Calendar"))
+        self.actionExport_Monthly.setText(_translate("MainWindow", "Export Monthly"))
 

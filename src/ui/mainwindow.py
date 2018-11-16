@@ -64,6 +64,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # action setup
         self.actionGenerate_Schedule.triggered.connect(self.generateSchedule)
         self.actionExport_Schedule.triggered.connect(self.exportSchedule)
+        self.actionExport_Monthly.triggered.connect(self.exportMonthlySchedule)
         self.actionPublish.triggered.connect(self.publishSchedule)
         self.actionClear_Calendar.triggered.connect(self.clearCalendar)
 
@@ -234,7 +235,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if not fileName:
             return
 
-        ExcelHelper.saveToFile(fileName, self.scheduleTable)
+        ExcelHelper.saveYearlySchedule(fileName, self.scheduleTable)
+
+    def exportMonthlySchedule(self):
+        # open save dialog to let user choose folder + filename
+        fileName = ''
+        # fileName, _ = QFileDialog.getSaveFileName(
+        #     self, "Save Excel file", "", "Excel file (*.xlsx)"
+        # )
+
+        # if not fileName:
+        #     return
+
+        calendarYear = self.calendarYearSpinBox.value()
+        ExcelHelper.saveMonthlySchedule(fileName, self.scheduleTable, calendarYear)
 
     def publishSchedule(self):
         calendarYear = self.calendarYearSpinBox.value()
