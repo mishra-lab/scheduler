@@ -239,13 +239,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def exportMonthlySchedule(self):
         # open save dialog to let user choose folder + filename
-        fileName = ''
-        # fileName, _ = QFileDialog.getSaveFileName(
-        #     self, "Save Excel file", "", "Excel file (*.xlsx)"
-        # )
+        fileName, _ = QFileDialog.getSaveFileName(
+            self, "Save Excel file", "", "Excel file (*.xlsx)"
+        )
 
-        # if not fileName:
-        #     return
+        if not fileName:
+            return
 
         calendarYear = self.calendarYearSpinBox.value()
         ExcelHelper.saveMonthlySchedule(fileName, self.scheduleTable, calendarYear)
