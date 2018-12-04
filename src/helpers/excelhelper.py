@@ -38,8 +38,8 @@ class ExcelHelper:
         # for each weeknum, loop over days in that week, assuming we start
         # at monday and end on friday
         
-        # TODO: add time of day field (to distinguish 8am-5pm from 5pm-8am)
-        DayFields = namedtuple('DayFields', ['fulldate', 'date', 'day', 'clinicians'])
+        DayFields = namedtuple('DayFields', 
+            ['fulldate', 'date', 'day', 'dayclin', 'nightclin'])
 
         cal = calendar.Calendar()
         numCols = table.columnCount()
@@ -70,11 +70,16 @@ class ExcelHelper:
             weekEnd = weekStart + timedelta(hours=WEEK_HOURS)
 
             # enumerate weekdays
-            while day <= weekEnd:
+            while day < weekEnd:
                 result.append(DayFields(
                     '{:%Y-%m-%d}'.format(day), 
                     '{:%b-%d}'.format(day), 
-                    '{:%a}'.format(day), weekClinicians))
+                    '{:%a}'.format(day),
+                    weekClinicians,
+
+                    # handle friday separately, distinguish day/night clinicians
+                    weekendClinician if day.date() == weekEnd.date() else weekClinicians
+                ))
                 day += timedelta(days=1)
 
             # enumerate weekend
@@ -84,7 +89,9 @@ class ExcelHelper:
                     '{:%Y-%m-%d}'.format(day), 
                     '{:%b-%d}'.format(day), 
                     '{:%a}'.format(day), 
-                    weekendClinician))
+                    weekendClinician,
+                    weekendClinician
+                ))
                 day += timedelta(days=1)
 
             return result
@@ -124,26 +131,35 @@ class ExcelHelper:
             ws = wb.create_sheet(title)
 
             # write header
-            ws.cell(row=1, column=1, value='Date')
-            ws.cell(row=1, column=2, value='Day')
+            ws.cell(row=2, column=1, value='Date')
+            ws.cell(row=2, column=2, value='Day')
 
             col_idx = 3
             for div in divisions:
                 ws.cell(row=1, column=col_idx, value='{} Service'.format(div))
-                col_idx += 1
+                ws.cell(row=2, column=col_idx, value='0800 - 1700')
+                ws.cell(row=2, column=col_idx+1, value='1700 - 0800')
+                col_idx += 2
 
             # write month sheet
             month = month_dict[key]
             for i in range(len(month)):
                 daytuple = month[i]
-                ws.cell(row=(i+2), column=1, value=daytuple.date)
-                ws.cell(row=(i+2), column=2, value=daytuple.day)
+                ws.cell(row=(i+3), column=1, value=daytuple.date)
+                ws.cell(row=(i+3), column=2, value=daytuple.day)
 
                 col_idx = 3
-                for div in daytuple.clinicians:
-                    ws.cell(row=(i+2), column=col_idx, value=div)
-                    col_idx += 1
+                for j in range(len(divisions)):
+                    dayClinician = daytuple.dayclin[j]
+                    nightClinician = daytuple.nightclin[j]
 
+                    ws.cell(row=(i+3), column=col_idx, value=dayClinician)
+                    ws.cell(row=(i+3), column=col_idx+1, value=nightClinician)
+
+                    col_idx += 2
+
+        # remove the automatically created first sheet
+        wb.remove(wb.active)
         wb.save(filename)
 
     @staticmethod
