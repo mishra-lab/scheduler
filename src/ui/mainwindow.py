@@ -197,11 +197,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             QMessageBox.critical(self, "Could not generate schedule!",
                 "Could not generate a schedule based on the given constraints and configuration. Try adjusting min/max values in the configuration tab.")
         
-            self.holidayMap = schedule[2]
-            longWeekends = list(self.holidayMap.values())
+        else:
             divAssignments = schedule[0]
             weekendAssignments = schedule[1]
-            longWeekends = schedule[2]
+            self.holidayMap = schedule[2]
+            longWeekends = list(self.holidayMap.values())
             
             # create rows for each week num
             for weekNum in range(1, len(weekendAssignments) + 1):
@@ -247,11 +247,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self, "Save Excel file", "", "Excel file (*.xlsx)"
         )
 
-        ExcelHelper.saveMonthlySchedule(fileName, self.scheduleTable, calendarYear, self.holidayMap)
+        if not fileName:
             return
 
         calendarYear = self.calendarYearSpinBox.value()
-        ExcelHelper.saveMonthlySchedule(fileName, self.scheduleTable, calendarYear)
+        ExcelHelper.saveMonthlySchedule(fileName, self.scheduleTable, calendarYear, self.holidayMap)
 
     def publishSchedule(self):
         calendarYear = self.calendarYearSpinBox.value()
