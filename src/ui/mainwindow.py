@@ -68,6 +68,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.actionPublish.triggered.connect(self.publishSchedule)
         self.actionClear_Calendar.triggered.connect(self.clearCalendar)
 
+        # misc vars
+        self.holidayMap = {}
+
     def openConfig(self):
         path, _ = QFileDialog.getOpenFileName(
             self, "Open file", "", "JSON files (*.json)"
@@ -194,7 +197,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             QMessageBox.critical(self, "Could not generate schedule!",
                 "Could not generate a schedule based on the given constraints and configuration. Try adjusting min/max values in the configuration tab.")
         
-        else:
+            self.holidayMap = schedule[2]
+            longWeekends = list(self.holidayMap.values())
             divAssignments = schedule[0]
             weekendAssignments = schedule[1]
             longWeekends = schedule[2]
@@ -243,7 +247,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self, "Save Excel file", "", "Excel file (*.xlsx)"
         )
 
-        if not fileName:
+        ExcelHelper.saveMonthlySchedule(fileName, self.scheduleTable, calendarYear, self.holidayMap)
             return
 
         calendarYear = self.calendarYearSpinBox.value()

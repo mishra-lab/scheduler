@@ -229,6 +229,7 @@ class Scheduler:
 
         self.clinicians = {}
         self.divisions = {}
+        self.holiday_map = {}
         self.long_weekends = []
         
         self.set_long_weekends(long_weekends)
@@ -268,7 +269,7 @@ class Scheduler:
                     i = week_num - 1
                     weekendAssignments[i] = clinician.name
 
-            return (divAssignments, weekendAssignments, self.long_weekends)
+            return (divAssignments, weekendAssignments, self.holiday_map)
 
     def setup_solver(self):
         if getattr(sys, 'frozen', False):
@@ -376,7 +377,7 @@ class Scheduler:
                 print('Event creator {} was not found in clinicians'.format(creator))
 
     def set_long_weekends(self, events):
-        lw = set()
+        lw = dict()
         for event in events:
             start = datetime.strptime(
                 event['start'].get('date'),
@@ -387,11 +388,14 @@ class Scheduler:
             # Mon statutory holidays are associated with their weeknum - 1
             #   (i.e.: the previous weeknum)
             if start.isoweekday() == 1:
-                lw.add(start.isocalendar()[1] - 1)
+                lw[event['start']['date']] = start.isocalendar()[1] - 1
+                # lw.add(start.isocalendar()[1] - 1)
             elif start.isoweekday() == 5:
-                lw.add(start.isocalendar()[1])
+                lw[event['start']['date']] = start.isocalendar()[1]
+                # lw.add(start.isocalendar()[1])
 
-        self.long_weekends = list(lw)
+        self.holiday_map = lw
+        self.long_weekends = list(lw.values())
     
     def setup_problem(self):
         """

@@ -34,7 +34,7 @@ class ExcelHelper:
         wb.save(filename)
 
     @staticmethod
-    def saveMonthlySchedule(filename, table, year):
+    def saveMonthlySchedule(filename, table, year, holidayMap):
         # for each weeknum, loop over days in that week, assuming we start
         # at monday and end on friday
         
@@ -61,7 +61,6 @@ class ExcelHelper:
             weekClinicians = clinTuple[:-1]
             weekendClinician = tuple([clinTuple[-1]] * len(divisions))
 
-            # TODO: handle holiday weekends
             day = weekStart = datetime.strptime(
                 # year / weekNum / Monday / 8AM
                 '{0}/{1:02d}/1/08:00'.format(year, weekNum),
@@ -119,6 +118,18 @@ class ExcelHelper:
 
         # group day mappings according to month
         all_dates = list(itertools.chain.from_iterable(date_maps))
+
+        # deal with holidays after we created all_dates
+        for i in range(len(all_dates)):
+            date = all_dates[i]
+            if date.fulldate in holidayMap:
+                weekNum = holidayMap[date.fulldate]
+                clin = clinicianTuples[weekNum - 1][-1]
+
+                # replace date with the correct DayTuple
+                newdate = date._replace(dayclin=(clin, clin), nightclin=(clin, clin))
+                all_dates[i] = newdate
+
         groupby_months = itertools.groupby(all_dates, group_months)
 
         month_dict = {k : list(v) for k, v in groupby_months}
