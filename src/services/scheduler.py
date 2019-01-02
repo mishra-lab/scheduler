@@ -1,12 +1,16 @@
 import json
 import math
+import os
 import random
+import sys
 from datetime import datetime, timedelta
 
+import pulp
 from googleapiclient.discovery import build
 from httplib2 import Http
-from oauth2client import file as oauth_file, client, tools
-from pulp import *
+from oauth2client import client
+from oauth2client import file as oauth_file
+from oauth2client import tools
 
 from constants import *
 
@@ -29,7 +33,7 @@ class Variable:
         self._init_var()
 
     def _init_var(self):
-        self._var = LpVariable(
+        self._var = pulp.LpVariable(
             self.name, lowBound=self.min, upBound=self.max, cat="Integer"
         )
 
@@ -126,6 +130,12 @@ class Division:
             del self.bound_dict[clinician.name]
             self.clinicians.remove(clinician)
 
+    def reset(self):
+        """
+        Resets division to pre-solving state
+        """
+        self.assignments = []
+
     def get_vars(self):
         """
         Returns all block variables corresponding to this division, across all
@@ -178,6 +188,13 @@ class Clinician:
         if var in self._vars:
             self._vars.remove(var)
 
+    def reset(self):
+        """
+        Resets clinician to pre-solving state
+        """
+        self._vars = []
+        self.weekends_assigned = []
+
     def get_vars(self, predicate=None):
         """
         Returns a list of all variables from this clinician that satisfy
@@ -206,62 +223,113 @@ class Scheduler:
     schedule based on the supplied clinician and division data.
     """
 
-    def __init__(self, config_path, num_blocks):
-        self.config_file = config_path
+    def __init__(self, num_blocks, clin_data={}, timeoff_data=[], long_weekends=[]):
         self.num_blocks = num_blocks
         self.num_weekends = num_blocks * BLOCK_SIZE
+
         self.clinicians = {}
         self.divisions = {}
+        self.holiday_map = {}
         self.long_weekends = []
-        self.problem = LpProblem('scheduler', sense=LpMaximize)
-        self.read_config()
+        
+        self.set_long_weekends(long_weekends)
+        self.set_data(clin_data)
+        self.set_timeoff(timeoff_data)
+
+    def generate(self, debug=False):
         self.setup_solver()
+        self.setup_problem()
+        ret = self.problem.solve(self.solver) == pulp.LpStatusOptimal
+
+        if debug:
+            print('objective value = {}'.format(pulp.value(self.problem.objective)))
+            print('conflicts per doc:')
+            for clinician in self.clinicians.values():
+                print(clinician.name)
+                assigned_blocksoff = clinician.get_block_vars(
+                    lambda x, clinician=clinician: x.block_num in clinician.blocks_off and x.get_value() == 1.0)
+                assigned_weekendsoff = clinician.get_weekend_vars(
+                    lambda x, clinician=clinician: x.week_num in clinician.weekends_off and x.get_value() == 1.0)
+                print('\t{} out of {} blocks'.format(
+                    len(assigned_blocksoff), len(clinician.blocks_off)))
+                print('\t{} out of {} weekends'.format(
+                    len(assigned_weekendsoff), len(clinician.weekends_off)))
+                    
+        if ret:
+            self.assign_schedule()
+            # only keep assignments mapping
+            divAssignments = dict.fromkeys(self.divisions.keys())
+            for key in self.divisions.keys():
+                div = self.divisions[key]
+                divAssignments[key] = [clin.name for clin in div.assignments]
+
+            weekendAssignments = [None] * self.num_weekends
+            for clinician in self.clinicians.values():
+                for week_num in clinician.weekends_assigned:
+                    i = week_num - 1
+                    weekendAssignments[i] = clinician.name
+
+            return (divAssignments, weekendAssignments, self.holiday_map)
 
     def setup_solver(self):
-        import sys
         if getattr(sys, 'frozen', False):
             # running in a bundle
             cwd = os.getcwd()
             exe = 'cbc-2.9.9-x86\\bin\\cbc.exe'
             solverdir = os.path.join(cwd, exe)
-            self.solver = COIN_CMD(path=solverdir)
+            self.solver = pulp.COIN_CMD(path=solverdir)
         else:
             # running from source
-            self.solver = LpSolverDefault
+            self.solver = pulp.LpSolverDefault
 
-    def read_config(self):
+    def set_data(self, data):
+        """
+        Converts data to a form useable by LP solver
+        """
+        self.clinicians = {}
+        self.divisions = {}
+
+        for clin_name in data:
+            clin_object = data[clin_name]
+
+            # populate blocks/weekends off
+            blocks_off, weekends_off = [], []
+            if 'blocks_off' in clin_object:
+                blocks_off = clin_object['blocks_off']
+            if 'weekends_off' in clin_object:
+                blocks_off = clin_object['weekends_off']
+
+            clinician = Clinician(
+                name=clin_name,
+                email=clin_object['email'],
+                blocks_off=blocks_off,
+                weekends_off=weekends_off
+            )
+            # save to local dict
+            self.clinicians[clin_name] = clinician
+
+            # parse divisions
+            for div_name in clin_object['divisions']:
+                div_object = clin_object['divisions'][div_name]
+                # create division in local dict, if necessary
+                if div_name not in self.divisions:
+                    self.divisions[div_name] = Division(div_name)
+
+                # save to local dict
+                self.divisions[div_name].add_clinician(
+                    clinician=clinician,
+                    min_=div_object['min'],
+                    max_=div_object['max']
+                )
+
+    def read_config(self, config_path):
         """
         Retrieves static data about clinicians and divisions from a 
         config file.
         """
-        with open(self.config_file, 'r') as f:
+        with open(config_path, 'r') as f:
             data = json.load(f)
-            try:
-                for clinician in data["CLINICIANS"]:
-                    blocks_off, weekends_off = [], []
-                    if "blocks_off" in data["CLINICIANS"][clinician]:
-                        blocks_off = data["CLINICIANS"][clinician]["blocks_off"]
-                    if "weekends_off" in data["CLINICIANS"][clinician]:
-                        weekends_off = data["CLINICIANS"][clinician]["weekends_off"]
-                    self.clinicians[clinician] = \
-                        Clinician(
-                            name=clinician,
-                            email=data["CLINICIANS"][clinician]["email"],
-                            blocks_off=blocks_off,
-                            weekends_off=weekends_off)
-
-                for division in data["DIVISIONS"]:
-                    self.divisions[division] = Division(division)
-                    for clinician in data["DIVISIONS"][division]:
-                        self.divisions[division].add_clinician(
-                            clinician=self.clinicians[clinician],
-                            min_=data["DIVISIONS"][division][clinician]["min"],
-                            max_=data["DIVISIONS"][division][clinician]["max"],
-                        )
-
-            except KeyError as err:
-                print('Invalid config file: missing key {}'.format(str(err)))
-                raise err
+            self.set_data(data)
 
     def set_timeoff(self, events):
         """
@@ -308,16 +376,36 @@ class Scheduler:
             else:
                 print('Event creator {} was not found in clinicians'.format(creator))
 
-    def set_long_weekends(self, long_weekends):
-        """
-        Populates set of long weekends (week numbers).
-        """
-        self.long_weekends = long_weekends
+    def set_long_weekends(self, events):
+        lw = dict()
+        for event in events:
+            start = datetime.strptime(
+                event['start'].get('date'),
+                '%Y-%m-%d'
+            )
 
-    def build_lp(self):
+            # Fri statutory holidays are associated with their regular weeknum
+            # Mon statutory holidays are associated with their weeknum - 1
+            #   (i.e.: the previous weeknum)
+            if start.isoweekday() == 1:
+                lw[event['start']['date']] = start.isocalendar()[1] - 1
+                # lw.add(start.isocalendar()[1] - 1)
+            elif start.isoweekday() == 5:
+                lw[event['start']['date']] = start.isocalendar()[1]
+                # lw.add(start.isocalendar()[1])
+
+        self.holiday_map = lw
+        self.long_weekends = list(lw.values())
+    
+    def setup_problem(self):
         """
         Constructs an LP program based on the clinician, division data.
         """
+        self.problem = pulp.LpProblem('scheduler', sense=pulp.LpMaximize)
+
+        for clinician in self.clinicians.values(): clinician.reset()
+        for division in self.divisions.values(): division.reset()
+
         divisions = list(self.divisions.values())
         clinicians = list(self.clinicians.values())
 
@@ -356,7 +444,7 @@ class Scheduler:
         for div in divisions:
             for block_num in range(1, self.num_blocks + 1):
                 self.problem.add(
-                    lpSum(
+                    pulp.lpSum(
                         [_.get_var()
                          for _ in div.get_vars_by_block_num(block_num)]
                     ) == 1
@@ -370,7 +458,7 @@ class Scheduler:
                         lambda x, week_num=week_num: x.week_num == week_num
                     )
                  ]
-            self.problem.add(lpSum(
+            self.problem.add(pulp.lpSum(
                 [_.get_var() for _ in vars_]) == 1)
 
     def _build_minmax_constraints(self, divisions):
@@ -378,7 +466,7 @@ class Scheduler:
         for div in divisions:
             for clinician in div.clinicians:
                 (min_, max_) = div.bound_dict[clinician.name]
-                sum_ = lpSum(
+                sum_ = pulp.lpSum(
                     [_.get_var() for _ in div.get_vars_by_name(clinician.name)])
                 self.problem.add(sum_ <= max_)
                 self.problem.add(sum_ >= min_)
@@ -388,7 +476,7 @@ class Scheduler:
             for block_num in range(1, self.num_blocks):
                 # if a clinician works a given block, they should not work any
                 # adjacent block (even in a different division)
-                sum_ = lpSum(
+                sum_ = pulp.lpSum(
                     [_.get_var() for _ in clinician.get_block_vars(
                         lambda x, block_num=block_num: x.block_num in (block_num, block_num + 1))]
                 )
@@ -396,7 +484,7 @@ class Scheduler:
 
             # at most 1 consecutive weekend of work
             for week_num in range(1, self.num_weekends):
-                sum_ = lpSum(
+                sum_ = pulp.lpSum(
                     [_.get_var() for _ in clinician.get_weekend_vars(
                         lambda x, week_num=week_num: x.week_num in (
                             week_num, week_num + 1)
@@ -412,7 +500,7 @@ class Scheduler:
             min_long_weekends = math.floor(
                 len(self.long_weekends) / len(self.clinicians))
             for clinician in clinicians:
-                sum_ = lpSum(
+                sum_ = pulp.lpSum(
                     [_.get_var() for _ in clinician.get_weekend_vars(
                         lambda x, l=self.long_weekends: x.week_num in l
                     )]
@@ -465,7 +553,7 @@ class Scheduler:
                     lambda x: 'adjacency' in x.name
                 )]
             )
-        return lpSum(adjacency_vars)
+        return pulp.lpSum(adjacency_vars)
 
     def _build_appeasement_objectives(self, clinicians):
         wa_variables = []
@@ -497,29 +585,9 @@ class Scheduler:
             )
 
         return (
-            lpSum(wa_variables),
-            lpSum(ba_variables)
+            pulp.lpSum(wa_variables),
+            pulp.lpSum(ba_variables)
         )
-
-    def solve_lp(self):
-        """
-        Solves LP program and prints information regarding solution.
-        """
-        ret = self.problem.solve(self.solver) == LpStatusOptimal
-        print('objective value = {}'.format(value(self.problem.objective)))
-        print('conflicts per doc:')
-        for clinician in self.clinicians.values():
-            print(clinician.name)
-            assigned_blocksoff = clinician.get_block_vars(
-                lambda x, clinician=clinician: x.block_num in clinician.blocks_off and x.get_value() == 1.0)
-            assigned_weekendsoff = clinician.get_weekend_vars(
-                lambda x, clinician=clinician: x.week_num in clinician.weekends_off and x.get_value() == 1.0)
-            print('\t{} out of {} blocks'.format(
-                len(assigned_blocksoff), len(clinician.blocks_off)))
-            print('\t{} out of {} weekends'.format(
-                len(assigned_weekendsoff), len(clinician.weekends_off)))
-        print()
-        return ret
 
     def assign_schedule(self):
         """
@@ -530,109 +598,12 @@ class Scheduler:
             for block_num in range(1, self.num_blocks + 1):
                 assignments = list(filter(lambda x: x.get_value(
                 ) == 1.0, div.get_vars_by_block_num(block_num)))
-                div.assignments.extend(
-                    [_.clinician for _ in assignments]
-                )
+
+                for _ in range(BLOCK_SIZE):
+                    div.assignments.extend(
+                        [__.clinician for __ in assignments]
+                    )
 
         for clinician in self.clinicians.values():
             vars_ = clinician.get_weekend_vars(lambda x: x.get_value() == 1.0)
             clinician.weekends_assigned = [_.week_num for _ in vars_]
-
-
-class API:
-    """
-    A helper class that wraps some of the API methods of Google calendar.
-    """
-    SCOPE = 'https://www.googleapis.com/auth/calendar'
-
-    def __init__(self, calendar_id, flags):
-        # retrieve credentials / create new
-        store = oauth_file.Storage('token.json')
-        creds = store.get()
-        if not creds or creds.invalid:
-            flow = client.flow_from_clientsecrets(
-                self.get_client_secret(), API.SCOPE)
-            creds = tools.run_flow(flow, store, flags)
-
-        # discover calendar API
-        self._service = build(
-            'calendar', 'v3', http=creds.authorize(Http()))
-        self.calendar_id = calendar_id
-        self.time_zone = self.get_timezone()
-
-    def get_client_secret(self):
-        import sys
-        if getattr(sys, 'frozen', False):
-            # running in a bundle
-            cwd = os.getcwd()
-            file = 'credentials.json'
-            return os.path.join(cwd, file)
-        else:
-            # running from source
-            return 'credentials.json'
-
-    def get_timezone(self):
-        """
-        Returns the timezone of the calendar given by `calendar_id`.
-        """
-        # pylint: disable=maybe-no-member
-        result = self._service.calendars().get(
-            calendarId=self.calendar_id).execute()
-        return result.get('timeZone')
-
-    def get_events(self, start, end, search_str='', max_res=1000):
-        """
-        Returns a list of at most `max_res` events with dates between 
-        start and end.
-        """
-        # pylint: disable=maybe-no-member
-        result = self._service.events().list(
-            calendarId=self.calendar_id,
-            timeMin=start,
-            timeMax=end,
-            maxResults=max_res,
-            singleEvents=True,
-            orderBy='startTime').execute()
-
-        events = result.get('items', [])
-        return list(filter(lambda x, s=search_str: s in x['summary'], events))
-
-    def create_event(self, start, end, attendees, summary):
-        """
-        Creates a new event starting at `start` and ending at `end` with
-        the given `attendees` and `summary`
-        """
-        event = {
-            'summary': summary,
-            'start': {
-                'dateTime': start,
-                'timeZone': self.time_zone
-            },
-            'end': {
-                'dateTime': end,
-                'timeZone': self.time_zone
-            },
-            'attendees': [
-                {'email': _} for _ in attendees
-            ]
-        }
-
-        # pylint: disable=maybe-no-member
-        self._service.events().insert(
-            calendarId=self.calendar_id,
-            body=event
-        ).execute()
-
-    def delete_event(self, event_id):
-        # pylint: disable=maybe-no-member
-        self._service.events().delete(
-            calendarId=self.calendar_id,
-            eventId=event_id
-        ).execute()
-
-    def delete_events(self, start, end, search_str=''):
-        events = self.get_events(start, end, search_str)
-
-        for event in events:
-            id_ = event['id']
-            self.delete_event(id_)
