@@ -109,3 +109,8 @@ venv.bak/
 # API
 src/credentials.json
 src/token.json
+
+# LaTeX
+*.aux
+*.out
+*.synctex.gz
