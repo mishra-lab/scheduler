@@ -36,16 +36,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def configuration(self, value):
         if type(value) is dict:
             self._configuration = value
-            configStatus = len(self._configuration.keys()) > 0
-            self.configFileLabel.setText('Configuration: {}'.format(
-                'loaded' if configStatus else 'not loaded'
-            ))
         else:
             raise TypeError(value)
 
-    def setupConfigurationTab(self):
-        self.configuration = {}
+    @property
+    def configPath(self):
+        return self._configPath
 
+    @configPath.setter
+    def configPath(self, value):
+        if value:
+            self._configPath = value
+            self.tabWidget.setTabText(0, 'Configuration ({})'.format(self._configPath))
+            self.tabWidget.setTabText(1, 'Scheduler ({})'.format(self._configPath))
+
+    def setupConfigurationTab(self):
         # treeview setup
         self.model = TreeModel(None)
         self.treeEditorDelegate = TreeEditDelegate()
@@ -59,6 +64,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.actionNew_Clinician.triggered.connect(self.createNewClinician)
         self.actionEdit_Clinician.triggered.connect(self.editClinician)
         self.actionDelete_Clinician.triggered.connect(self.deleteClinician)
+
+        self.newConfig()
 
     def setupSchedulerTab(self):
         # action setup
@@ -79,6 +86,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if path != '':
             try:
                 with open(path, 'r') as f:
+                    self.configPath = path
                     self.configuration = json.load(f)
                     UiHelper.syncTreeView(self.treeView, self.model, self.configuration)
 
@@ -96,6 +104,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     data = {}
                     UiHelper.convertTreeToDict(self.model.rootItem, data)
                     json.dump(data, f)
+                    self.configPath = fileName
 
             except Exception as ex:
                 QMessageBox.critical(self, "Unable to save file", str(ex))
@@ -103,6 +112,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def newConfig(self):
         # clear data
         self.configuration = {}
+        self.configPath = 'new config'
         
         # build treeview
         UiHelper.syncTreeView(self.treeView, self.model, self.configuration)
