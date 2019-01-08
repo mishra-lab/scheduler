@@ -22,6 +22,10 @@ from .ui_mainwindow import Ui_MainWindow
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
+
+        self._configuration = {}
+        self._configPath = ''
+
         self.setupUi(self)
         self.setupConfigurationTab()
         self.setupSchedulerTab()
