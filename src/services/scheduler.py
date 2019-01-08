@@ -224,7 +224,7 @@ class Scheduler:
     schedule based on the supplied clinician and division data.
     """
 
-    def __init__(self, logger, num_blocks, clin_data={}, request_dict=[], holidays=[]):
+    def __init__(self, logger, num_blocks, clin_data={}, request_dict=[], holidays=[], constraints=[]):
         self.num_blocks = num_blocks
         self.num_weekends = num_blocks * BLOCK_SIZE
 
@@ -233,10 +233,12 @@ class Scheduler:
         self.holiday_map = {}
         self.long_weekends = []
         self._logger = logger
+        self.constraints = []
         
         self.set_long_weekends(holidays)
         self.set_data(clin_data)
         self.set_timeoff(request_dict)
+        self.set_constraints(constraints)
 
     def generate(self, verbose=False, shuffle=False):
         self.setup_solver()
@@ -330,15 +332,6 @@ class Scheduler:
                     max_=div_object['max']
                 )
 
-    def read_config(self, config_path):
-        """
-        Retrieves static data about clinicians and divisions from a 
-        config file.
-        """
-        with open(config_path, 'r') as f:
-            data = json.load(f)
-            self.set_data(data)
-
     def set_timeoff(self, request_dict):
         """
         Populates timeoff for each clinician in self.clinicians based
@@ -390,15 +383,21 @@ class Scheduler:
                 self.holiday_map[date] = date.isocalendar()[1]
         
         self.long_weekends = list(self.holiday_map.values())
-    
+   
+    def set_constraints(self, constraint_dict):
+        for key in constraint_dict:
+            self.constraints.append(Scheduler.CONSTRAINT_MAPPING[key])
+ 
     def setup_problem(self, shuffle=False):
         """
         Constructs an LP program based on the clinician, division data.
         """
         self.problem = pulp.LpProblem('scheduler', sense=pulp.LpMaximize)
 
-        for clinician in self.clinicians.values(): clinician.reset()
-        for division in self.divisions.values(): division.reset()
+        for clinician in self.clinicians.values():
+            clinician.reset()
+        for division in self.divisions.values():
+            division.reset()
 
         divisions = list(self.divisions.values())
         clinicians = list(self.clinicians.values())
@@ -406,14 +405,10 @@ class Scheduler:
         if shuffle: random.shuffle(clinicians)
 
         self._build_clinician_variables(divisions, clinicians)
-        self._build_coverage_constraints(divisions, clinicians)
-        self._build_minmax_constraints(divisions)
-        self._build_consec_blocks_constraints(clinicians)
-        self._build_spread_blocks_constraints(clinicians)
-        self._build_spread_weekends_constraints(clinicians)
-        self._build_longweekend_constraints(clinicians)
-        self._build_weekend_constraints(clinicians)
-        self._build_adjacency_variables(divisions)
+
+        # add all necessary constraints
+        for func in self.constraints:
+            func(self)
 
         block_conflicts_obj = self._build_block_objective(clinicians)
         weekend_conflicts_obj = self._build_weekend_objective(clinicians)
@@ -459,8 +454,8 @@ class Scheduler:
                 [_ for clinician in clinicians
                     for _ in clinician.get_weekend_vars(
                         lambda x, week_num=week_num: x.week_num == week_num
-                    )
-                 ]
+                )
+                ]
             self.problem.add(pulp.lpSum(
                 [_.get_var() for _ in vars_]) == 1)
 
@@ -645,3 +640,12 @@ class Scheduler:
         for clinician in self.clinicians.values():
             vars_ = clinician.get_weekend_vars(lambda x: x.get_value() == 1.0)
             clinician.weekends_assigned = [_.week_num for _ in vars_]
+
+    CONSTRAINT_MAPPING = {
+        'balancedLongWeekends': _constrain_balanced_longweekends,
+        'blockCoverage': _constrain_block_coverage,
+        'minMaxBlocks': _constrain_minmax_blocks,
+        'preventConsecutiveBlocks': _constrain_consec_blocks,
+        'preventConsecutiveWeekends': _constrain_consec_weekends,
+        'weekendCoverage': _constrain_weekend_coverage
+    }
