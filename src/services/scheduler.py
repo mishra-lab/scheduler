@@ -414,6 +414,7 @@ class Scheduler:
         self._build_minmax_constraints(divisions)
         self._build_consec_constraints(clinicians)
         self._build_longweekend_constraints(clinicians)
+        self._build_weekend_constraints(clinicians)
         self._build_adjacency_variables(divisions)
         appeasement_objs = self._build_appeasement_objectives(clinicians)
 
@@ -494,7 +495,7 @@ class Scheduler:
 
     def _build_longweekend_constraints(self, clinicians):
         if self.long_weekends:
-            # equal distribution of long weekends
+            # (roughly) equal distribution of long weekends
             max_long_weekends = math.ceil(
                 len(self.long_weekends) / len(self.clinicians))
             min_long_weekends = math.floor(
@@ -507,6 +508,22 @@ class Scheduler:
                 )
                 self.problem.add(sum_ <= max_long_weekends)
                 self.problem.add(sum_ >= min_long_weekends)
+
+    def _build_weekend_constraints(self, clinicians):
+        # (roughly) equal distribution of weekends
+        max_weekends = math.ceil(
+            self.num_weekends / len(clinicians)
+        )
+        min_weekends = math.floor(
+            self.num_weekends / len(clinicians)
+        )
+
+        for clinician in clinicians:
+            sum_ = pulp.lpSum(
+                [_.get_var() for _ in clinician.get_weekend_vars()]
+            )
+            self.problem.add(sum_ <= max_weekends)
+            self.problem.add(sum_ >= min_weekends)
 
     def _build_adjacency_variables(self, divisions):
         # block-adjacent weekends

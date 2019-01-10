@@ -58,12 +58,15 @@ Note that weekends are not distinguished according to division, since the clinic
 		\item In a given division, each clinician can only work between the minimum and maximum number of weeks they are allowed (note: these may be different for different divisions)
 			\begin{equation}
 				m_{c, d} \leq \sum_{d} X_{c, b, d} \leq M_{c, d} \text{ for each } c, d
-			\end{equation}			
+			\end{equation}
+		\item Weekends should be roughly equally distributed between clinicians.
+			\begin{equation}
+				\floor*{ \frac{W}{C} } \leq \sum_{w} Y_{c, w} \leq \ceil*{ \frac{W}{C} } \text{ for each } c
+			\end{equation}
 		\item Long weekends should be roughly equally distributed between clinicians.
 			\begin{equation}
 				\floor*{\frac{|\mc{L}|}{C}} \leq \sum_{w \in \mc{L}} Y_{c, w} \leq \ceil*{\frac{|\mc{L}|}{C}} \text{ for each } c
 			\end{equation}
-		Each clinician should work a given number of long weekends. Roughly, this is the number of long weekends divided by the number of clinicians
 		\item A clinician cannot work two consecutive blocks (across all divisions)
 			\begin{equation}
 				\sum_d \left(X_{c, b, d} + X_{c, b+1, d}\right) \leq 1 \text{ for each $c$ and each $b \leq B - 1$}
