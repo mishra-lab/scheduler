@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Welcome to Clinician Scheduler’s documentation! &#8212; Clinician Scheduler 1.0 documentation</title>
+    <title>Clinician Scheduler &#8212; Clinician Scheduler 1.0 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -31,18 +31,82 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="welcome-to-clinician-scheduler-s-documentation">
-<h1>Welcome to Clinician Scheduler’s documentation!<a class="headerlink" href="#welcome-to-clinician-scheduler-s-documentation" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="clinician-scheduler">
+<h1>Clinician Scheduler<a class="headerlink" href="#clinician-scheduler" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
+<p>The clinician scheduler allows you to automatically generate and publish
+schedules that satisfy common constraints in an on-call system, while taking
+into account the preferences of clinicians.</p>
+<div class="section" id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
+<p>Download and unzip the compressed file to an appropriate folder.</p>
+<div class="section" id="generating-google-api-credentials">
+<h3>Generating Google API credentials<a class="headerlink" href="#generating-google-api-credentials" title="Permalink to this headline">¶</a></h3>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This process should only be done the very first time you are running
+the program. If you have previously generated a credential file using
+this process you should be able to re-use it. Just make sure that the
+credential file is placed in the same folder as the executable (<code class="docutils literal notranslate"><span class="pre">scheduler.exe</span></code>).</p>
 </div>
-<div class="section" id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
-<ul class="simple">
-<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
-<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
-<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
-</ul>
+<p>The application uses Google calendar for retrieving clinician
+time-off requests and long weekend information, as well as uploading the
+generated schedule to the calendar. These operations require the use
+of Google API credentials, which can be generated as follows.</p>
+<ol class="arabic simple">
+<li>Sign into <a class="reference external" href="https://console.developers.google.com">https://console.developers.google.com</a>.</li>
+<li>Click on the project selector at the top left of the page.</li>
+</ol>
+<img alt="_images/step2_select_a_project.png" src="_images/step2_select_a_project.png" />
+<ol class="arabic simple" start="3">
+<li>Click on <cite>New Project</cite>.</li>
+</ol>
+<img alt="_images/step3_new_project.png" src="_images/step3_new_project.png" />
+<ol class="arabic simple" start="4">
+<li>Enter “Clinician Scheduler” as the <cite>Project Name</cite> and click <cite>Create</cite>.</li>
+</ol>
+<img alt="_images/step4_create_project.png" src="_images/step4_create_project.png" />
+<p>5. Now you should see the dashboard for the Clinician Scheduler project.
+You will need to enable the Google calendar API. Click on <cite>Enable APIs and Services</cite>.</p>
+<img alt="_images/step5_enable_apis_and_services.png" src="_images/step5_enable_apis_and_services.png" />
+<ol class="arabic simple" start="6">
+<li>Search for “Google calendar API” using the search bar, and select it.</li>
+</ol>
+<img alt="_images/step6_search_calendar_api.png" src="_images/step6_search_calendar_api.png" />
+<ol class="arabic simple" start="7">
+<li>Click <cite>Enable</cite>.</li>
+</ol>
+<img alt="_images/step7_enable_calendar_api.png" src="_images/step7_enable_calendar_api.png" />
+<p>8. Now you should see the overview page for the Google calendar API.
+To generate the credentials, click <cite>Create credentials</cite>.</p>
+<img alt="_images/step8_create_credentials.png" src="_images/step8_create_credentials.png" />
+<p>9. On the credentials form, choose “Google Calendar API” for <cite>Which API are you using?</cite>,
+then “Other UI (e.g. Windows, CLI tool)” for <cite>Where will you be calling the API from?</cite>
+and “User data” for <cite>What data will you be accessing?</cite>. Then click on <cite>What credentials do I need?</cite>.</p>
+<img alt="_images/step9_credentials_form.png" src="_images/step9_credentials_form.png" />
+<ol class="arabic simple" start="10">
+<li>Enter “Client” for <cite>Name</cite> and click on <cite>Create OAuth client ID</cite>.</li>
+</ol>
+<img alt="_images/step10_oauth_client_id.png" src="_images/step10_oauth_client_id.png" />
+<p>11. Choose the email address associated to your account for <cite>Email address</cite>
+and enter “Clinician Scheduler” for <cite>Product name shown to users</cite>, then
+click <cite>Continue</cite>.</p>
+<img alt="_images/step11_oauth_consent_screen.png" src="_images/step11_oauth_consent_screen.png" />
+<p>12. Your credentials are now generated! Make sure to download and save them
+in the same location that you unzipped the application, so that the
+credential file and the executable file (<code class="docutils literal notranslate"><span class="pre">scheduler.exe</span></code>) are in the same folder.</p>
+<img alt="_images/step12_download_credentials.png" src="_images/step12_download_credentials.png" />
+<div class="admonition attention">
+<p class="first admonition-title">Attention</p>
+<p class="last">Make sure the credential file is saved as <code class="docutils literal notranslate"><span class="pre">credentials.json</span></code> (rename it, if necessary),
+or otherwise the application will not be able to recognize it!</p>
+</div>
+</div>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+</div>
 </div>
 
 
