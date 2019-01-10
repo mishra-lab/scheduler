@@ -1,3 +1,4 @@
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -115,8 +116,6 @@ src/token.json
 *.out
 *.synctex.gz
 
-
-
 ##########
 # SPHINX #
 ##########
@@ -162,3 +161,7 @@ Thumbs.db
 # Editor backup files #
 #######################
 *~
+
+# Don't ignore HTML subdir of Sphinx docs!
+!docs/build/
+docs/build/doctrees
