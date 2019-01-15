@@ -9,7 +9,7 @@ app = None
 
 def main():
     app = QApplication([])
-    app.setApplicationName("Configuration Manager")
+    app.setApplicationName("Clinician Scheduler")
 
     window = MainWindow()
     app.exec_()

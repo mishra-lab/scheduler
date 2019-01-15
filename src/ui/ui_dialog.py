@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '..\designer\dialog.ui'
+# Form implementation generated from reading ui file 'src\designer\dialog.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.2
 #
@@ -75,7 +75,7 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        Dialog.setWindowTitle(_translate("Dialog", "Clinician Details"))
         self.nameLabel.setText(_translate("Dialog", "Name"))
         self.emailLabel.setText(_translate("Dialog", "Email"))
         item = self.divisionTable.horizontalHeaderItem(0)

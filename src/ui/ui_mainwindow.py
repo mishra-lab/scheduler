@@ -176,7 +176,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Clinician Scheduler"))
         self.configActions.setTitle(_translate("MainWindow", "Actions"))
         self.newConfigButton.setToolTip(_translate("MainWindow", "<html><head/><body><p>Create new configuration file</p></body></html>"))
         self.newConfigButton.setText(_translate("MainWindow", "New Config"))
