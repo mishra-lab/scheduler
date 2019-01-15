@@ -6,7 +6,7 @@ This project aims to make the task of creating schedules for clinicians automati
 ## Features
 - [x] Quick and easy generation of schedules given constraints
 - [x] Integration with Google Calendar
-- [ ] (WIP) Robust and intuitive graphical user interface 
+- [x] Robust and intuitive graphical user interface 
 
 ## Building Binaries
 ### Required Packages
