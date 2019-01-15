@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'designer\mainwindow.ui'
+# Form implementation generated from reading ui file 'src\designer\mainwindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.2
 #
@@ -31,15 +31,15 @@ class Ui_MainWindow(object):
         self.configActions.setObjectName("configActions")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.configActions)
         self.horizontalLayout.setObjectName("horizontalLayout")
-        self.newButton = QtWidgets.QPushButton(self.configActions)
-        self.newButton.setObjectName("newButton")
-        self.horizontalLayout.addWidget(self.newButton)
-        self.openButton = QtWidgets.QPushButton(self.configActions)
-        self.openButton.setObjectName("openButton")
-        self.horizontalLayout.addWidget(self.openButton)
-        self.saveButton = QtWidgets.QPushButton(self.configActions)
-        self.saveButton.setObjectName("saveButton")
-        self.horizontalLayout.addWidget(self.saveButton)
+        self.newConfigButton = QtWidgets.QPushButton(self.configActions)
+        self.newConfigButton.setObjectName("newConfigButton")
+        self.horizontalLayout.addWidget(self.newConfigButton)
+        self.openConfigButton = QtWidgets.QPushButton(self.configActions)
+        self.openConfigButton.setObjectName("openConfigButton")
+        self.horizontalLayout.addWidget(self.openConfigButton)
+        self.saveConfigButton = QtWidgets.QPushButton(self.configActions)
+        self.saveConfigButton.setObjectName("saveConfigButton")
+        self.horizontalLayout.addWidget(self.saveConfigButton)
         self.newClinicianButton = QtWidgets.QPushButton(self.configActions)
         self.newClinicianButton.setObjectName("newClinicianButton")
         self.horizontalLayout.addWidget(self.newClinicianButton)
@@ -191,12 +191,14 @@ class Ui_MainWindow(object):
         self.actionClear_Calendar.setObjectName("actionClear_Calendar")
         self.actionExport_Monthly = QtWidgets.QAction(MainWindow)
         self.actionExport_Monthly.setObjectName("actionExport_Monthly")
+        self.actionCurrentTabChanged = QtWidgets.QAction(MainWindow)
+        self.actionCurrentTabChanged.setObjectName("actionCurrentTabChanged")
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(1)
-        self.newButton.clicked['bool'].connect(self.actionNew.trigger)
-        self.openButton.clicked['bool'].connect(self.actionOpen.trigger)
-        self.saveButton.clicked['bool'].connect(self.actionSave.trigger)
+        self.tabWidget.setCurrentIndex(0)
+        self.newConfigButton.clicked['bool'].connect(self.actionNew.trigger)
+        self.openConfigButton.clicked['bool'].connect(self.actionOpen.trigger)
+        self.saveConfigButton.clicked['bool'].connect(self.actionSave.trigger)
         self.newClinicianButton.clicked['bool'].connect(self.actionNew_Clinician.trigger)
         self.editClinicianButton.clicked['bool'].connect(self.actionEdit_Clinician.trigger)
         self.deleteClinicianButton.clicked['bool'].connect(self.actionDelete_Clinician.trigger)
@@ -206,18 +208,19 @@ class Ui_MainWindow(object):
         self.publishCalendarButton.clicked['bool'].connect(self.actionPublish.trigger)
         self.clearCalendarButton.clicked['bool'].connect(self.actionClear_Calendar.trigger)
         self.exportMonthlyButton.clicked['bool'].connect(self.actionExport_Monthly.trigger)
+        self.tabWidget.currentChanged['int'].connect(self.actionCurrentTabChanged.trigger)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.configActions.setTitle(_translate("MainWindow", "Actions"))
-        self.newButton.setToolTip(_translate("MainWindow", "<html><head/><body><p>Create new configuration file</p></body></html>"))
-        self.newButton.setText(_translate("MainWindow", "New"))
-        self.openButton.setToolTip(_translate("MainWindow", "<html><head/><body><p>Open configuration file</p></body></html>"))
-        self.openButton.setText(_translate("MainWindow", "Open"))
-        self.saveButton.setToolTip(_translate("MainWindow", "<html><head/><body><p>Save changes to configuration file</p></body></html>"))
-        self.saveButton.setText(_translate("MainWindow", "Save"))
+        self.newConfigButton.setToolTip(_translate("MainWindow", "<html><head/><body><p>Create new configuration file</p></body></html>"))
+        self.newConfigButton.setText(_translate("MainWindow", "New Config"))
+        self.openConfigButton.setToolTip(_translate("MainWindow", "<html><head/><body><p>Open configuration file</p></body></html>"))
+        self.openConfigButton.setText(_translate("MainWindow", "Open Config"))
+        self.saveConfigButton.setToolTip(_translate("MainWindow", "<html><head/><body><p>Save changes to configuration file</p></body></html>"))
+        self.saveConfigButton.setText(_translate("MainWindow", "Save Config"))
         self.newClinicianButton.setToolTip(_translate("MainWindow", "<html><head/><body><p>Add a new clinician</p></body></html>"))
         self.newClinicianButton.setText(_translate("MainWindow", "New Clinician"))
         self.editClinicianButton.setToolTip(_translate("MainWindow", "<html><head/><body><p>Edit the selected clinician</p></body></html>"))
@@ -267,4 +270,5 @@ class Ui_MainWindow(object):
         self.actionPublish.setText(_translate("MainWindow", "Publish"))
         self.actionClear_Calendar.setText(_translate("MainWindow", "Clear Calendar"))
         self.actionExport_Monthly.setText(_translate("MainWindow", "Export Monthly"))
+        self.actionCurrentTabChanged.setText(_translate("MainWindow", "CurrentTabChanged"))
 

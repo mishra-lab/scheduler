@@ -1,6 +1,7 @@
 # pylint: disable=undefined-variable
 import ast
 import json
+import re
 from datetime import datetime, timedelta
 
 from PyQt5.QtCore import *
@@ -27,6 +28,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self._configPath = ''
 
         self.setupUi(self)
+        self.tabWidget.currentChanged[int].connect(self.updateTabText)
         self.setupConfigurationTab()
         self.setupSchedulerTab()
 
@@ -53,8 +55,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def configPath(self, value):
         if value:
             self._configPath = value
-            self.tabWidget.setTabText(0, 'Configuration ({})'.format(self._configPath))
-            self.tabWidget.setTabText(1, 'Scheduler ({})'.format(self._configPath))
+            idx = self.tabWidget.currentIndex()
+            self.updateTabText(idx)
 
     def setupConfigurationTab(self):
         # treeview setup
@@ -83,6 +85,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # misc vars
         self.holidayMap = {}
+
+    def updateTabText(self, selectedTabIdx):
+        # clear (configPath) from all other tabs
+        for i in range(self.tabWidget.count()):
+            text = self.tabWidget.tabText(i)
+            newText = re.sub(r'\((?:.*)\)|(\w+)(.*)', r'\1', text)
+            self.tabWidget.setTabText(i, newText)
+
+        # leave title as is if there is no config path
+        if not self.configPath: return
+
+        text = self.tabWidget.tabText(selectedTabIdx)
+        # replace filename in brackets with new config path OR
+        # add new config path in brackets, if no brackets yet
+        newText = re.sub(r'\((?:.*)\)|(\w+)(.*)', r'\1 ({})'.format(self._configPath), text)
+        self.tabWidget.setTabText(selectedTabIdx, newText)
 
     def openConfig(self):
         path, _ = QFileDialog.getOpenFileName(
