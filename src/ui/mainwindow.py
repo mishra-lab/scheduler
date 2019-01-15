@@ -66,22 +66,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.treeView.setModel(self.model)
 
         # action setup
-        self.actionOpen.triggered.connect(self.openConfig)
-        self.actionSave.triggered.connect(self.saveConfig)
-        self.actionNew.triggered.connect(self.newConfig)
-        self.actionNew_Clinician.triggered.connect(self.createNewClinician)
-        self.actionEdit_Clinician.triggered.connect(self.editClinician)
-        self.actionDelete_Clinician.triggered.connect(self.deleteClinician)
+        self.openConfigButton.clicked.connect(self.openConfig)
+        self.saveConfigButton.clicked.connect(self.saveConfig)
+        self.newConfigButton.clicked.connect(self.newConfig)
+        self.newClinicianButton.clicked.connect(self.createNewClinician)
+        self.editClinicianButton.clicked.connect(self.editClinician)
+        self.deleteClinicianButton.clicked.connect(self.deleteClinician)
 
         self.newConfig()
 
     def setupSchedulerTab(self):
         # action setup
-        self.actionGenerate_Schedule.triggered.connect(self.generateSchedule)
-        self.actionExport_Schedule.triggered.connect(self.exportSchedule)
-        self.actionExport_Monthly.triggered.connect(self.exportMonthlySchedule)
-        self.actionPublish.triggered.connect(self.publishSchedule)
-        self.actionClear_Calendar.triggered.connect(self.clearCalendar)
+        self.loadButton.clicked.connect(self.openConfig)
+        self.generateScheduleButton.clicked.connect(self.generateSchedule)
+        self.exportScheduleButton.clicked.connect(self.exportSchedule)
+        self.exportMonthlyButton.clicked.connect(self.exportMonthlySchedule)
+        self.publishCalendarButton.clicked.connect(self.publishSchedule)
+        self.clearCalendarButton.clicked.connect(self.clearCalendar)
 
         # misc vars
         self.holidayMap = {}
