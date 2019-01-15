@@ -30,6 +30,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupConfigurationTab()
         self.setupSchedulerTab()
 
+        self.tabWidget.setCurrentIndex(0)
+
         self.show()
 
     @property
