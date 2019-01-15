@@ -34,55 +34,99 @@ of Google API credentials, which can be generated as follows.
 1. Sign into https://console.developers.google.com.
 2. Click on the project selector at the top left of the page.
 
-.. image:: images/gapi/step2_select_a_project.png
+.. figure:: _static/images/gapi/step2_select_a_project.png
+   :class: with-border
+   :target: _static/images/gapi/step2_select_a_project.png
+
+|
 
 3. Click on `New Project`.
 
-.. image:: images/gapi/step3_new_project.png
+.. figure:: _static/images/gapi/step3_new_project.png
+   :class: with-border
+   :target: _static/images/gapi/step3_new_project.png
+
+|
 
 4. Enter "Clinician Scheduler" as the `Project Name` and click `Create`.
 
-.. image:: images/gapi/step4_create_project.png
+.. figure:: _static/images/gapi/step4_create_project.png
+   :class: with-border
+   :target: _static/images/gapi/step4_create_project.png
+
+|
 
 5. Now you should see the dashboard for the Clinician Scheduler project. 
 You will need to enable the Google calendar API. Click on `Enable APIs and Services`.
 
-.. image:: images/gapi/step5_enable_apis_and_services.png
+.. figure:: _static/images/gapi/step5_enable_apis_and_services.png
+   :class: with-border
+   :target: _static/images/gapi/step5_enable_apis_and_services.png
+
+|
 
 6. Search for "Google calendar API" using the search bar, and select it.
 
-.. image:: images/gapi/step6_search_calendar_api.png
+.. figure:: _static/images/gapi/step6_search_calendar_api.png
+   :class: with-border
+   :target: _static/images/gapi/step6_search_calendar_api.png
+
+|
 
 7. Click `Enable`.
 
-.. image:: images/gapi/step7_enable_calendar_api.png
+.. figure:: _static/images/gapi/step7_enable_calendar_api.png
+   :class: with-border
+   :target: _static/images/gapi/step7_enable_calendar_api.png
+
+|
 
 8. Now you should see the overview page for the Google calendar API. 
 To generate the credentials, click `Create credentials`.
 
-.. image:: images/gapi/step8_create_credentials.png
+.. figure:: _static/images/gapi/step8_create_credentials.png
+   :class: with-border
+   :target: _static/images/gapi/step8_create_credentials.png
+
+|
 
 9. On the credentials form, choose "Google Calendar API" for `Which API are you using?`,
 then "Other UI (e.g. Windows, CLI tool)" for `Where will you be calling the API from?`
 and "User data" for `What data will you be accessing?`. Then click on `What credentials do I need?`.
 
-.. image:: images/gapi/step9_credentials_form.png
+.. figure:: _static/images/gapi/step9_credentials_form.png
+   :class: with-border
+   :target: _static/images/gapi/step9_credentials_form.png
+
+|
 
 10. Enter "Client" for `Name` and click on `Create OAuth client ID`.
 
-.. image:: images/gapi/step10_oauth_client_id.png
+.. figure:: _static/images/gapi/step10_oauth_client_id.png
+   :class: with-border
+   :target: _static/images/gapi/step10_oauth_client_id.png
+
+|
 
 11. Choose the email address associated to your account for `Email address`
 and enter "Clinician Scheduler" for `Product name shown to users`, then 
 click `Continue`.
 
-.. image:: images/gapi/step11_oauth_consent_screen.png
+.. figure:: _static/images/gapi/step11_oauth_consent_screen.png
+   :class: with-border
+   :target: _static/images/gapi/step11_oauth_consent_screen.png
+
+|
 
 12. Your credentials are now generated! Make sure to download and save them 
 in the same location that you unzipped the application, so that the 
 credential file and the executable file (``scheduler.exe``) are in the same folder.
 
-.. image:: images/gapi/step12_download_credentials.png
+.. figure:: _static/images/gapi/step12_download_credentials.png
+   :class: with-border
+   :target: _static/images/gapi/step12_download_credentials.png
+
+|
 
 .. attention::
    Make sure the credential file is saved as ``credentials.json`` (rename it, if necessary), 

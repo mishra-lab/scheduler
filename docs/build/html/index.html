@@ -9,6 +9,7 @@
     <title>Clinician Scheduler &#8212; Clinician Scheduler 1.0 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/style.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
@@ -58,45 +59,100 @@ of Google API credentials, which can be generated as follows.</p>
 <li>Sign into <a class="reference external" href="https://console.developers.google.com">https://console.developers.google.com</a>.</li>
 <li>Click on the project selector at the top left of the page.</li>
 </ol>
-<img alt="_images/step2_select_a_project.png" src="_images/step2_select_a_project.png" />
+<div class="figure">
+<a class="reference external image-reference" href="_static/images/gapi/step2_select_a_project.png"><img alt="_images/step2_select_a_project.png" class="with-border" src="_images/step2_select_a_project.png" /></a>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <ol class="arabic simple" start="3">
 <li>Click on <cite>New Project</cite>.</li>
 </ol>
-<img alt="_images/step3_new_project.png" src="_images/step3_new_project.png" />
+<div class="figure">
+<a class="reference external image-reference" href="_static/images/gapi/step3_new_project.png"><img alt="_images/step3_new_project.png" class="with-border" src="_images/step3_new_project.png" /></a>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <ol class="arabic simple" start="4">
 <li>Enter “Clinician Scheduler” as the <cite>Project Name</cite> and click <cite>Create</cite>.</li>
 </ol>
-<img alt="_images/step4_create_project.png" src="_images/step4_create_project.png" />
+<div class="figure">
+<a class="reference external image-reference" href="_static/images/gapi/step4_create_project.png"><img alt="_images/step4_create_project.png" class="with-border" src="_images/step4_create_project.png" /></a>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <p>5. Now you should see the dashboard for the Clinician Scheduler project.
 You will need to enable the Google calendar API. Click on <cite>Enable APIs and Services</cite>.</p>
-<img alt="_images/step5_enable_apis_and_services.png" src="_images/step5_enable_apis_and_services.png" />
+<div class="figure">
+<a class="reference external image-reference" href="_static/images/gapi/step5_enable_apis_and_services.png"><img alt="_images/step5_enable_apis_and_services.png" class="with-border" src="_images/step5_enable_apis_and_services.png" /></a>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <ol class="arabic simple" start="6">
 <li>Search for “Google calendar API” using the search bar, and select it.</li>
 </ol>
-<img alt="_images/step6_search_calendar_api.png" src="_images/step6_search_calendar_api.png" />
+<div class="figure">
+<a class="reference external image-reference" href="_static/images/gapi/step6_search_calendar_api.png"><img alt="_images/step6_search_calendar_api.png" class="with-border" src="_images/step6_search_calendar_api.png" /></a>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <ol class="arabic simple" start="7">
 <li>Click <cite>Enable</cite>.</li>
 </ol>
-<img alt="_images/step7_enable_calendar_api.png" src="_images/step7_enable_calendar_api.png" />
+<div class="figure">
+<a class="reference external image-reference" href="_static/images/gapi/step7_enable_calendar_api.png"><img alt="_images/step7_enable_calendar_api.png" class="with-border" src="_images/step7_enable_calendar_api.png" /></a>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <p>8. Now you should see the overview page for the Google calendar API.
 To generate the credentials, click <cite>Create credentials</cite>.</p>
-<img alt="_images/step8_create_credentials.png" src="_images/step8_create_credentials.png" />
+<div class="figure">
+<a class="reference external image-reference" href="_static/images/gapi/step8_create_credentials.png"><img alt="_images/step8_create_credentials.png" class="with-border" src="_images/step8_create_credentials.png" /></a>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <p>9. On the credentials form, choose “Google Calendar API” for <cite>Which API are you using?</cite>,
 then “Other UI (e.g. Windows, CLI tool)” for <cite>Where will you be calling the API from?</cite>
 and “User data” for <cite>What data will you be accessing?</cite>. Then click on <cite>What credentials do I need?</cite>.</p>
-<img alt="_images/step9_credentials_form.png" src="_images/step9_credentials_form.png" />
+<div class="figure">
+<a class="reference external image-reference" href="_static/images/gapi/step9_credentials_form.png"><img alt="_images/step9_credentials_form.png" class="with-border" src="_images/step9_credentials_form.png" /></a>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <ol class="arabic simple" start="10">
 <li>Enter “Client” for <cite>Name</cite> and click on <cite>Create OAuth client ID</cite>.</li>
 </ol>
-<img alt="_images/step10_oauth_client_id.png" src="_images/step10_oauth_client_id.png" />
+<div class="figure">
+<a class="reference external image-reference" href="_static/images/gapi/step10_oauth_client_id.png"><img alt="_images/step10_oauth_client_id.png" class="with-border" src="_images/step10_oauth_client_id.png" /></a>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <p>11. Choose the email address associated to your account for <cite>Email address</cite>
 and enter “Clinician Scheduler” for <cite>Product name shown to users</cite>, then
 click <cite>Continue</cite>.</p>
-<img alt="_images/step11_oauth_consent_screen.png" src="_images/step11_oauth_consent_screen.png" />
+<div class="figure">
+<a class="reference external image-reference" href="_static/images/gapi/step11_oauth_consent_screen.png"><img alt="_images/step11_oauth_consent_screen.png" class="with-border" src="_images/step11_oauth_consent_screen.png" /></a>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <p>12. Your credentials are now generated! Make sure to download and save them
 in the same location that you unzipped the application, so that the
 credential file and the executable file (<code class="docutils literal notranslate"><span class="pre">scheduler.exe</span></code>) are in the same folder.</p>
-<img alt="_images/step12_download_credentials.png" src="_images/step12_download_credentials.png" />
+<div class="figure">
+<a class="reference external image-reference" href="_static/images/gapi/step12_download_credentials.png"><img alt="_images/step12_download_credentials.png" class="with-border" src="_images/step12_download_credentials.png" /></a>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <div class="admonition attention">
 <p class="first admonition-title">Attention</p>
 <p class="last">Make sure the credential file is saved as <code class="docutils literal notranslate"><span class="pre">credentials.json</span></code> (rename it, if necessary),
