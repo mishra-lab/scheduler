@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 
 from openpyxl import Workbook
 from openpyxl.styles import Border, Side, Alignment, colors
+from openpyxl.utils import get_column_letter
 
 from constants import WEEK_HOURS, WEEKEND_HOURS
 
@@ -175,6 +176,8 @@ class ExcelHelper:
 
                     col_idx += 3
 
+            ExcelHelper.expandColumns(ws)
+            
         # remove the automatically created first sheet
         wb.remove(wb.active)
         wb.save(filename)
@@ -218,6 +221,19 @@ class ExcelHelper:
             headers.append(table.horizontalHeaderItem(i).text())
 
         return headers
+
+    @staticmethod
+    def expandColumns(worksheet, expand_factor=1.25):
+        """
+        Expands every column width in given worksheet up to 
+            max_length * expand_factor
+
+        ref: https://groups.google.com/d/msg/openpyxl-users/rsy8W2epzVs/a0sjdghwCAAJ
+        """
+        for idx, col in enumerate(worksheet.columns, 1):
+            lengths = [len(u"{}".format(cell.value)) for cell in col if cell.value != None]
+            new_width = max(lengths) * expand_factor
+            worksheet.column_dimensions[get_column_letter(idx)].width = new_width
 
     @staticmethod
     def addFullBlackBorder(cell):
