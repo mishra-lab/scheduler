@@ -5,7 +5,7 @@ from collections import namedtuple
 from datetime import datetime, timedelta
 
 from openpyxl import Workbook
-from openpyxl.styles import Border, Side, colors
+from openpyxl.styles import Border, Side, Alignment, colors
 
 from constants import WEEK_HOURS, WEEKEND_HOURS
 
@@ -145,13 +145,16 @@ class ExcelHelper:
             # write header
             ws.cell(row=2, column=1, value='Date')
             ws.cell(row=2, column=2, value='Day')
+            ws.cell(row=2, column=3, value='Fellow')
 
-            col_idx = 3
+            col_idx = 4
             for div in divisions:
-                ws.cell(row=1, column=col_idx, value='{} Service'.format(div))
+                ExcelHelper.horizontalCenter(ws.cell(row=1, column=col_idx, value='{} Service'.format(div)))
+                ws.merge_cells(start_row=1, start_column=col_idx, end_row=1, end_column=col_idx+2)
                 ws.cell(row=2, column=col_idx, value='0800 - 1700')
                 ws.cell(row=2, column=col_idx+1, value='1700 - 0800')
-                col_idx += 2
+                ws.cell(row=2, column=col_idx+2, value='Backup')
+                col_idx += 3
 
             # write month sheet
             month = month_dict[key]
@@ -159,16 +162,18 @@ class ExcelHelper:
                 daytuple = month[i]
                 ExcelHelper.addFullBlackBorder(ws.cell(row=(i+3), column=1, value=daytuple.date))
                 ExcelHelper.addFullBlackBorder(ws.cell(row=(i+3), column=2, value=daytuple.day))
+                ExcelHelper.addFullBlackBorder(ws.cell(row=(i+3), column=3, value=None))
 
-                col_idx = 3
+                col_idx = 4
                 for j in range(len(divisions)):
                     dayClinician = daytuple.dayclin[j]
                     nightClinician = daytuple.nightclin[j]
 
                     ExcelHelper.addFullBlackBorder(ws.cell(row=(i+3), column=col_idx, value=dayClinician))
                     ExcelHelper.addFullBlackBorder(ws.cell(row=(i+3), column=col_idx+1, value=nightClinician))
+                    ExcelHelper.addFullBlackBorder(ws.cell(row=(i+3), column=col_idx+2, value=None))
 
-                    col_idx += 2
+                    col_idx += 3
 
         # remove the automatically created first sheet
         wb.remove(wb.active)
@@ -218,3 +223,7 @@ class ExcelHelper:
     def addFullBlackBorder(cell):
         side = Side(border_style='thin', color=colors.BLACK)
         cell.border = Border(left=side, right=side, top=side, bottom=side)
+
+    @staticmethod
+    def horizontalCenter(cell):
+        cell.alignment = Alignment(horizontal='center')
