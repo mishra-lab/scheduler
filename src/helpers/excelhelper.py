@@ -1,10 +1,11 @@
-from datetime import datetime, timedelta
+import calendar
 import itertools
 import operator
-import calendar
 from collections import namedtuple
+from datetime import datetime, timedelta
 
 from openpyxl import Workbook
+from openpyxl.styles import Border, Side, colors
 
 from constants import WEEK_HOURS, WEEKEND_HOURS
 
@@ -156,16 +157,16 @@ class ExcelHelper:
             month = month_dict[key]
             for i in range(len(month)):
                 daytuple = month[i]
-                ws.cell(row=(i+3), column=1, value=daytuple.date)
-                ws.cell(row=(i+3), column=2, value=daytuple.day)
+                ExcelHelper.addFullBlackBorder(ws.cell(row=(i+3), column=1, value=daytuple.date))
+                ExcelHelper.addFullBlackBorder(ws.cell(row=(i+3), column=2, value=daytuple.day))
 
                 col_idx = 3
                 for j in range(len(divisions)):
                     dayClinician = daytuple.dayclin[j]
                     nightClinician = daytuple.nightclin[j]
 
-                    ws.cell(row=(i+3), column=col_idx, value=dayClinician)
-                    ws.cell(row=(i+3), column=col_idx+1, value=nightClinician)
+                    ExcelHelper.addFullBlackBorder(ws.cell(row=(i+3), column=col_idx, value=dayClinician))
+                    ExcelHelper.addFullBlackBorder(ws.cell(row=(i+3), column=col_idx+1, value=nightClinician))
 
                     col_idx += 2
 
@@ -212,3 +213,8 @@ class ExcelHelper:
             headers.append(table.horizontalHeaderItem(i).text())
 
         return headers
+
+    @staticmethod
+    def addFullBlackBorder(cell):
+        side = Side(border_style='thin', color=colors.BLACK)
+        cell.border = Border(left=side, right=side, top=side, bottom=side)
