@@ -6,8 +6,8 @@
 Clinician Scheduler
 ===================
 
-.. toctree::
-   :maxdepth: 2
+.. contents:: Contents:
+   :local:
 
 The clinician scheduler allows you to automatically generate and publish 
 schedules that satisfy common constraints in an on-call system, while taking
@@ -34,59 +34,59 @@ of Google API credentials, which can be generated as follows.
 1. Sign into https://console.developers.google.com.
 2. Click on the project selector at the top left of the page.
 
-.. figure:: _static/images/gapi/step2_select_a_project.png
+.. figure:: _static/images/google_credentials/step2_select_a_project.png
    :class: with-border
-   :target: _static/images/gapi/step2_select_a_project.png
+   :target: _static/images/google_credentials/step2_select_a_project.png
 
 |
 
 3. Click on `New Project`.
 
-.. figure:: _static/images/gapi/step3_new_project.png
+.. figure:: _static/images/google_credentials/step3_new_project.png
    :class: with-border
-   :target: _static/images/gapi/step3_new_project.png
+   :target: _static/images/google_credentials/step3_new_project.png
 
 |
 
 4. Enter "Clinician Scheduler" as the `Project Name` and click `Create`.
 
-.. figure:: _static/images/gapi/step4_create_project.png
+.. figure:: _static/images/google_credentials/step4_create_project.png
    :class: with-border
-   :target: _static/images/gapi/step4_create_project.png
+   :target: _static/images/google_credentials/step4_create_project.png
 
 |
 
 5. Now you should see the dashboard for the Clinician Scheduler project. 
 You will need to enable the Google calendar API. Click on `Enable APIs and Services`.
 
-.. figure:: _static/images/gapi/step5_enable_apis_and_services.png
+.. figure:: _static/images/google_credentials/step5_enable_apis_and_services.png
    :class: with-border
-   :target: _static/images/gapi/step5_enable_apis_and_services.png
+   :target: _static/images/google_credentials/step5_enable_apis_and_services.png
 
 |
 
 6. Search for "Google calendar API" using the search bar, and select it.
 
-.. figure:: _static/images/gapi/step6_search_calendar_api.png
+.. figure:: _static/images/google_credentials/step6_search_calendar_api.png
    :class: with-border
-   :target: _static/images/gapi/step6_search_calendar_api.png
+   :target: _static/images/google_credentials/step6_search_calendar_api.png
 
 |
 
 7. Click `Enable`.
 
-.. figure:: _static/images/gapi/step7_enable_calendar_api.png
+.. figure:: _static/images/google_credentials/step7_enable_calendar_api.png
    :class: with-border
-   :target: _static/images/gapi/step7_enable_calendar_api.png
+   :target: _static/images/google_credentials/step7_enable_calendar_api.png
 
 |
 
 8. Now you should see the overview page for the Google calendar API. 
 To generate the credentials, click `Create credentials`.
 
-.. figure:: _static/images/gapi/step8_create_credentials.png
+.. figure:: _static/images/google_credentials/step8_create_credentials.png
    :class: with-border
-   :target: _static/images/gapi/step8_create_credentials.png
+   :target: _static/images/google_credentials/step8_create_credentials.png
 
 |
 
@@ -94,17 +94,17 @@ To generate the credentials, click `Create credentials`.
 then "Other UI (e.g. Windows, CLI tool)" for `Where will you be calling the API from?`
 and "User data" for `What data will you be accessing?`. Then click on `What credentials do I need?`.
 
-.. figure:: _static/images/gapi/step9_credentials_form.png
+.. figure:: _static/images/google_credentials/step9_credentials_form.png
    :class: with-border
-   :target: _static/images/gapi/step9_credentials_form.png
+   :target: _static/images/google_credentials/step9_credentials_form.png
 
 |
 
 10. Enter "Client" for `Name` and click on `Create OAuth client ID`.
 
-.. figure:: _static/images/gapi/step10_oauth_client_id.png
+.. figure:: _static/images/google_credentials/step10_oauth_client_id.png
    :class: with-border
-   :target: _static/images/gapi/step10_oauth_client_id.png
+   :target: _static/images/google_credentials/step10_oauth_client_id.png
 
 |
 
@@ -112,9 +112,9 @@ and "User data" for `What data will you be accessing?`. Then click on `What cred
 and enter "Clinician Scheduler" for `Product name shown to users`, then 
 click `Continue`.
 
-.. figure:: _static/images/gapi/step11_oauth_consent_screen.png
+.. figure:: _static/images/google_credentials/step11_oauth_consent_screen.png
    :class: with-border
-   :target: _static/images/gapi/step11_oauth_consent_screen.png
+   :target: _static/images/google_credentials/step11_oauth_consent_screen.png
 
 |
 
@@ -122,9 +122,9 @@ click `Continue`.
 in the same location that you unzipped the application, so that the 
 credential file and the executable file (``scheduler.exe``) are in the same folder.
 
-.. figure:: _static/images/gapi/step12_download_credentials.png
+.. figure:: _static/images/google_credentials/step12_download_credentials.png
    :class: with-border
-   :target: _static/images/gapi/step12_download_credentials.png
+   :target: _static/images/google_credentials/step12_download_credentials.png
 
 |
 
