@@ -1,10 +1,12 @@
-from datetime import datetime, timedelta
+import calendar
 import itertools
 import operator
-import calendar
 from collections import namedtuple
+from datetime import datetime, timedelta
 
 from openpyxl import Workbook
+from openpyxl.styles import Border, Side, Alignment, colors
+from openpyxl.utils import get_column_letter
 
 from constants import WEEK_HOURS, WEEKEND_HOURS
 
@@ -144,31 +146,65 @@ class ExcelHelper:
             # write header
             ws.cell(row=2, column=1, value='Date')
             ws.cell(row=2, column=2, value='Day')
+            ws.cell(row=2, column=3, value='Fellow')
 
-            col_idx = 3
+            col_idx = 4
             for div in divisions:
-                ws.cell(row=1, column=col_idx, value='{} Service'.format(div))
+                ExcelHelper.horizontalCenter(
+                    ws.cell(row=1, column=col_idx, value='{} Service'.format(div))
+                )
+                ws.merge_cells(start_row=1, start_column=col_idx, end_row=1, end_column=col_idx+2)
                 ws.cell(row=2, column=col_idx, value='0800 - 1700')
                 ws.cell(row=2, column=col_idx+1, value='1700 - 0800')
-                col_idx += 2
+                ws.cell(row=2, column=col_idx+2, value='Backup')
+                col_idx += 3
 
             # write month sheet
             month = month_dict[key]
             for i in range(len(month)):
                 daytuple = month[i]
-                ws.cell(row=(i+3), column=1, value=daytuple.date)
-                ws.cell(row=(i+3), column=2, value=daytuple.day)
 
-                col_idx = 3
+                ExcelHelper.addFullBlackBorder(
+                    ws.cell(row=(i+3), column=1, value=daytuple.date)
+                )
+                ExcelHelper.addFullBlackBorder(
+                    ws.cell(row=(i+3), column=2, value=daytuple.day)
+                )
+                ExcelHelper.horizontalCenter(
+                    ExcelHelper.addFullBlackBorder(
+                        ws.cell(row=(i+3), column=3, value=None)
+                    )
+                )
+
+                col_idx = 4
                 for j in range(len(divisions)):
                     dayClinician = daytuple.dayclin[j]
                     nightClinician = daytuple.nightclin[j]
 
-                    ws.cell(row=(i+3), column=col_idx, value=dayClinician)
-                    ws.cell(row=(i+3), column=col_idx+1, value=nightClinician)
+                    # use next division's night clinician as a backup
+                    next_div = (j + 1) % len(divisions)
+                    backupClinician = daytuple.nightclin[next_div]
 
-                    col_idx += 2
+                    ExcelHelper.horizontalCenter(
+                        ExcelHelper.addFullBlackBorder(
+                            ws.cell(row=(i+3), column=col_idx, value=dayClinician)
+                        )
+                    )
+                    ExcelHelper.horizontalCenter(
+                        ExcelHelper.addFullBlackBorder(
+                            ws.cell(row=(i+3), column=col_idx+1, value=nightClinician)
+                        )
+                    )
+                    ExcelHelper.horizontalCenter(
+                        ExcelHelper.addFullBlackBorder(
+                            ws.cell(row=(i+3), column=col_idx+2, value=backupClinician)
+                        )
+                    )
 
+                    col_idx += 3
+
+            ExcelHelper.expandColumns(ws)
+            
         # remove the automatically created first sheet
         wb.remove(wb.active)
         wb.save(filename)
@@ -212,3 +248,30 @@ class ExcelHelper:
             headers.append(table.horizontalHeaderItem(i).text())
 
         return headers
+
+    @staticmethod
+    def expandColumns(worksheet, expand_factor=1.25):
+        """
+        Expands every column width in given worksheet up to 
+            max_length * expand_factor
+
+        ref: https://groups.google.com/d/msg/openpyxl-users/rsy8W2epzVs/a0sjdghwCAAJ
+        """
+
+        for idx, col in enumerate(worksheet.columns, 1):
+            lengths = [len(u"{}".format(cell.value)) for cell in col if cell.value != None]
+            new_width = max(lengths) * expand_factor
+            worksheet.column_dimensions[get_column_letter(idx)].width = new_width
+
+        return worksheet
+
+    @staticmethod
+    def addFullBlackBorder(cell):
+        side = Side(border_style='thin', color=colors.BLACK)
+        cell.border = Border(left=side, right=side, top=side, bottom=side)
+        return cell
+
+    @staticmethod
+    def horizontalCenter(cell):
+        cell.alignment = Alignment(horizontal='center')
+        return cell
