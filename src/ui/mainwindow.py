@@ -63,6 +63,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.treeView.setModel(self.model)
 
         # action setup
+        self.treeView.expanded.connect(self.autoSizeTreeView)
+
         self.openConfigButton.clicked.connect(self.openConfig)
         self.saveConfigButton.clicked.connect(self.saveConfig)
         self.newConfigButton.clicked.connect(self.newConfig)
@@ -99,6 +101,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # add new config path in brackets, if no brackets yet
         newText = re.sub(r'\((?:.*)\)|(\w+)(.*)', r'\1 ({})'.format(self._configPath), text)
         self.tabWidget.setTabText(selectedTabIdx, newText)
+
+    def autoSizeTreeView(self):
+        for i in range(self.model.rootItem.columnCount()):
+            self.treeView.resizeColumnToContents(i)
 
     def openConfig(self):
         path, _ = QFileDialog.getOpenFileName(
