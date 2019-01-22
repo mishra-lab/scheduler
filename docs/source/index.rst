@@ -134,3 +134,54 @@ credential file and the executable file (``scheduler.exe``) are in the same fold
 
 Usage
 -----
+
+Creating a configuration file
+"""""""""""""""""""""""""""""
+
+Before we can generate a schedule, we need to create a configuration file
+that specifies which clinicians are available, and how many weeks each 
+clinician should fulfill.
+
+Adding a new clinician
+~~~~~~~~~~~~~~~~~~~~~~
+
+1. From the configuration tab, click `New Clinician`. You should see a
+form for supplying details.
+
+.. figure:: _static/images/add_clinician/step1_new_clinician.png
+   :class: with-border
+   :target: _static/images/add_clinician/step1_new_clinician.png
+
+|
+
+
+2. Fill out the name, email (optional), and divisions that the clinician
+will be covering. To add a division you can click on `Add` and a new row 
+will be added to the table which you can fill out. You can set the minimum
+and maximum number of blocks that a clinician can work in a given division. 
+
+.. note::
+    A single block corresponds to two weeks.
+
+.. figure:: _static/images/add_clinician/step2_add_division.png
+   :class: with-border
+   :target: _static/images/add_clinician/step2_add_division.png
+
+|
+
+3. To delete a row from the table, select the row and then click `Remove`.
+
+.. figure:: _static/images/add_clinician/step3_remove_division.png
+   :class: with-border
+   :target: _static/images/add_clinician/step3_remove_division.png
+
+|
+
+4. When you are finished entering the data for the clinician, click `Ok`.
+You should now see a new entry in the main table for that clinician.
+
+.. figure:: _static/images/add_clinician/step4_add_clinician.png
+   :class: with-border
+   :target: _static/images/add_clinician/step4_add_clinician.png
+
+|
