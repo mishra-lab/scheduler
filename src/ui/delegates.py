@@ -16,21 +16,3 @@ class ValidationDelegate(QItemDelegate):
         editor = QLineEdit(parent)
         editor.setValidator(self.validator())
         return editor
-
-class TreeEditDelegate(QItemDelegate):
-    """
-    Custom delegate that copies data into editor during initialization
-    """
-
-    def __init__(self, parent=None):
-        QItemDelegate.__init__(self, parent)
-
-    def createEditor(self, parent, option, index):
-        editor = QLineEdit(parent)
-        return editor
-
-    def setEditorData(self, editor, index):
-        if index.isValid():
-            editor.setText(index.data())
-        else:
-            QItemDelegate.setEditorData(editor, index)

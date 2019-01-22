@@ -8,9 +8,10 @@ from ui.ui_dialog import Ui_Dialog
 
 
 class DialogWindow(QDialog, Ui_Dialog):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, isEdit=False, *args, **kwargs):
         super(DialogWindow, self).__init__(*args, **kwargs)
         self.setupUi(self)
+        self.isEdit = isEdit
 
         # make sure min/max columns only accept integer values
         # note: need class to "own" delegates, otherwise they will be GC'd and cause a segfault
@@ -37,6 +38,9 @@ class DialogWindow(QDialog, Ui_Dialog):
         self.clinDict = clinDict
 
     def setClinician(self, data):
+        # store current clinician name in case it changes
+        if self.isEdit: self.oldName = data['name']
+    
         self.nameLineEdit.setText(data['name'])
         self.emailLineEdit.setText(data['email'])
         
@@ -69,34 +73,88 @@ class DialogWindow(QDialog, Ui_Dialog):
         return True
 
     def accept(self):
+        """
+        Accept changes and update configuration.
+        """
+
         # validate data
         if not self.checkInput():
             return
 
-        # create new clinician in self.data
-        clinName = self.nameLineEdit.text()
+        ret = False
+
+        if self.isEdit: 
+            ret = self.acceptEdit()
+        else: 
+            ret = self.acceptNew()
+
+        if ret: QDialog.accept(self)
+
+    def acceptEdit(self):
+        """
+        Updates configuration based on edits made to existing clinician.
+
+        Returns True iff changes were accepted.
+        """
+
+        clinician = self.extractFormData()
+
+        # check if the newly chosen name already exists in the config
+        if self.oldName != clinician['name'] and clinician['name'] in self.clinDict:
+            QMessageBox.critical(
+                self,
+                "Name Error",
+                "A clinician with this name already exists in the configuration file. Please choose a different name.",
+                QMessageBox.Ok
+            )
+
+            return False
+
+        # remove old data and update config
+        del self.clinDict[self.oldName]
+        self.clinDict[clinician['name']] = clinician
+
+        return True
+
+    def acceptNew(self):
+        """
+        Updates configuration for newly added clinician.
+        
+        Returns True iff changes were accepted.
+        """
+
+        clinician = self.extractFormData()
+
+        # check if such a name is already stored in config
+        if clinician['name'] in self.clinDict:
+            QMessageBox.critical(
+                self,
+                "Name Error",
+                "A clinician with this name already exists in the configuration file. Please choose a different name.",
+                QMessageBox.Ok
+            )
+
+            return False
+
+        # set new clinician
+        self.clinDict[clinician['name']] = clinician
+
+        return True
+
+    def extractFormData(self):
+        # extract name, email
         clinician = dict()
+        clinName = self.nameLineEdit.text()
+        clinician['name'] = clinName
 
-        if clinName in self.clinDict:
-            # warn user that data will be overwritten for that clinician
-            reply = QMessageBox.question(
-                self, 
-                "Overwrite Warning", 
-                "This action will overwrite the current data stored for {}. Are you sure you want to continue?".format(
-                    clinName)
-                , QMessageBox.Yes | QMessageBox.No)
-
-            if reply == QMessageBox.No: return
-
-        # assume no data exists about current clinician
         clinEmail = self.emailLineEdit.text()
         clinician['email'] = clinEmail
         clinician['divisions'] = dict()
         
+        # extract clinician's division list
         for i in range(self.divisionTable.rowCount()):
             division = dict()
 
-            # extract data
             divName = self.divisionTable.item(i, 0).text()
             divMin = self.divisionTable.item(i, 1).text()
             divMax = self.divisionTable.item(i, 2).text()
@@ -105,6 +163,4 @@ class DialogWindow(QDialog, Ui_Dialog):
             division['max'] = divMax
             clinician['divisions'][divName] = division
 
-        self.clinDict[clinName] = clinician
-        QDialog.accept(self)
-
+        return clinician

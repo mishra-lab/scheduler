@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'src\designer\mainwindow.ui'
+# Form implementation generated from reading ui file 'designer\mainwindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.2
 #
@@ -51,7 +51,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addWidget(self.deleteClinicianButton)
         self.verticalLayout.addWidget(self.configActions)
         self.treeView = QtWidgets.QTreeView(self.configurationTab)
-        self.treeView.setEditTriggers(QtWidgets.QAbstractItemView.EditKeyPressed|QtWidgets.QAbstractItemView.SelectedClicked)
+        self.treeView.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.treeView.setAlternatingRowColors(True)
         self.treeView.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectItems)
         self.treeView.setExpandsOnDoubleClick(True)

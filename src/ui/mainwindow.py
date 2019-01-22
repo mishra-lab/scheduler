@@ -14,7 +14,6 @@ from helpers.excelhelper import ExcelHelper
 from helpers.uihelper import UiHelper
 from services import scheduler
 
-from .delegates import TreeEditDelegate
 from .dialog import DialogWindow
 from .models import TreeModel
 from .ui_mainwindow import Ui_MainWindow
@@ -61,8 +60,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def setupConfigurationTab(self):
         # treeview setup
         self.model = TreeModel(None)
-        self.treeEditorDelegate = TreeEditDelegate()
-        self.treeView.setItemDelegate(self.treeEditorDelegate)
         self.treeView.setModel(self.model)
 
         # action setup
@@ -143,7 +140,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         UiHelper.syncTreeView(self.treeView, self.model, self.configuration)
 
     def createNewClinician(self):
-        dialog = DialogWindow()
+        dialog = DialogWindow(isEdit=False)
         dialog.setClinicianDictionary(self.configuration)
         dialog.exec_()
 
@@ -158,7 +155,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             clinData["name"] = selectedItem.itemData[0]
 
             # transfer clinData to edit dialog
-            dialog = DialogWindow()
+            dialog = DialogWindow(isEdit=True)
             dialog.setClinicianDictionary(self.configuration)
             dialog.setClinician(clinData)
             dialog.exec_()
@@ -172,7 +169,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             reply = QMessageBox.question(
                 self, 
                 "Delete Warning", 
-                "This action will delete the current data stored for {}. Are you sure you want to continue?".format(
+                "This action will delete the current data stored for \"{}\". Are you sure you want to continue?".format(
                     clinName)
                 , QMessageBox.Yes | QMessageBox.No)
             if reply == QMessageBox.No: return

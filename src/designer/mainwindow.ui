@@ -103,7 +103,7 @@
         <item>
          <widget class="QTreeView" name="treeView">
           <property name="editTriggers">
-           <set>QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
+           <set>QAbstractItemView::NoEditTriggers</set>
           </property>
           <property name="alternatingRowColors">
            <bool>true</bool>
