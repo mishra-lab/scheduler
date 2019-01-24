@@ -135,8 +135,8 @@ credential file and the executable file (``scheduler.exe``) are in the same fold
 Usage
 -----
 
-Creating a configuration file
-"""""""""""""""""""""""""""""
+Clinician Configuration
+"""""""""""""""""""""""
 
 Before we can generate a schedule, we need to create a configuration file
 that specifies which clinicians are available, and how many weeks each 
@@ -185,3 +185,64 @@ You should now see a new entry in the main table for that clinician.
    :target: _static/images/add_clinician/step4_add_clinician.png
 
 |
+
+Deleting an existing clinician
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. TODO:
+
+Editing an existing clinician
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. TODO:
+
+Saving the configuration to a file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. TODO:
+
+Loading a configuration file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. TODO:
+
+Google Calendar Configuration
+"""""""""""""""""""""""""""""
+
+Creating a calendar
+~~~~~~~~~~~~~~~~~~~
+
+.. TODO:
+
+Adding holiday events
+~~~~~~~~~~~~~~~~~~~~~
+
+.. TODO:
+
+Adding clinician requests
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. TODO:
+
+Scheduling
+""""""""""
+
+Loading a configuration file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. TODO:
+
+Generating a schedule
+~~~~~~~~~~~~~~~~~~~~~
+
+.. TODO:
+
+Exporting a schedule
+~~~~~~~~~~~~~~~~~~~~
+
+.. TODO:
+
+Publishing a schedule to Google Calendar
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. TODO:

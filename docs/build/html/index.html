@@ -37,13 +37,30 @@
 <div class="contents local topic" id="contents">
 <p class="topic-title first">Contents:</p>
 <ul class="simple">
-<li><a class="reference internal" href="#setup" id="id1">Setup</a><ul>
-<li><a class="reference internal" href="#generating-google-api-credentials" id="id2">Generating Google API credentials</a></li>
+<li><a class="reference internal" href="#setup" id="id2">Setup</a><ul>
+<li><a class="reference internal" href="#generating-google-api-credentials" id="id3">Generating Google API credentials</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#usage" id="id3">Usage</a><ul>
-<li><a class="reference internal" href="#creating-a-configuration-file" id="id4">Creating a configuration file</a><ul>
-<li><a class="reference internal" href="#adding-a-new-clinician" id="id5">Adding a new clinician</a></li>
+<li><a class="reference internal" href="#usage" id="id4">Usage</a><ul>
+<li><a class="reference internal" href="#clinician-configuration" id="id5">Clinician Configuration</a><ul>
+<li><a class="reference internal" href="#adding-a-new-clinician" id="id6">Adding a new clinician</a></li>
+<li><a class="reference internal" href="#deleting-an-existing-clinician" id="id7">Deleting an existing clinician</a></li>
+<li><a class="reference internal" href="#editing-an-existing-clinician" id="id8">Editing an existing clinician</a></li>
+<li><a class="reference internal" href="#saving-the-configuration-to-a-file" id="id9">Saving the configuration to a file</a></li>
+<li><a class="reference internal" href="#loading-a-configuration-file" id="id10">Loading a configuration file</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#google-calendar-configuration" id="id11">Google Calendar Configuration</a><ul>
+<li><a class="reference internal" href="#creating-a-calendar" id="id12">Creating a calendar</a></li>
+<li><a class="reference internal" href="#adding-holiday-events" id="id13">Adding holiday events</a></li>
+<li><a class="reference internal" href="#adding-clinician-requests" id="id14">Adding clinician requests</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#scheduling" id="id15">Scheduling</a><ul>
+<li><a class="reference internal" href="#id1" id="id16">Loading a configuration file</a></li>
+<li><a class="reference internal" href="#generating-a-schedule" id="id17">Generating a schedule</a></li>
+<li><a class="reference internal" href="#exporting-a-schedule" id="id18">Exporting a schedule</a></li>
+<li><a class="reference internal" href="#publishing-a-schedule-to-google-calendar" id="id19">Publishing a schedule to Google Calendar</a></li>
 </ul>
 </li>
 </ul>
@@ -54,10 +71,10 @@
 schedules that satisfy common constraints in an on-call system, while taking
 into account the preferences of clinicians.</p>
 <div class="section" id="setup">
-<h2><a class="toc-backref" href="#id1">Setup</a><a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id2">Setup</a><a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
 <p>Download and unzip the compressed file to an appropriate folder.</p>
 <div class="section" id="generating-google-api-credentials">
-<h3><a class="toc-backref" href="#id2">Generating Google API credentials</a><a class="headerlink" href="#generating-google-api-credentials" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id3">Generating Google API credentials</a><a class="headerlink" href="#generating-google-api-credentials" title="Permalink to this headline">¶</a></h3>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">This process should only be done the very first time you are running
@@ -175,14 +192,14 @@ or otherwise the application will not be able to recognize it!</p>
 </div>
 </div>
 <div class="section" id="usage">
-<h2><a class="toc-backref" href="#id3">Usage</a><a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="creating-a-configuration-file">
-<h3><a class="toc-backref" href="#id4">Creating a configuration file</a><a class="headerlink" href="#creating-a-configuration-file" title="Permalink to this headline">¶</a></h3>
+<h2><a class="toc-backref" href="#id4">Usage</a><a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="clinician-configuration">
+<h3><a class="toc-backref" href="#id5">Clinician Configuration</a><a class="headerlink" href="#clinician-configuration" title="Permalink to this headline">¶</a></h3>
 <p>Before we can generate a schedule, we need to create a configuration file
 that specifies which clinicians are available, and how many weeks each
 clinician should fulfill.</p>
 <div class="section" id="adding-a-new-clinician">
-<h4><a class="toc-backref" href="#id5">Adding a new clinician</a><a class="headerlink" href="#adding-a-new-clinician" title="Permalink to this headline">¶</a></h4>
+<h4><a class="toc-backref" href="#id6">Adding a new clinician</a><a class="headerlink" href="#adding-a-new-clinician" title="Permalink to this headline">¶</a></h4>
 <p>1. From the configuration tab, click <cite>New Clinician</cite>. You should see a
 form for supplying details.</p>
 <div class="figure">
@@ -222,6 +239,45 @@ You should now see a new entry in the main table for that clinician.</p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
+</div>
+<div class="section" id="deleting-an-existing-clinician">
+<h4><a class="toc-backref" href="#id7">Deleting an existing clinician</a><a class="headerlink" href="#deleting-an-existing-clinician" title="Permalink to this headline">¶</a></h4>
+</div>
+<div class="section" id="editing-an-existing-clinician">
+<h4><a class="toc-backref" href="#id8">Editing an existing clinician</a><a class="headerlink" href="#editing-an-existing-clinician" title="Permalink to this headline">¶</a></h4>
+</div>
+<div class="section" id="saving-the-configuration-to-a-file">
+<h4><a class="toc-backref" href="#id9">Saving the configuration to a file</a><a class="headerlink" href="#saving-the-configuration-to-a-file" title="Permalink to this headline">¶</a></h4>
+</div>
+<div class="section" id="loading-a-configuration-file">
+<h4><a class="toc-backref" href="#id10">Loading a configuration file</a><a class="headerlink" href="#loading-a-configuration-file" title="Permalink to this headline">¶</a></h4>
+</div>
+</div>
+<div class="section" id="google-calendar-configuration">
+<h3><a class="toc-backref" href="#id11">Google Calendar Configuration</a><a class="headerlink" href="#google-calendar-configuration" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="creating-a-calendar">
+<h4><a class="toc-backref" href="#id12">Creating a calendar</a><a class="headerlink" href="#creating-a-calendar" title="Permalink to this headline">¶</a></h4>
+</div>
+<div class="section" id="adding-holiday-events">
+<h4><a class="toc-backref" href="#id13">Adding holiday events</a><a class="headerlink" href="#adding-holiday-events" title="Permalink to this headline">¶</a></h4>
+</div>
+<div class="section" id="adding-clinician-requests">
+<h4><a class="toc-backref" href="#id14">Adding clinician requests</a><a class="headerlink" href="#adding-clinician-requests" title="Permalink to this headline">¶</a></h4>
+</div>
+</div>
+<div class="section" id="scheduling">
+<h3><a class="toc-backref" href="#id15">Scheduling</a><a class="headerlink" href="#scheduling" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id1">
+<h4><a class="toc-backref" href="#id16">Loading a configuration file</a><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h4>
+</div>
+<div class="section" id="generating-a-schedule">
+<h4><a class="toc-backref" href="#id17">Generating a schedule</a><a class="headerlink" href="#generating-a-schedule" title="Permalink to this headline">¶</a></h4>
+</div>
+<div class="section" id="exporting-a-schedule">
+<h4><a class="toc-backref" href="#id18">Exporting a schedule</a><a class="headerlink" href="#exporting-a-schedule" title="Permalink to this headline">¶</a></h4>
+</div>
+<div class="section" id="publishing-a-schedule-to-google-calendar">
+<h4><a class="toc-backref" href="#id19">Publishing a schedule to Google Calendar</a><a class="headerlink" href="#publishing-a-schedule-to-google-calendar" title="Permalink to this headline">¶</a></h4>
 </div>
 </div>
 </div>
