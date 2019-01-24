@@ -37,30 +37,31 @@
 <div class="contents local topic" id="contents">
 <p class="topic-title first">Contents:</p>
 <ul class="simple">
-<li><a class="reference internal" href="#setup" id="id2">Setup</a><ul>
-<li><a class="reference internal" href="#generating-google-api-credentials" id="id3">Generating Google API credentials</a></li>
+<li><a class="reference internal" href="#setup" id="id7">Setup</a><ul>
+<li><a class="reference internal" href="#generating-google-api-credentials" id="id8">Generating Google API credentials</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#usage" id="id4">Usage</a><ul>
-<li><a class="reference internal" href="#clinician-configuration" id="id5">Clinician Configuration</a><ul>
-<li><a class="reference internal" href="#adding-a-new-clinician" id="id6">Adding a new clinician</a></li>
-<li><a class="reference internal" href="#deleting-an-existing-clinician" id="id7">Deleting an existing clinician</a></li>
-<li><a class="reference internal" href="#editing-an-existing-clinician" id="id8">Editing an existing clinician</a></li>
-<li><a class="reference internal" href="#saving-the-configuration-to-a-file" id="id9">Saving the configuration to a file</a></li>
-<li><a class="reference internal" href="#loading-a-configuration-file" id="id10">Loading a configuration file</a></li>
+<li><a class="reference internal" href="#usage" id="id9">Usage</a><ul>
+<li><a class="reference internal" href="#authentication" id="id10">Authentication</a></li>
+<li><a class="reference internal" href="#clinician-configuration" id="id11">Clinician Configuration</a><ul>
+<li><a class="reference internal" href="#adding-a-new-clinician" id="id12">Adding a new clinician</a></li>
+<li><a class="reference internal" href="#deleting-an-existing-clinician" id="id13">Deleting an existing clinician</a></li>
+<li><a class="reference internal" href="#editing-an-existing-clinician" id="id14">Editing an existing clinician</a></li>
+<li><a class="reference internal" href="#saving-the-configuration-to-a-file" id="id15">Saving the configuration to a file</a></li>
+<li><a class="reference internal" href="#loading-a-configuration-file" id="id16">Loading a configuration file</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#google-calendar-configuration" id="id11">Google Calendar Configuration</a><ul>
-<li><a class="reference internal" href="#creating-a-calendar" id="id12">Creating a calendar</a></li>
-<li><a class="reference internal" href="#adding-holiday-events" id="id13">Adding holiday events</a></li>
-<li><a class="reference internal" href="#adding-clinician-requests" id="id14">Adding clinician requests</a></li>
+<li><a class="reference internal" href="#google-calendar-configuration" id="id17">Google Calendar Configuration</a><ul>
+<li><a class="reference internal" href="#creating-a-calendar" id="id18">Creating a calendar</a></li>
+<li><a class="reference internal" href="#adding-holiday-events" id="id19">Adding holiday events</a></li>
+<li><a class="reference internal" href="#adding-clinician-requests" id="id20">Adding clinician requests</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#scheduling" id="id15">Scheduling</a><ul>
-<li><a class="reference internal" href="#id1" id="id16">Loading a configuration file</a></li>
-<li><a class="reference internal" href="#generating-a-schedule" id="id17">Generating a schedule</a></li>
-<li><a class="reference internal" href="#exporting-a-schedule" id="id18">Exporting a schedule</a></li>
-<li><a class="reference internal" href="#publishing-a-schedule-to-google-calendar" id="id19">Publishing a schedule to Google Calendar</a></li>
+<li><a class="reference internal" href="#scheduling" id="id21">Scheduling</a><ul>
+<li><a class="reference internal" href="#id4" id="id22">Loading a configuration file</a></li>
+<li><a class="reference internal" href="#generating-a-schedule" id="id23">Generating a schedule</a></li>
+<li><a class="reference internal" href="#exporting-a-schedule" id="id24">Exporting a schedule</a></li>
+<li><a class="reference internal" href="#publishing-a-schedule-to-google-calendar" id="id25">Publishing a schedule to Google Calendar</a></li>
 </ul>
 </li>
 </ul>
@@ -71,10 +72,10 @@
 schedules that satisfy common constraints in an on-call system, while taking
 into account the preferences of clinicians.</p>
 <div class="section" id="setup">
-<h2><a class="toc-backref" href="#id2">Setup</a><a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
+<h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
 <p>Download and unzip the compressed file to an appropriate folder.</p>
 <div class="section" id="generating-google-api-credentials">
-<h3><a class="toc-backref" href="#id3">Generating Google API credentials</a><a class="headerlink" href="#generating-google-api-credentials" title="Permalink to this headline">¶</a></h3>
+<h3>Generating Google API credentials<a class="headerlink" href="#generating-google-api-credentials" title="Permalink to this headline">¶</a></h3>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">This process should only be done the very first time you are running
@@ -192,14 +193,35 @@ or otherwise the application will not be able to recognize it!</p>
 </div>
 </div>
 <div class="section" id="usage">
-<h2><a class="toc-backref" href="#id4">Usage</a><a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="authentication">
+<span id="id1"></span><h3>Authentication<a class="headerlink" href="#authentication" title="Permalink to this headline">¶</a></h3>
+<p>When the scheduler first makes a connection to Google calendar, it needs
+to create an authentication token, which will be used to simplify future
+connections.</p>
+<p>This requires you to allow the scheduler application to access a calendar
+that you specified. You may encounter this when using any functionality that
+interacts with Google calendar, for example in <a class="reference internal" href="#generating-a-schedule"><span class="std std-ref">Generating a schedule</span></a>
+or in <a class="reference internal" href="#publishing-a-schedule-to-google-calendar"><span class="std std-ref">Publishing a schedule to Google Calendar</span></a>.</p>
+<p>1. The scheduler should have automatically opened the access request page
+in a browser window, in which case you can skip to step 2. <strong>Otherwise</strong>,
+locate the command prompt for the scheduler. You should see instructions
+to open the access request printed on the command prompt. Follow these instructions
+in order to open the access request page manually.</p>
+<p>2. Follow the instructions on the access request page in order to allow
+the scheduler application to read/write from/to the calendar you specified.
+<strong>(Optional)</strong> If you opened the access request manually in step 1, you will
+receive an authentication code which needs to be pasted into the command prompt</p>
+<p>3. Once you have completed the authentication process, the scheduler will
+automatically resume its functionality.</p>
+</div>
 <div class="section" id="clinician-configuration">
-<h3><a class="toc-backref" href="#id5">Clinician Configuration</a><a class="headerlink" href="#clinician-configuration" title="Permalink to this headline">¶</a></h3>
+<span id="id2"></span><h3>Clinician Configuration<a class="headerlink" href="#clinician-configuration" title="Permalink to this headline">¶</a></h3>
 <p>Before we can generate a schedule, we need to create a configuration file
 that specifies which clinicians are available, and how many weeks each
 clinician should fulfill.</p>
 <div class="section" id="adding-a-new-clinician">
-<h4><a class="toc-backref" href="#id6">Adding a new clinician</a><a class="headerlink" href="#adding-a-new-clinician" title="Permalink to this headline">¶</a></h4>
+<h4>Adding a new clinician<a class="headerlink" href="#adding-a-new-clinician" title="Permalink to this headline">¶</a></h4>
 <p>1. From the configuration tab, click <cite>New Clinician</cite>. You should see a
 form for supplying details.</p>
 <div class="figure">
@@ -241,43 +263,82 @@ You should now see a new entry in the main table for that clinician.</p>
 </div>
 </div>
 <div class="section" id="deleting-an-existing-clinician">
-<h4><a class="toc-backref" href="#id7">Deleting an existing clinician</a><a class="headerlink" href="#deleting-an-existing-clinician" title="Permalink to this headline">¶</a></h4>
+<h4>Deleting an existing clinician<a class="headerlink" href="#deleting-an-existing-clinician" title="Permalink to this headline">¶</a></h4>
 </div>
 <div class="section" id="editing-an-existing-clinician">
-<h4><a class="toc-backref" href="#id8">Editing an existing clinician</a><a class="headerlink" href="#editing-an-existing-clinician" title="Permalink to this headline">¶</a></h4>
+<h4>Editing an existing clinician<a class="headerlink" href="#editing-an-existing-clinician" title="Permalink to this headline">¶</a></h4>
 </div>
 <div class="section" id="saving-the-configuration-to-a-file">
-<h4><a class="toc-backref" href="#id9">Saving the configuration to a file</a><a class="headerlink" href="#saving-the-configuration-to-a-file" title="Permalink to this headline">¶</a></h4>
+<h4>Saving the configuration to a file<a class="headerlink" href="#saving-the-configuration-to-a-file" title="Permalink to this headline">¶</a></h4>
 </div>
 <div class="section" id="loading-a-configuration-file">
-<h4><a class="toc-backref" href="#id10">Loading a configuration file</a><a class="headerlink" href="#loading-a-configuration-file" title="Permalink to this headline">¶</a></h4>
+<h4>Loading a configuration file<a class="headerlink" href="#loading-a-configuration-file" title="Permalink to this headline">¶</a></h4>
 </div>
 </div>
 <div class="section" id="google-calendar-configuration">
-<h3><a class="toc-backref" href="#id11">Google Calendar Configuration</a><a class="headerlink" href="#google-calendar-configuration" title="Permalink to this headline">¶</a></h3>
+<h3>Google Calendar Configuration<a class="headerlink" href="#google-calendar-configuration" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="creating-a-calendar">
-<h4><a class="toc-backref" href="#id12">Creating a calendar</a><a class="headerlink" href="#creating-a-calendar" title="Permalink to this headline">¶</a></h4>
+<h4>Creating a calendar<a class="headerlink" href="#creating-a-calendar" title="Permalink to this headline">¶</a></h4>
 </div>
 <div class="section" id="adding-holiday-events">
-<h4><a class="toc-backref" href="#id13">Adding holiday events</a><a class="headerlink" href="#adding-holiday-events" title="Permalink to this headline">¶</a></h4>
+<h4>Adding holiday events<a class="headerlink" href="#adding-holiday-events" title="Permalink to this headline">¶</a></h4>
 </div>
 <div class="section" id="adding-clinician-requests">
-<h4><a class="toc-backref" href="#id14">Adding clinician requests</a><a class="headerlink" href="#adding-clinician-requests" title="Permalink to this headline">¶</a></h4>
+<span id="id3"></span><h4>Adding clinician requests<a class="headerlink" href="#adding-clinician-requests" title="Permalink to this headline">¶</a></h4>
 </div>
 </div>
 <div class="section" id="scheduling">
-<h3><a class="toc-backref" href="#id15">Scheduling</a><a class="headerlink" href="#scheduling" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="id1">
-<h4><a class="toc-backref" href="#id16">Loading a configuration file</a><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h4>
+<h3>Scheduling<a class="headerlink" href="#scheduling" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id4">
+<h4>Loading a configuration file<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h4>
+<p>From the scheduling tab, click on <cite>Load</cite> and select the configuration
+file that you generated in <a class="reference internal" href="#clinician-configuration"><span class="std std-ref">Clinician Configuration</span></a></p>
+<div class="figure">
+<a class="reference external image-reference" href="_static/images/scheduling/load_config/load_config.png"><img alt="_images/load_config.png" class="with-border" src="_images/load_config.png" /></a>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 </div>
 <div class="section" id="generating-a-schedule">
-<h4><a class="toc-backref" href="#id17">Generating a schedule</a><a class="headerlink" href="#generating-a-schedule" title="Permalink to this headline">¶</a></h4>
+<span id="id5"></span><h4>Generating a schedule<a class="headerlink" href="#generating-a-schedule" title="Permalink to this headline">¶</a></h4>
+<ol class="arabic simple">
+<li>Enter the calendar year for the schedule that you want to generate.</li>
+</ol>
+<p>2. <strong>(Optional)</strong> In order to retrieve the time-off requests that were populated
+in Google calendar in <a class="reference internal" href="#adding-clinician-requests"><span class="std std-ref">Adding clinician requests</span></a>, we need to specify the
+calendar ID. Open the calendar in your browser, and navigate to the
+<cite>Settings and sharing</cite> page.
+On the setting page, navigate to the <cite>Integrate calendar</cite> section, and copy
+the value under <cite>Calendar ID</cite> to your clipboard.
+Paste this value into the <cite>Google Calendar ID</cite> textbox on the <cite>Scheduler</cite>
+tab.</p>
+<p>3. <strong>(Optional)</strong> If you supplied a calendar ID in step 2, you can configure
+the options <cite>Retrieve Time-off Requests</cite> and <cite>Retrieve Long Weekends</cite> as necessary.
+Enabling <cite>Retrieve Time-off Requests</cite> will read the time-off calendar events
+from the calendar specified in <cite>Calendar ID</cite>, while enabling
+<cite>Retrieve Long Weekends</cite> will read the holiday events from that calendar.</p>
+<p>4. <strong>(Optional)</strong> In the case that you only need to generate a schedule for
+a subset of the calendar year, you can select the amount of blocks you need
+to generate by specifying a value in <cite>Number of Blocks</cite>. By default, the
+scheduler will generate a full schedule, corresponding to 26 blocks.</p>
+<p>5. Click on <cite>Generate</cite>, and after a few moments you should see a preview of
+the generated schedule in the table. <strong>(Optional)</strong> See <a class="reference internal" href="#authentication"><span class="std std-ref">Authentication</span></a>
+in case you encounter problems with Google calendar at this stage.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">It is possible that the scheduler will not be able to come up with a
+schedule that satisfies your constraints. You can try adjusting
+some constraints by changing the minimum and maximum number of blocks of
+clinicians in the configuration file. See <a class="reference internal" href="#clinician-configuration"><span class="std std-ref">Clinician Configuration</span></a>
+for more information on changing the configuration file.</p>
+</div>
 </div>
 <div class="section" id="exporting-a-schedule">
-<h4><a class="toc-backref" href="#id18">Exporting a schedule</a><a class="headerlink" href="#exporting-a-schedule" title="Permalink to this headline">¶</a></h4>
+<h4>Exporting a schedule<a class="headerlink" href="#exporting-a-schedule" title="Permalink to this headline">¶</a></h4>
 </div>
 <div class="section" id="publishing-a-schedule-to-google-calendar">
-<h4><a class="toc-backref" href="#id19">Publishing a schedule to Google Calendar</a><a class="headerlink" href="#publishing-a-schedule-to-google-calendar" title="Permalink to this headline">¶</a></h4>
+<span id="id6"></span><h4>Publishing a schedule to Google Calendar<a class="headerlink" href="#publishing-a-schedule-to-google-calendar" title="Permalink to this headline">¶</a></h4>
 </div>
 </div>
 </div>

@@ -2,18 +2,19 @@
 \contentsline {chapter}{\numberline {1}Setup}{3}{chapter.1}
 \contentsline {section}{\numberline {1.1}Generating Google API credentials}{3}{section.1.1}
 \contentsline {chapter}{\numberline {2}Usage}{11}{chapter.2}
-\contentsline {section}{\numberline {2.1}Clinician Configuration}{11}{section.2.1}
-\contentsline {subsection}{\numberline {2.1.1}Adding a new clinician}{11}{subsection.2.1.1}
-\contentsline {subsection}{\numberline {2.1.2}Deleting an existing clinician}{13}{subsection.2.1.2}
-\contentsline {subsection}{\numberline {2.1.3}Editing an existing clinician}{13}{subsection.2.1.3}
-\contentsline {subsection}{\numberline {2.1.4}Saving the configuration to a file}{13}{subsection.2.1.4}
-\contentsline {subsection}{\numberline {2.1.5}Loading a configuration file}{13}{subsection.2.1.5}
-\contentsline {section}{\numberline {2.2}Google Calendar Configuration}{13}{section.2.2}
-\contentsline {subsection}{\numberline {2.2.1}Creating a calendar}{13}{subsection.2.2.1}
-\contentsline {subsection}{\numberline {2.2.2}Adding holiday events}{13}{subsection.2.2.2}
-\contentsline {subsection}{\numberline {2.2.3}Adding clinician requests}{13}{subsection.2.2.3}
-\contentsline {section}{\numberline {2.3}Scheduling}{13}{section.2.3}
-\contentsline {subsection}{\numberline {2.3.1}Loading a configuration file}{13}{subsection.2.3.1}
-\contentsline {subsection}{\numberline {2.3.2}Generating a schedule}{13}{subsection.2.3.2}
-\contentsline {subsection}{\numberline {2.3.3}Exporting a schedule}{13}{subsection.2.3.3}
-\contentsline {subsection}{\numberline {2.3.4}Publishing a schedule to Google Calendar}{13}{subsection.2.3.4}
+\contentsline {section}{\numberline {2.1}Authentication}{11}{section.2.1}
+\contentsline {section}{\numberline {2.2}Clinician Configuration}{11}{section.2.2}
+\contentsline {subsection}{\numberline {2.2.1}Adding a new clinician}{11}{subsection.2.2.1}
+\contentsline {subsection}{\numberline {2.2.2}Deleting an existing clinician}{14}{subsection.2.2.2}
+\contentsline {subsection}{\numberline {2.2.3}Editing an existing clinician}{14}{subsection.2.2.3}
+\contentsline {subsection}{\numberline {2.2.4}Saving the configuration to a file}{14}{subsection.2.2.4}
+\contentsline {subsection}{\numberline {2.2.5}Loading a configuration file}{14}{subsection.2.2.5}
+\contentsline {section}{\numberline {2.3}Google Calendar Configuration}{14}{section.2.3}
+\contentsline {subsection}{\numberline {2.3.1}Creating a calendar}{14}{subsection.2.3.1}
+\contentsline {subsection}{\numberline {2.3.2}Adding holiday events}{14}{subsection.2.3.2}
+\contentsline {subsection}{\numberline {2.3.3}Adding clinician requests}{14}{subsection.2.3.3}
+\contentsline {section}{\numberline {2.4}Scheduling}{14}{section.2.4}
+\contentsline {subsection}{\numberline {2.4.1}Loading a configuration file}{14}{subsection.2.4.1}
+\contentsline {subsection}{\numberline {2.4.2}Generating a schedule}{15}{subsection.2.4.2}
+\contentsline {subsection}{\numberline {2.4.3}Exporting a schedule}{15}{subsection.2.4.3}
+\contentsline {subsection}{\numberline {2.4.4}Publishing a schedule to Google Calendar}{15}{subsection.2.4.4}
