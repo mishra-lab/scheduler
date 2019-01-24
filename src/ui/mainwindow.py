@@ -31,6 +31,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupConfigurationTab()
         self.setupSchedulerTab()
 
+        self.handleCalendarIdChange(self.gCalLineEdit.text())
         self.tabWidget.setCurrentIndex(0)
 
         self.show()
@@ -76,6 +77,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def setupSchedulerTab(self):
         # action setup
+        self.gCalLineEdit.textChanged[str].connect(self.handleCalendarIdChange)
+
         self.loadButton.clicked.connect(self.openConfig)
         self.generateScheduleButton.clicked.connect(self.generateSchedule)
         self.exportScheduleButton.clicked.connect(self.exportSchedule)
@@ -85,6 +88,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # misc vars
         self.holidayMap = {}
+
+    def handleCalendarIdChange(self, text):
+        if len(text) == 0:
+            # first, uncheck "retrieve" checkboxes
+            self.retrieveTimeOffRequestsCheckBox.setChecked(False)
+            self.retrieveLongWeekendsCheckBox.setChecked(False)
+            # then disable them altogether
+            self.retrieveTimeOffRequestsCheckBox.setDisabled(True)
+            self.retrieveLongWeekendsCheckBox.setDisabled(True)
+
+        else:
+            # enable "retrieve" checkboxes
+            self.retrieveTimeOffRequestsCheckBox.setDisabled(False)
+            self.retrieveLongWeekendsCheckBox.setDisabled(False)
 
     def updateTabText(self, selectedTabIdx):
         # clear (configPath) from all other tabs
