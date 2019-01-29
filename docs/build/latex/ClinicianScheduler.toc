@@ -14,7 +14,6 @@
 \contentsline {subsection}{\numberline {2.3.2}Adding holiday events}{14}{subsection.2.3.2}
 \contentsline {subsection}{\numberline {2.3.3}Adding clinician requests}{14}{subsection.2.3.3}
 \contentsline {section}{\numberline {2.4}Scheduling}{14}{section.2.4}
-\contentsline {subsection}{\numberline {2.4.1}Loading a configuration file}{14}{subsection.2.4.1}
-\contentsline {subsection}{\numberline {2.4.2}Generating a schedule}{15}{subsection.2.4.2}
-\contentsline {subsection}{\numberline {2.4.3}Exporting a schedule}{15}{subsection.2.4.3}
-\contentsline {subsection}{\numberline {2.4.4}Publishing a schedule to Google Calendar}{15}{subsection.2.4.4}
+\contentsline {subsection}{\numberline {2.4.1}Generating a schedule}{14}{subsection.2.4.1}
+\contentsline {subsection}{\numberline {2.4.2}Exporting a schedule}{14}{subsection.2.4.2}
+\contentsline {subsection}{\numberline {2.4.3}Publishing a schedule to Google Calendar}{15}{subsection.2.4.3}

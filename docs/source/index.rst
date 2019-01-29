@@ -58,7 +58,7 @@ of Google API credentials, which can be generated as follows.
 |
 
 5. Now you should see the dashboard for the Clinician Scheduler project. 
-You will need to enable the Google calendar API. Click on `Enable APIs and Services`.
+   You will need to enable the Google calendar API. Click on `Enable APIs and Services`.
 
 .. figure:: _static/images/google_credentials/step5_enable_apis_and_services.png
    :class: with-border
@@ -83,7 +83,7 @@ You will need to enable the Google calendar API. Click on `Enable APIs and Servi
 |
 
 8. Now you should see the overview page for the Google calendar API. 
-To generate the credentials, click `Create credentials`.
+   To generate the credentials, click `Create credentials`.
 
 .. figure:: _static/images/google_credentials/step8_create_credentials.png
    :class: with-border
@@ -92,8 +92,8 @@ To generate the credentials, click `Create credentials`.
 |
 
 9. On the credentials form, choose "Google Calendar API" for `Which API are you using?`,
-then "Other UI (e.g. Windows, CLI tool)" for `Where will you be calling the API from?`
-and "User data" for `What data will you be accessing?`. Then click on `What credentials do I need?`.
+   then "Other UI (e.g. Windows, CLI tool)" for `Where will you be calling the API from?`
+   and "User data" for `What data will you be accessing?`. Then click on `What credentials do I need?`.
 
 .. figure:: _static/images/google_credentials/step9_credentials_form.png
    :class: with-border
@@ -110,8 +110,8 @@ and "User data" for `What data will you be accessing?`. Then click on `What cred
 |
 
 11. Choose the email address associated to your account for `Email address`
-and enter "Clinician Scheduler" for `Product name shown to users`, then 
-click `Continue`.
+    and enter "Clinician Scheduler" for `Product name shown to users`, then 
+    click `Continue`.
 
 .. figure:: _static/images/google_credentials/step11_oauth_consent_screen.png
    :class: with-border
@@ -119,9 +119,9 @@ click `Continue`.
 
 |
 
-12. Your credentials are now generated! Make sure to download and save them 
-in the same location that you unzipped the application, so that the 
-credential file and the executable file (``scheduler.exe``) are in the same folder.
+12. Your credentials are now generated! Make sure to download and save 
+    them in the same location that you unzipped the application, so that
+    the credential file and the executable file (``scheduler.exe``) are in the same folder.
 
 .. figure:: _static/images/google_credentials/step12_download_credentials.png
    :class: with-border
@@ -150,10 +150,10 @@ interacts with Google calendar, for example in :ref:`generating-a-schedule`
 or in :ref:`publishing-a-schedule-to-google-calendar`.
 
 1. The scheduler should have automatically opened the access request page
-in a browser window, in which case you can skip to step 2. **Otherwise**, 
-locate the command prompt for the scheduler. You should see instructions 
-to open the access request printed on the command prompt. Follow these instructions
-in order to open the access request page manually.
+   in a browser window, in which case you can skip to step 2. **Otherwise**, 
+   locate the command prompt for the scheduler. You should see instructions 
+   to open the access request printed on the command prompt. Follow these instructions
+   in order to open the access request page manually.
 
 .. TODO:
 .. .. figure:: _static/images/scheduling/XXXXXXXXXX.png
@@ -163,9 +163,10 @@ in order to open the access request page manually.
 .. |
 
 2. Follow the instructions on the access request page in order to allow
-the scheduler application to read/write from/to the calendar you specified.
-**(Optional)** If you opened the access request manually in step 1, you will
-receive an authentication code which needs to be pasted into the command prompt
+   the scheduler application to read/write from/to the calendar you specified.
+
+   **(Optional)** If you opened the access request manually in step 1, you will
+   receive an authentication code which needs to be pasted into the command prompt
 
 .. .. figure:: _static/images/scheduling/XXXXXXXXXX.png
 ..    :class: with-border
@@ -174,7 +175,7 @@ receive an authentication code which needs to be pasted into the command prompt
 .. |
 
 3. Once you have completed the authentication process, the scheduler will
-automatically resume its functionality.
+   automatically resume its functionality.
 
 .. _clinician-configuration:
 
@@ -199,9 +200,9 @@ form for supplying details.
 
 
 2. Fill out the name, email (optional), and divisions that the clinician
-will be covering. To add a division you can click on `Add` and a new row 
-will be added to the table which you can fill out. You can set the minimum
-and maximum number of blocks that a clinician can work in a given division. 
+   will be covering. To add a division you can click on `Add` and a new row 
+   will be added to the table which you can fill out. You can set the minimum
+   and maximum number of blocks that a clinician can work in a given division. 
 
 .. note::
     A single block corresponds to two weeks.
@@ -221,7 +222,7 @@ and maximum number of blocks that a clinician can work in a given division.
 |
 
 4. When you are finished entering the data for the clinician, click `Ok`.
-You should now see a new entry in the main table for that clinician.
+   You should now see a new entry in the main table for that clinician.
 
 .. figure:: _static/images/add_clinician/step4_add_clinician.png
    :class: with-border
@@ -272,24 +273,23 @@ Adding clinician requests
 Scheduling
 """"""""""
 
-Loading a configuration file
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-From the scheduling tab, click on `Load` and select the configuration
-file that you generated in :ref:`clinician-configuration` 
-
-.. figure:: _static/images/scheduling/load_config/load_config.png
-   :class: with-border
-   :target: _static/images/scheduling/load_config/load_config.png
-
-|
-
 .. _generating-a-schedule:
 
 Generating a schedule
 ~~~~~~~~~~~~~~~~~~~~~
+Once you have created a configuration file, you can switch over to the 
+`Scheduler` tab of the application in order to generate a schedule.
 
-1. Enter the calendar year for the schedule that you want to generate.
+1. From the scheduling tab, click on `Load` and select the configuration
+   file that you generated in :ref:`clinician-configuration` 
+
+.. .. figure:: _static/images/scheduling/load_config/load_config.png
+..    :class: with-border
+..    :target: _static/images/scheduling/load_config/load_config.png
+
+.. |
+
+2. Enter the calendar year for the schedule that you want to generate.
 
 .. TODO:
 .. .. figure:: _static/images/scheduling/XXXXXXXXXX.png
@@ -298,14 +298,14 @@ Generating a schedule
 
 .. |
 
-2. **(Optional)** In order to retrieve the time-off requests that were populated
-in Google calendar in :ref:`adding-clinician-requests`, we need to specify the
-calendar ID. Open the calendar in your browser, and navigate to the 
-`Settings and sharing` page.
-On the setting page, navigate to the `Integrate calendar` section, and copy
-the value under `Calendar ID` to your clipboard. 
-Paste this value into the `Google Calendar ID` textbox on the `Scheduler`
-tab.
+3. **(Optional)** In order to retrieve the time-off requests that were populated
+   in Google calendar in :ref:`adding-clinician-requests`, we need to specify the
+   calendar ID. Open the calendar in your browser, and navigate to the 
+   `Settings and sharing` page.
+   On the setting page, navigate to the `Integrate calendar` section, and copy
+   the value under `Calendar ID` to your clipboard. 
+   Paste this value into the `Google Calendar ID` textbox on the `Scheduler`
+   tab.
 
 .. TODO:
 .. .. figure:: _static/images/scheduling/XXXXXXXXXX.png
@@ -314,11 +314,11 @@ tab.
 
 .. |
 
-3. **(Optional)** If you supplied a calendar ID in step 2, you can configure 
-the options `Retrieve Time-off Requests` and `Retrieve Long Weekends` as necessary.
-Enabling `Retrieve Time-off Requests` will read the time-off calendar events
-from the calendar specified in `Calendar ID`, while enabling 
-`Retrieve Long Weekends` will read the holiday events from that calendar.
+4. **(Optional)** If you supplied a calendar ID in step 3, you can configure 
+   the options `Retrieve Time-off Requests` and `Retrieve Long Weekends` as necessary.
+   Enabling `Retrieve Time-off Requests` will read the time-off calendar events
+   from the calendar specified in `Calendar ID`, while enabling 
+   `Retrieve Long Weekends` will read the holiday events from that calendar.
 
 .. TODO:
 .. .. figure:: _static/images/scheduling/XXXXXXXXXX.png
@@ -327,10 +327,10 @@ from the calendar specified in `Calendar ID`, while enabling
 
 .. |
 
-4. **(Optional)** In the case that you only need to generate a schedule for
-a subset of the calendar year, you can select the amount of blocks you need 
-to generate by specifying a value in `Number of Blocks`. By default, the 
-scheduler will generate a full schedule, corresponding to 26 blocks.
+5. **(Optional)** In the case that you only need to generate a schedule for
+   a subset of the calendar year, you can select the amount of blocks you need 
+   to generate by specifying a value in `Number of Blocks`. By default, the 
+   scheduler will generate a full schedule, corresponding to 26 blocks.
 
 .. TODO:
 .. .. figure:: _static/images/scheduling/XXXXXXXXXX.png
@@ -339,9 +339,11 @@ scheduler will generate a full schedule, corresponding to 26 blocks.
 
 .. |
 
-5. Click on `Generate`, and after a few moments you should see a preview of
-the generated schedule in the table. **(Optional)** See :ref:`authentication`
-in case you encounter problems with Google calendar at this stage.
+6. Click on `Generate`, and after a few moments you should see a preview of
+   the generated schedule in the table.
+   
+   **(Optional)** See :ref:`authentication` in case you encounter problems
+   with Google calendar at this stage.
 
 .. TODO:
 .. .. figure:: _static/images/scheduling/XXXXXXXXXX.png
@@ -360,7 +362,31 @@ in case you encounter problems with Google calendar at this stage.
 Exporting a schedule
 ~~~~~~~~~~~~~~~~~~~~
 
-.. TODO:
+If you are satisfied with the generated schedule, you can choose to export
+it as an Excel file. There are two format options: `Yearly Export` and 
+`Monthly Export`. 
+
+.. .. figure:: .....
+..    :class: with-border
+..    :target: ......
+
+
+Selecting the `Yearly Export` option will generate an excel file with a single
+sheet, displaying the clinicians that are covering a particular division
+for a given week or weekend. It is very similar to the table output in
+the application itself.
+
+.. .. figure:: .....
+..    :class: with-border
+..    :target: ......
+
+Selecting the `Monthly Export` option will generate a more detailed breakdown
+of the schedule, with a separate sheet for every month, detailing which
+clinician covers which division on which day.
+
+.. .. figure:: .....
+..    :class: with-border
+..    :target: ......
 
 .. _publishing-a-schedule-to-google-calendar:
 

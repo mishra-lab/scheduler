@@ -37,31 +37,30 @@
 <div class="contents local topic" id="contents">
 <p class="topic-title first">Contents:</p>
 <ul class="simple">
-<li><a class="reference internal" href="#setup" id="id7">Setup</a><ul>
-<li><a class="reference internal" href="#generating-google-api-credentials" id="id8">Generating Google API credentials</a></li>
+<li><a class="reference internal" href="#setup" id="id6">Setup</a><ul>
+<li><a class="reference internal" href="#generating-google-api-credentials" id="id7">Generating Google API credentials</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#usage" id="id9">Usage</a><ul>
-<li><a class="reference internal" href="#authentication" id="id10">Authentication</a></li>
-<li><a class="reference internal" href="#clinician-configuration" id="id11">Clinician Configuration</a><ul>
-<li><a class="reference internal" href="#adding-a-new-clinician" id="id12">Adding a new clinician</a></li>
-<li><a class="reference internal" href="#deleting-an-existing-clinician" id="id13">Deleting an existing clinician</a></li>
-<li><a class="reference internal" href="#editing-an-existing-clinician" id="id14">Editing an existing clinician</a></li>
-<li><a class="reference internal" href="#saving-the-configuration-to-a-file" id="id15">Saving the configuration to a file</a></li>
-<li><a class="reference internal" href="#loading-a-configuration-file" id="id16">Loading a configuration file</a></li>
+<li><a class="reference internal" href="#usage" id="id8">Usage</a><ul>
+<li><a class="reference internal" href="#authentication" id="id9">Authentication</a></li>
+<li><a class="reference internal" href="#clinician-configuration" id="id10">Clinician Configuration</a><ul>
+<li><a class="reference internal" href="#adding-a-new-clinician" id="id11">Adding a new clinician</a></li>
+<li><a class="reference internal" href="#deleting-an-existing-clinician" id="id12">Deleting an existing clinician</a></li>
+<li><a class="reference internal" href="#editing-an-existing-clinician" id="id13">Editing an existing clinician</a></li>
+<li><a class="reference internal" href="#saving-the-configuration-to-a-file" id="id14">Saving the configuration to a file</a></li>
+<li><a class="reference internal" href="#loading-a-configuration-file" id="id15">Loading a configuration file</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#google-calendar-configuration" id="id17">Google Calendar Configuration</a><ul>
-<li><a class="reference internal" href="#creating-a-calendar" id="id18">Creating a calendar</a></li>
-<li><a class="reference internal" href="#adding-holiday-events" id="id19">Adding holiday events</a></li>
-<li><a class="reference internal" href="#adding-clinician-requests" id="id20">Adding clinician requests</a></li>
+<li><a class="reference internal" href="#google-calendar-configuration" id="id16">Google Calendar Configuration</a><ul>
+<li><a class="reference internal" href="#creating-a-calendar" id="id17">Creating a calendar</a></li>
+<li><a class="reference internal" href="#adding-holiday-events" id="id18">Adding holiday events</a></li>
+<li><a class="reference internal" href="#adding-clinician-requests" id="id19">Adding clinician requests</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#scheduling" id="id21">Scheduling</a><ul>
-<li><a class="reference internal" href="#id4" id="id22">Loading a configuration file</a></li>
-<li><a class="reference internal" href="#generating-a-schedule" id="id23">Generating a schedule</a></li>
-<li><a class="reference internal" href="#exporting-a-schedule" id="id24">Exporting a schedule</a></li>
-<li><a class="reference internal" href="#publishing-a-schedule-to-google-calendar" id="id25">Publishing a schedule to Google Calendar</a></li>
+<li><a class="reference internal" href="#scheduling" id="id20">Scheduling</a><ul>
+<li><a class="reference internal" href="#generating-a-schedule" id="id21">Generating a schedule</a></li>
+<li><a class="reference internal" href="#exporting-a-schedule" id="id22">Exporting a schedule</a></li>
+<li><a class="reference internal" href="#publishing-a-schedule-to-google-calendar" id="id23">Publishing a schedule to Google Calendar</a></li>
 </ul>
 </li>
 </ul>
@@ -115,8 +114,10 @@ of Google API credentials, which can be generated as follows.</p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<p>5. Now you should see the dashboard for the Clinician Scheduler project.
-You will need to enable the Google calendar API. Click on <cite>Enable APIs and Services</cite>.</p>
+<ol class="arabic simple" start="5">
+<li>Now you should see the dashboard for the Clinician Scheduler project.
+You will need to enable the Google calendar API. Click on <cite>Enable APIs and Services</cite>.</li>
+</ol>
 <div class="figure">
 <a class="reference external image-reference" href="_static/images/google_credentials/step5_enable_apis_and_services.png"><img alt="_images/step5_enable_apis_and_services.png" class="with-border" src="_images/step5_enable_apis_and_services.png" /></a>
 </div>
@@ -141,17 +142,21 @@ You will need to enable the Google calendar API. Click on <cite>Enable APIs and 
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<p>8. Now you should see the overview page for the Google calendar API.
-To generate the credentials, click <cite>Create credentials</cite>.</p>
+<ol class="arabic simple" start="8">
+<li>Now you should see the overview page for the Google calendar API.
+To generate the credentials, click <cite>Create credentials</cite>.</li>
+</ol>
 <div class="figure">
 <a class="reference external image-reference" href="_static/images/google_credentials/step8_create_credentials.png"><img alt="_images/step8_create_credentials.png" class="with-border" src="_images/step8_create_credentials.png" /></a>
 </div>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<p>9. On the credentials form, choose “Google Calendar API” for <cite>Which API are you using?</cite>,
+<ol class="arabic simple" start="9">
+<li>On the credentials form, choose “Google Calendar API” for <cite>Which API are you using?</cite>,
 then “Other UI (e.g. Windows, CLI tool)” for <cite>Where will you be calling the API from?</cite>
-and “User data” for <cite>What data will you be accessing?</cite>. Then click on <cite>What credentials do I need?</cite>.</p>
+and “User data” for <cite>What data will you be accessing?</cite>. Then click on <cite>What credentials do I need?</cite>.</li>
+</ol>
 <div class="figure">
 <a class="reference external image-reference" href="_static/images/google_credentials/step9_credentials_form.png"><img alt="_images/step9_credentials_form.png" class="with-border" src="_images/step9_credentials_form.png" /></a>
 </div>
@@ -167,18 +172,22 @@ and “User data” for <cite>What data will you be accessing?</cite>. Then clic
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<p>11. Choose the email address associated to your account for <cite>Email address</cite>
+<ol class="arabic simple" start="11">
+<li>Choose the email address associated to your account for <cite>Email address</cite>
 and enter “Clinician Scheduler” for <cite>Product name shown to users</cite>, then
-click <cite>Continue</cite>.</p>
+click <cite>Continue</cite>.</li>
+</ol>
 <div class="figure">
 <a class="reference external image-reference" href="_static/images/google_credentials/step11_oauth_consent_screen.png"><img alt="_images/step11_oauth_consent_screen.png" class="with-border" src="_images/step11_oauth_consent_screen.png" /></a>
 </div>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<p>12. Your credentials are now generated! Make sure to download and save them
-in the same location that you unzipped the application, so that the
-credential file and the executable file (<code class="docutils literal notranslate"><span class="pre">scheduler.exe</span></code>) are in the same folder.</p>
+<ol class="arabic simple" start="12">
+<li>Your credentials are now generated! Make sure to download and save
+them in the same location that you unzipped the application, so that
+the credential file and the executable file (<code class="docutils literal notranslate"><span class="pre">scheduler.exe</span></code>) are in the same folder.</li>
+</ol>
 <div class="figure">
 <a class="reference external image-reference" href="_static/images/google_credentials/step12_download_credentials.png"><img alt="_images/step12_download_credentials.png" class="with-border" src="_images/step12_download_credentials.png" /></a>
 </div>
@@ -203,17 +212,24 @@ connections.</p>
 that you specified. You may encounter this when using any functionality that
 interacts with Google calendar, for example in <a class="reference internal" href="#generating-a-schedule"><span class="std std-ref">Generating a schedule</span></a>
 or in <a class="reference internal" href="#publishing-a-schedule-to-google-calendar"><span class="std std-ref">Publishing a schedule to Google Calendar</span></a>.</p>
-<p>1. The scheduler should have automatically opened the access request page
+<ol class="arabic simple">
+<li>The scheduler should have automatically opened the access request page
 in a browser window, in which case you can skip to step 2. <strong>Otherwise</strong>,
 locate the command prompt for the scheduler. You should see instructions
 to open the access request printed on the command prompt. Follow these instructions
-in order to open the access request page manually.</p>
-<p>2. Follow the instructions on the access request page in order to allow
-the scheduler application to read/write from/to the calendar you specified.
-<strong>(Optional)</strong> If you opened the access request manually in step 1, you will
+in order to open the access request page manually.</li>
+</ol>
+<ol class="arabic" start="2">
+<li><p class="first">Follow the instructions on the access request page in order to allow
+the scheduler application to read/write from/to the calendar you specified.</p>
+<p><strong>(Optional)</strong> If you opened the access request manually in step 1, you will
 receive an authentication code which needs to be pasted into the command prompt</p>
-<p>3. Once you have completed the authentication process, the scheduler will
-automatically resume its functionality.</p>
+</li>
+</ol>
+<ol class="arabic simple" start="3">
+<li>Once you have completed the authentication process, the scheduler will
+automatically resume its functionality.</li>
+</ol>
 </div>
 <div class="section" id="clinician-configuration">
 <span id="id2"></span><h3>Clinician Configuration<a class="headerlink" href="#clinician-configuration" title="Permalink to this headline">¶</a></h3>
@@ -230,10 +246,12 @@ form for supplying details.</p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<p>2. Fill out the name, email (optional), and divisions that the clinician
+<ol class="arabic simple" start="2">
+<li>Fill out the name, email (optional), and divisions that the clinician
 will be covering. To add a division you can click on <cite>Add</cite> and a new row
 will be added to the table which you can fill out. You can set the minimum
-and maximum number of blocks that a clinician can work in a given division.</p>
+and maximum number of blocks that a clinician can work in a given division.</li>
+</ol>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">A single block corresponds to two weeks.</p>
@@ -253,8 +271,10 @@ and maximum number of blocks that a clinician can work in a given division.</p>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<p>4. When you are finished entering the data for the clinician, click <cite>Ok</cite>.
-You should now see a new entry in the main table for that clinician.</p>
+<ol class="arabic simple" start="4">
+<li>When you are finished entering the data for the clinician, click <cite>Ok</cite>.
+You should now see a new entry in the main table for that clinician.</li>
+</ol>
 <div class="figure">
 <a class="reference external image-reference" href="_static/images/add_clinician/step4_add_clinician.png"><img alt="_images/step4_add_clinician.png" class="with-border" src="_images/step4_add_clinician.png" /></a>
 </div>
@@ -289,42 +309,47 @@ You should now see a new entry in the main table for that clinician.</p>
 </div>
 <div class="section" id="scheduling">
 <h3>Scheduling<a class="headerlink" href="#scheduling" title="Permalink to this headline">¶</a></h3>
-<div class="section" id="id4">
-<h4>Loading a configuration file<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h4>
-<p>From the scheduling tab, click on <cite>Load</cite> and select the configuration
-file that you generated in <a class="reference internal" href="#clinician-configuration"><span class="std std-ref">Clinician Configuration</span></a></p>
-<div class="figure">
-<a class="reference external image-reference" href="_static/images/scheduling/load_config/load_config.png"><img alt="_images/load_config.png" class="with-border" src="_images/load_config.png" /></a>
-</div>
-<div class="line-block">
-<div class="line"><br /></div>
-</div>
-</div>
 <div class="section" id="generating-a-schedule">
-<span id="id5"></span><h4>Generating a schedule<a class="headerlink" href="#generating-a-schedule" title="Permalink to this headline">¶</a></h4>
+<span id="id4"></span><h4>Generating a schedule<a class="headerlink" href="#generating-a-schedule" title="Permalink to this headline">¶</a></h4>
+<p>Once you have created a configuration file, you can switch over to the
+<cite>Scheduler</cite> tab of the application in order to generate a schedule.</p>
 <ol class="arabic simple">
+<li>From the scheduling tab, click on <cite>Load</cite> and select the configuration
+file that you generated in <a class="reference internal" href="#clinician-configuration"><span class="std std-ref">Clinician Configuration</span></a></li>
+</ol>
+<ol class="arabic simple" start="2">
 <li>Enter the calendar year for the schedule that you want to generate.</li>
 </ol>
-<p>2. <strong>(Optional)</strong> In order to retrieve the time-off requests that were populated
+<ol class="arabic simple" start="3">
+<li><strong>(Optional)</strong> In order to retrieve the time-off requests that were populated
 in Google calendar in <a class="reference internal" href="#adding-clinician-requests"><span class="std std-ref">Adding clinician requests</span></a>, we need to specify the
 calendar ID. Open the calendar in your browser, and navigate to the
 <cite>Settings and sharing</cite> page.
 On the setting page, navigate to the <cite>Integrate calendar</cite> section, and copy
 the value under <cite>Calendar ID</cite> to your clipboard.
 Paste this value into the <cite>Google Calendar ID</cite> textbox on the <cite>Scheduler</cite>
-tab.</p>
-<p>3. <strong>(Optional)</strong> If you supplied a calendar ID in step 2, you can configure
+tab.</li>
+</ol>
+<ol class="arabic simple" start="4">
+<li><strong>(Optional)</strong> If you supplied a calendar ID in step 3, you can configure
 the options <cite>Retrieve Time-off Requests</cite> and <cite>Retrieve Long Weekends</cite> as necessary.
 Enabling <cite>Retrieve Time-off Requests</cite> will read the time-off calendar events
 from the calendar specified in <cite>Calendar ID</cite>, while enabling
-<cite>Retrieve Long Weekends</cite> will read the holiday events from that calendar.</p>
-<p>4. <strong>(Optional)</strong> In the case that you only need to generate a schedule for
+<cite>Retrieve Long Weekends</cite> will read the holiday events from that calendar.</li>
+</ol>
+<ol class="arabic simple" start="5">
+<li><strong>(Optional)</strong> In the case that you only need to generate a schedule for
 a subset of the calendar year, you can select the amount of blocks you need
 to generate by specifying a value in <cite>Number of Blocks</cite>. By default, the
-scheduler will generate a full schedule, corresponding to 26 blocks.</p>
-<p>5. Click on <cite>Generate</cite>, and after a few moments you should see a preview of
-the generated schedule in the table. <strong>(Optional)</strong> See <a class="reference internal" href="#authentication"><span class="std std-ref">Authentication</span></a>
-in case you encounter problems with Google calendar at this stage.</p>
+scheduler will generate a full schedule, corresponding to 26 blocks.</li>
+</ol>
+<ol class="arabic" start="6">
+<li><p class="first">Click on <cite>Generate</cite>, and after a few moments you should see a preview of
+the generated schedule in the table.</p>
+<p><strong>(Optional)</strong> See <a class="reference internal" href="#authentication"><span class="std std-ref">Authentication</span></a> in case you encounter problems
+with Google calendar at this stage.</p>
+</li>
+</ol>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">It is possible that the scheduler will not be able to come up with a
@@ -336,9 +361,19 @@ for more information on changing the configuration file.</p>
 </div>
 <div class="section" id="exporting-a-schedule">
 <h4>Exporting a schedule<a class="headerlink" href="#exporting-a-schedule" title="Permalink to this headline">¶</a></h4>
+<p>If you are satisfied with the generated schedule, you can choose to export
+it as an Excel file. There are two format options: <cite>Yearly Export</cite> and
+<cite>Monthly Export</cite>.</p>
+<p>Selecting the <cite>Yearly Export</cite> option will generate an excel file with a single
+sheet, displaying the clinicians that are covering a particular division
+for a given week or weekend. It is very similar to the table output in
+the application itself.</p>
+<p>Selecting the <cite>Monthly Export</cite> option will generate a more detailed breakdown
+of the schedule, with a separate sheet for every month, detailing which
+clinician covers which division on which day.</p>
 </div>
 <div class="section" id="publishing-a-schedule-to-google-calendar">
-<span id="id6"></span><h4>Publishing a schedule to Google Calendar<a class="headerlink" href="#publishing-a-schedule-to-google-calendar" title="Permalink to this headline">¶</a></h4>
+<span id="id5"></span><h4>Publishing a schedule to Google Calendar<a class="headerlink" href="#publishing-a-schedule-to-google-calendar" title="Permalink to this headline">¶</a></h4>
 </div>
 </div>
 </div>
