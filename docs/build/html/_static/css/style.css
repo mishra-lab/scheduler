@@ -12,3 +12,8 @@
     font-weight: bold !important;
     font-size: 17px !important;
 }
+
+.warning{
+    background-color: #ffc9a3 !important;
+    border: 1px solid #ff832b !important;
+}

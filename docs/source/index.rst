@@ -6,7 +6,7 @@
 Clinician Scheduler
 ===================
 
-.. contents:: Contents:
+.. contents:: Table of Contents
    :local:
    :backlinks: none
 
@@ -16,7 +16,6 @@ into account the preferences of clinicians.
 
 Setup
 -----
-Download and unzip the compressed file to an appropriate folder.
 
 Generating Google API credentials
 """""""""""""""""""""""""""""""""
@@ -133,6 +132,26 @@ of Google API credentials, which can be generated as follows.
    Make sure the credential file is saved as ``credentials.json`` (rename it, if necessary), 
    or otherwise the application will not be able to recognize it!
 
+Google Calendar Configuration
+"""""""""""""""""""""""""""""
+
+Creating a calendar
+~~~~~~~~~~~~~~~~~~~
+
+.. TODO:
+
+Adding holiday events
+~~~~~~~~~~~~~~~~~~~~~
+
+.. TODO:
+
+.. _adding-clinician-requests:
+
+Adding clinician requests
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. TODO:
+
 Usage
 -----
 
@@ -186,6 +205,38 @@ Before we can generate a schedule, we need to create a configuration file
 that specifies which clinicians are available, and how many weeks each 
 clinician should fulfill.
 
+
+Creating a new configuration file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+By default, you will get a blank configuration file when you launch
+the program. If you would like to discard the changes you have made and 
+start a configuration file from scratch, simply click on `New Config`.
+
+<image placeholder>
+
+.. warning::
+   Unsaved changes to a configuration file will be discarded upon clicking
+   `New Config`.
+
+Saving the configuration file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When you are ready to save the configuration you created, click on 
+`Save Config` and choose a place to save your file. Make note of the name
+and directory of the file so you could load it in future runs.
+
+<image placeholder>
+
+Loading a configuration file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you would like to open a previously created configuration file, simply
+click on `Open Config`, navigate to the location of the configuration file,
+and select it.
+
+<image placeholder>
+
 Adding a new clinician
 ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -233,42 +284,19 @@ form for supplying details.
 Deleting an existing clinician
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. TODO:
+To delete an existing clinician, simply select a row corresponding
+to the clinician in the table and click on `Delete Clinician`.
+
+<image placeholder>
 
 Editing an existing clinician
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. TODO:
+To edit the information of a clinician, select a row corresponding
+to the clinician in the table and click on `Edit Clinician`. You should
+see a dialog window where you can change the information.
 
-Saving the configuration to a file
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. TODO:
-
-Loading a configuration file
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. TODO:
-
-Google Calendar Configuration
-"""""""""""""""""""""""""""""
-
-Creating a calendar
-~~~~~~~~~~~~~~~~~~~
-
-.. TODO:
-
-Adding holiday events
-~~~~~~~~~~~~~~~~~~~~~
-
-.. TODO:
-
-.. _adding-clinician-requests:
-
-Adding clinician requests
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. TODO:
+<image placeholder>
 
 Scheduling
 """"""""""
@@ -283,20 +311,11 @@ Once you have created a configuration file, you can switch over to the
 1. From the scheduling tab, click on `Load` and select the configuration
    file that you generated in :ref:`clinician-configuration` 
 
-.. .. figure:: _static/images/scheduling/load_config/load_config.png
-..    :class: with-border
-..    :target: _static/images/scheduling/load_config/load_config.png
-
-.. |
+<image placeholder>
 
 2. Enter the calendar year for the schedule that you want to generate.
 
-.. TODO:
-.. .. figure:: _static/images/scheduling/XXXXXXXXXX.png
-..    :class: with-border
-..    :target: _static/images/scheduling/XXXXXXXXXX.png
-
-.. |
+<image placeholder>
 
 3. **(Optional)** In order to retrieve the time-off requests that were populated
    in Google calendar in :ref:`adding-clinician-requests`, we need to specify the
@@ -307,12 +326,7 @@ Once you have created a configuration file, you can switch over to the
    Paste this value into the `Google Calendar ID` textbox on the `Scheduler`
    tab.
 
-.. TODO:
-.. .. figure:: _static/images/scheduling/XXXXXXXXXX.png
-..    :class: with-border
-..    :target: _static/images/scheduling/XXXXXXXXXX.png
-
-.. |
+<image placeholder>
 
 4. **(Optional)** If you supplied a calendar ID in step 3, you can configure 
    the options `Retrieve Time-off Requests` and `Retrieve Long Weekends` as necessary.
@@ -320,37 +334,22 @@ Once you have created a configuration file, you can switch over to the
    from the calendar specified in `Calendar ID`, while enabling 
    `Retrieve Long Weekends` will read the holiday events from that calendar.
 
-.. TODO:
-.. .. figure:: _static/images/scheduling/XXXXXXXXXX.png
-..    :class: with-border
-..    :target: _static/images/scheduling/XXXXXXXXXX.png
-
-.. |
+<image placeholder>
 
 5. **(Optional)** In the case that you only need to generate a schedule for
    a subset of the calendar year, you can select the amount of blocks you need 
    to generate by specifying a value in `Number of Blocks`. By default, the 
    scheduler will generate a full schedule, corresponding to 26 blocks.
 
-.. TODO:
-.. .. figure:: _static/images/scheduling/XXXXXXXXXX.png
-..    :class: with-border
-..    :target: _static/images/scheduling/XXXXXXXXXX.png
-
-.. |
+<image placeholder>
 
 6. Click on `Generate`, and after a few moments you should see a preview of
    the generated schedule in the table.
-   
+
    **(Optional)** See :ref:`authentication` in case you encounter problems
    with Google calendar at this stage.
 
-.. TODO:
-.. .. figure:: _static/images/scheduling/XXXXXXXXXX.png
-..    :class: with-border
-..    :target: _static/images/scheduling/XXXXXXXXXX.png
-
-.. |
+<image placeholder>
 
 .. note::
    It is possible that the scheduler will not be able to come up with a 
@@ -366,31 +365,43 @@ If you are satisfied with the generated schedule, you can choose to export
 it as an Excel file. There are two format options: `Yearly Export` and 
 `Monthly Export`. 
 
-.. .. figure:: .....
-..    :class: with-border
-..    :target: ......
-
+<image placeholder>
 
 Selecting the `Yearly Export` option will generate an excel file with a single
 sheet, displaying the clinicians that are covering a particular division
 for a given week or weekend. It is very similar to the table output in
 the application itself.
 
-.. .. figure:: .....
-..    :class: with-border
-..    :target: ......
+<image placeholder>
 
 Selecting the `Monthly Export` option will generate a more detailed breakdown
 of the schedule, with a separate sheet for every month, detailing which
 clinician covers which division on which day.
 
-.. .. figure:: .....
-..    :class: with-border
-..    :target: ......
+<image placeholder>
 
 .. _publishing-a-schedule-to-google-calendar:
 
 Publishing a schedule to Google Calendar
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. TODO:
+If you are satisfied with the generated schedule, you can publish it
+to Google calendar, by clicking on `Publish`.
+
+<image placeholder>
+
+.. warning::
+   This process might take some time, especially if the number of events
+   to be published is quite large.
+
+Clearing a published schedule
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you want to remove all the published events created by the application,
+simply click on `Clear`.
+
+<image placeholder>
+
+.. warning::
+   This process might take some time, especially if the number of published
+   events is quite large.
