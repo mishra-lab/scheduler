@@ -174,24 +174,29 @@ or in :ref:`publishing-a-schedule-to-google-calendar`.
    to open the access request printed on the command prompt. Follow these instructions
    in order to open the access request page manually.
 
-.. TODO:
-.. .. figure:: _static/images/scheduling/XXXXXXXXXX.png
-..    :class: with-border
-..    :target: _static/images/scheduling/XXXXXXXXXX.png
+.. figure:: _static/images/authentication/open_in_browser.png
+   :class: with-border
+   :target: _static/images/authentication/open_in_browser.png
 
-.. |
+|
 
 2. Follow the instructions on the access request page in order to allow
    the scheduler application to read/write from/to the calendar you specified.
 
+.. figure:: _static/images/authentication/access_request.png
+   :class: with-border
+   :target: _static/images/authentication/access_request.png
+
+|
+
    **(Optional)** If you opened the access request manually in step 1, you will
    receive an authentication code which needs to be pasted into the command prompt
 
-.. .. figure:: _static/images/scheduling/XXXXXXXXXX.png
-..    :class: with-border
-..    :target: _static/images/scheduling/XXXXXXXXXX.png
+.. figure:: _static/images/authentication/access_request_auth_code.png
+   :class: with-border
+   :target: _static/images/authentication/access_request_auth_code.png
 
-.. |
+|
 
 3. Once you have completed the authentication process, the scheduler will
    automatically resume its functionality.
@@ -213,7 +218,9 @@ By default, you will get a blank configuration file when you launch
 the program. If you would like to discard the changes you have made and 
 start a configuration file from scratch, simply click on `New Config`.
 
-<image placeholder>
+.. figure:: _static/images/configuration/new_config.png
+   :class: with-border
+   :target: _static/images/configuration/new_config.png
 
 .. warning::
    Unsaved changes to a configuration file will be discarded upon clicking
@@ -226,7 +233,9 @@ When you are ready to save the configuration you created, click on
 `Save Config` and choose a place to save your file. Make note of the name
 and directory of the file so you could load it in future runs.
 
-<image placeholder>
+.. figure:: _static/images/configuration/save_config.png
+   :class: with-border
+   :target: _static/images/configuration/save_config.png
 
 Loading a configuration file
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -235,7 +244,11 @@ If you would like to open a previously created configuration file, simply
 click on `Open Config`, navigate to the location of the configuration file,
 and select it.
 
-<image placeholder>
+.. figure:: _static/images/configuration/load_config.png
+   :class: with-border
+   :target: _static/images/configuration/load_config.png
+
+.. _adding-a-new-clinician:
 
 Adding a new clinician
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -243,9 +256,9 @@ Adding a new clinician
 1. From the configuration tab, click `New Clinician`. You should see a
 form for supplying details.
 
-.. figure:: _static/images/add_clinician/step1_new_clinician.png
+.. figure:: _static/images/configuration/add_clinician/step1_new_clinician.png
    :class: with-border
-   :target: _static/images/add_clinician/step1_new_clinician.png
+   :target: _static/images/configuration/add_clinician/step1_new_clinician.png
 
 |
 
@@ -258,26 +271,26 @@ form for supplying details.
 .. note::
     A single block corresponds to two weeks.
 
-.. figure:: _static/images/add_clinician/step2_add_division.png
+.. figure:: _static/images/configuration/add_clinician/step2_add_division.png
    :class: with-border
-   :target: _static/images/add_clinician/step2_add_division.png
+   :target: _static/images/configuration/add_clinician/step2_add_division.png
 
 |
 
 3. To delete a row from the table, select the row and then click `Remove`.
 
-.. figure:: _static/images/add_clinician/step3_remove_division.png
+.. figure:: _static/images/configuration/add_clinician/step3_remove_division.png
    :class: with-border
-   :target: _static/images/add_clinician/step3_remove_division.png
+   :target: _static/images/configuration/add_clinician/step3_remove_division.png
 
 |
 
 4. When you are finished entering the data for the clinician, click `Ok`.
    You should now see a new entry in the main table for that clinician.
 
-.. figure:: _static/images/add_clinician/step4_add_clinician.png
+.. figure:: _static/images/configuration/add_clinician/step4_add_clinician.png
    :class: with-border
-   :target: _static/images/add_clinician/step4_add_clinician.png
+   :target: _static/images/configuration/add_clinician/step4_add_clinician.png
 
 |
 
@@ -287,16 +300,22 @@ Deleting an existing clinician
 To delete an existing clinician, simply select a row corresponding
 to the clinician in the table and click on `Delete Clinician`.
 
-<image placeholder>
+.. figure:: _static/images/configuration/delete_clinician.png
+   :class: with-border
+   :target: _static/images/configuration/delete_clinician.png
+
 
 Editing an existing clinician
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To edit the information of a clinician, select a row corresponding
 to the clinician in the table and click on `Edit Clinician`. You should
-see a dialog window where you can change the information.
+see a dialog window where you can change the information. For more 
+details on how to enter data in the edit dialog, see :ref:`adding-a-new-clinician`.
 
-<image placeholder>
+.. figure:: _static/images/configuration/edit_clinician.png
+   :class: with-border
+   :target: _static/images/configuration/edit_clinician.png
 
 Scheduling
 """"""""""

@@ -37,32 +37,32 @@
 <div class="contents local topic" id="table-of-contents">
 <p class="topic-title first">Table of Contents</p>
 <ul class="simple">
-<li><a class="reference internal" href="#setup" id="id6">Setup</a><ul>
-<li><a class="reference internal" href="#generating-google-api-credentials" id="id7">Generating Google API credentials</a></li>
-<li><a class="reference internal" href="#google-calendar-configuration" id="id8">Google Calendar Configuration</a><ul>
-<li><a class="reference internal" href="#creating-a-calendar" id="id9">Creating a calendar</a></li>
-<li><a class="reference internal" href="#adding-holiday-events" id="id10">Adding holiday events</a></li>
-<li><a class="reference internal" href="#adding-clinician-requests" id="id11">Adding clinician requests</a></li>
+<li><a class="reference internal" href="#setup" id="id7">Setup</a><ul>
+<li><a class="reference internal" href="#generating-google-api-credentials" id="id8">Generating Google API credentials</a></li>
+<li><a class="reference internal" href="#google-calendar-configuration" id="id9">Google Calendar Configuration</a><ul>
+<li><a class="reference internal" href="#creating-a-calendar" id="id10">Creating a calendar</a></li>
+<li><a class="reference internal" href="#adding-holiday-events" id="id11">Adding holiday events</a></li>
+<li><a class="reference internal" href="#adding-clinician-requests" id="id12">Adding clinician requests</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a class="reference internal" href="#usage" id="id12">Usage</a><ul>
-<li><a class="reference internal" href="#authentication" id="id13">Authentication</a></li>
-<li><a class="reference internal" href="#clinician-configuration" id="id14">Clinician Configuration</a><ul>
-<li><a class="reference internal" href="#creating-a-new-configuration-file" id="id15">Creating a new configuration file</a></li>
-<li><a class="reference internal" href="#saving-the-configuration-file" id="id16">Saving the configuration file</a></li>
-<li><a class="reference internal" href="#loading-a-configuration-file" id="id17">Loading a configuration file</a></li>
-<li><a class="reference internal" href="#adding-a-new-clinician" id="id18">Adding a new clinician</a></li>
-<li><a class="reference internal" href="#deleting-an-existing-clinician" id="id19">Deleting an existing clinician</a></li>
-<li><a class="reference internal" href="#editing-an-existing-clinician" id="id20">Editing an existing clinician</a></li>
+<li><a class="reference internal" href="#usage" id="id13">Usage</a><ul>
+<li><a class="reference internal" href="#authentication" id="id14">Authentication</a></li>
+<li><a class="reference internal" href="#clinician-configuration" id="id15">Clinician Configuration</a><ul>
+<li><a class="reference internal" href="#creating-a-new-configuration-file" id="id16">Creating a new configuration file</a></li>
+<li><a class="reference internal" href="#saving-the-configuration-file" id="id17">Saving the configuration file</a></li>
+<li><a class="reference internal" href="#loading-a-configuration-file" id="id18">Loading a configuration file</a></li>
+<li><a class="reference internal" href="#adding-a-new-clinician" id="id19">Adding a new clinician</a></li>
+<li><a class="reference internal" href="#deleting-an-existing-clinician" id="id20">Deleting an existing clinician</a></li>
+<li><a class="reference internal" href="#editing-an-existing-clinician" id="id21">Editing an existing clinician</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#scheduling" id="id21">Scheduling</a><ul>
-<li><a class="reference internal" href="#generating-a-schedule" id="id22">Generating a schedule</a></li>
-<li><a class="reference internal" href="#exporting-a-schedule" id="id23">Exporting a schedule</a></li>
-<li><a class="reference internal" href="#publishing-a-schedule-to-google-calendar" id="id24">Publishing a schedule to Google Calendar</a></li>
-<li><a class="reference internal" href="#clearing-a-published-schedule" id="id25">Clearing a published schedule</a></li>
+<li><a class="reference internal" href="#scheduling" id="id22">Scheduling</a><ul>
+<li><a class="reference internal" href="#generating-a-schedule" id="id23">Generating a schedule</a></li>
+<li><a class="reference internal" href="#exporting-a-schedule" id="id24">Exporting a schedule</a></li>
+<li><a class="reference internal" href="#publishing-a-schedule-to-google-calendar" id="id25">Publishing a schedule to Google Calendar</a></li>
+<li><a class="reference internal" href="#clearing-a-published-schedule" id="id26">Clearing a published schedule</a></li>
 </ul>
 </li>
 </ul>
@@ -232,13 +232,31 @@ locate the command prompt for the scheduler. You should see instructions
 to open the access request printed on the command prompt. Follow these instructions
 in order to open the access request page manually.</li>
 </ol>
-<ol class="arabic" start="2">
-<li><p class="first">Follow the instructions on the access request page in order to allow
-the scheduler application to read/write from/to the calendar you specified.</p>
-<p><strong>(Optional)</strong> If you opened the access request manually in step 1, you will
-receive an authentication code which needs to be pasted into the command prompt</p>
-</li>
+<div class="figure">
+<a class="reference external image-reference" href="_static/images/authentication/open_in_browser.png"><img alt="_images/open_in_browser.png" class="with-border" src="_images/open_in_browser.png" /></a>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<ol class="arabic simple" start="2">
+<li>Follow the instructions on the access request page in order to allow
+the scheduler application to read/write from/to the calendar you specified.</li>
 </ol>
+<div class="figure">
+<a class="reference external image-reference" href="_static/images/authentication/access_request.png"><img alt="_images/access_request.png" class="with-border" src="_images/access_request.png" /></a>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<blockquote>
+<div><strong>(Optional)</strong> If you opened the access request manually in step 1, you will
+receive an authentication code which needs to be pasted into the command prompt</div></blockquote>
+<div class="figure">
+<a class="reference external image-reference" href="_static/images/authentication/access_request_auth_code.png"><img alt="_images/access_request_auth_code.png" class="with-border" src="_images/access_request_auth_code.png" /></a>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
 <ol class="arabic simple" start="3">
 <li>Once you have completed the authentication process, the scheduler will
 automatically resume its functionality.</li>
@@ -254,7 +272,9 @@ clinician should fulfill.</p>
 <p>By default, you will get a blank configuration file when you launch
 the program. If you would like to discard the changes you have made and
 start a configuration file from scratch, simply click on <cite>New Config</cite>.</p>
-<p>&lt;image placeholder&gt;</p>
+<div class="figure">
+<a class="reference external image-reference" href="_static/images/configuration/new_config.png"><img alt="_images/new_config.png" class="with-border" src="_images/new_config.png" /></a>
+</div>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p class="last">Unsaved changes to a configuration file will be discarded upon clicking
@@ -266,21 +286,25 @@ start a configuration file from scratch, simply click on <cite>New Config</cite>
 <p>When you are ready to save the configuration you created, click on
 <cite>Save Config</cite> and choose a place to save your file. Make note of the name
 and directory of the file so you could load it in future runs.</p>
-<p>&lt;image placeholder&gt;</p>
+<div class="figure">
+<a class="reference external image-reference" href="_static/images/configuration/save_config.png"><img alt="_images/save_config.png" class="with-border" src="_images/save_config.png" /></a>
+</div>
 </div>
 <div class="section" id="loading-a-configuration-file">
 <h4>Loading a configuration file<a class="headerlink" href="#loading-a-configuration-file" title="Permalink to this headline">¶</a></h4>
 <p>If you would like to open a previously created configuration file, simply
 click on <cite>Open Config</cite>, navigate to the location of the configuration file,
 and select it.</p>
-<p>&lt;image placeholder&gt;</p>
+<div class="figure">
+<a class="reference external image-reference" href="_static/images/configuration/load_config.png"><img alt="_images/load_config.png" class="with-border" src="_images/load_config.png" /></a>
+</div>
 </div>
 <div class="section" id="adding-a-new-clinician">
-<h4>Adding a new clinician<a class="headerlink" href="#adding-a-new-clinician" title="Permalink to this headline">¶</a></h4>
+<span id="id4"></span><h4>Adding a new clinician<a class="headerlink" href="#adding-a-new-clinician" title="Permalink to this headline">¶</a></h4>
 <p>1. From the configuration tab, click <cite>New Clinician</cite>. You should see a
 form for supplying details.</p>
 <div class="figure">
-<a class="reference external image-reference" href="_static/images/add_clinician/step1_new_clinician.png"><img alt="_images/step1_new_clinician.png" class="with-border" src="_images/step1_new_clinician.png" /></a>
+<a class="reference external image-reference" href="_static/images/configuration/add_clinician/step1_new_clinician.png"><img alt="_images/step1_new_clinician.png" class="with-border" src="_images/step1_new_clinician.png" /></a>
 </div>
 <div class="line-block">
 <div class="line"><br /></div>
@@ -296,7 +320,7 @@ and maximum number of blocks that a clinician can work in a given division.</li>
 <p class="last">A single block corresponds to two weeks.</p>
 </div>
 <div class="figure">
-<a class="reference external image-reference" href="_static/images/add_clinician/step2_add_division.png"><img alt="_images/step2_add_division.png" class="with-border" src="_images/step2_add_division.png" /></a>
+<a class="reference external image-reference" href="_static/images/configuration/add_clinician/step2_add_division.png"><img alt="_images/step2_add_division.png" class="with-border" src="_images/step2_add_division.png" /></a>
 </div>
 <div class="line-block">
 <div class="line"><br /></div>
@@ -305,7 +329,7 @@ and maximum number of blocks that a clinician can work in a given division.</li>
 <li>To delete a row from the table, select the row and then click <cite>Remove</cite>.</li>
 </ol>
 <div class="figure">
-<a class="reference external image-reference" href="_static/images/add_clinician/step3_remove_division.png"><img alt="_images/step3_remove_division.png" class="with-border" src="_images/step3_remove_division.png" /></a>
+<a class="reference external image-reference" href="_static/images/configuration/add_clinician/step3_remove_division.png"><img alt="_images/step3_remove_division.png" class="with-border" src="_images/step3_remove_division.png" /></a>
 </div>
 <div class="line-block">
 <div class="line"><br /></div>
@@ -315,7 +339,7 @@ and maximum number of blocks that a clinician can work in a given division.</li>
 You should now see a new entry in the main table for that clinician.</li>
 </ol>
 <div class="figure">
-<a class="reference external image-reference" href="_static/images/add_clinician/step4_add_clinician.png"><img alt="_images/step4_add_clinician.png" class="with-border" src="_images/step4_add_clinician.png" /></a>
+<a class="reference external image-reference" href="_static/images/configuration/add_clinician/step4_add_clinician.png"><img alt="_images/step4_add_clinician.png" class="with-border" src="_images/step4_add_clinician.png" /></a>
 </div>
 <div class="line-block">
 <div class="line"><br /></div>
@@ -325,20 +349,25 @@ You should now see a new entry in the main table for that clinician.</li>
 <h4>Deleting an existing clinician<a class="headerlink" href="#deleting-an-existing-clinician" title="Permalink to this headline">¶</a></h4>
 <p>To delete an existing clinician, simply select a row corresponding
 to the clinician in the table and click on <cite>Delete Clinician</cite>.</p>
-<p>&lt;image placeholder&gt;</p>
+<div class="figure">
+<a class="reference external image-reference" href="_static/images/configuration/delete_clinician.png"><img alt="_images/delete_clinician.png" class="with-border" src="_images/delete_clinician.png" /></a>
+</div>
 </div>
 <div class="section" id="editing-an-existing-clinician">
 <h4>Editing an existing clinician<a class="headerlink" href="#editing-an-existing-clinician" title="Permalink to this headline">¶</a></h4>
 <p>To edit the information of a clinician, select a row corresponding
 to the clinician in the table and click on <cite>Edit Clinician</cite>. You should
-see a dialog window where you can change the information.</p>
-<p>&lt;image placeholder&gt;</p>
+see a dialog window where you can change the information. For more
+details on how to enter data in the edit dialog, see <a class="reference internal" href="#adding-a-new-clinician"><span class="std std-ref">Adding a new clinician</span></a>.</p>
+<div class="figure">
+<a class="reference external image-reference" href="_static/images/configuration/edit_clinician.png"><img alt="_images/edit_clinician.png" class="with-border" src="_images/edit_clinician.png" /></a>
+</div>
 </div>
 </div>
 <div class="section" id="scheduling">
 <h3>Scheduling<a class="headerlink" href="#scheduling" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="generating-a-schedule">
-<span id="id4"></span><h4>Generating a schedule<a class="headerlink" href="#generating-a-schedule" title="Permalink to this headline">¶</a></h4>
+<span id="id5"></span><h4>Generating a schedule<a class="headerlink" href="#generating-a-schedule" title="Permalink to this headline">¶</a></h4>
 <p>Once you have created a configuration file, you can switch over to the
 <cite>Scheduler</cite> tab of the application in order to generate a schedule.</p>
 <ol class="arabic simple">
@@ -410,7 +439,7 @@ clinician covers which division on which day.</p>
 <p>&lt;image placeholder&gt;</p>
 </div>
 <div class="section" id="publishing-a-schedule-to-google-calendar">
-<span id="id5"></span><h4>Publishing a schedule to Google Calendar<a class="headerlink" href="#publishing-a-schedule-to-google-calendar" title="Permalink to this headline">¶</a></h4>
+<span id="id6"></span><h4>Publishing a schedule to Google Calendar<a class="headerlink" href="#publishing-a-schedule-to-google-calendar" title="Permalink to this headline">¶</a></h4>
 <p>If you are satisfied with the generated schedule, you can publish it
 to Google calendar, by clicking on <cite>Publish</cite>.</p>
 <p>&lt;image placeholder&gt;</p>
