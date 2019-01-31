@@ -330,11 +330,15 @@ Once you have created a configuration file, you can switch over to the
 1. From the scheduling tab, click on `Load` and select the configuration
    file that you generated in :ref:`clinician-configuration` 
 
-<image placeholder>
+.. figure:: _static/images/scheduling/generate_schedule/step1_load_config.png
+   :class: with-border
+   :target: _static/images/scheduling/generate_schedule/step1_load_config.png
 
 2. Enter the calendar year for the schedule that you want to generate.
 
-<image placeholder>
+.. figure:: _static/images/scheduling/generate_schedule/step2_calendar_year.png
+   :class: with-border
+   :target: _static/images/scheduling/generate_schedule/step2_calendar_year.png
 
 3. **(Optional)** In order to retrieve the time-off requests that were populated
    in Google calendar in :ref:`adding-clinician-requests`, we need to specify the
@@ -345,7 +349,9 @@ Once you have created a configuration file, you can switch over to the
    Paste this value into the `Google Calendar ID` textbox on the `Scheduler`
    tab.
 
-<image placeholder>
+.. figure:: _static/images/scheduling/generate_schedule/step3_calendar_id.png
+   :class: with-border
+   :target: _static/images/scheduling/generate_schedule/step3_calendar_id.png
 
 4. **(Optional)** If you supplied a calendar ID in step 3, you can configure 
    the options `Retrieve Time-off Requests` and `Retrieve Long Weekends` as necessary.
@@ -353,14 +359,18 @@ Once you have created a configuration file, you can switch over to the
    from the calendar specified in `Calendar ID`, while enabling 
    `Retrieve Long Weekends` will read the holiday events from that calendar.
 
-<image placeholder>
+.. figure:: _static/images/scheduling/generate_schedule/step4_retrieve_events.png
+   :class: with-border
+   :target: _static/images/scheduling/generate_schedule/step4_retrieve_events.png
 
 5. **(Optional)** In the case that you only need to generate a schedule for
    a subset of the calendar year, you can select the amount of blocks you need 
    to generate by specifying a value in `Number of Blocks`. By default, the 
    scheduler will generate a full schedule, corresponding to 26 blocks.
 
-<image placeholder>
+.. figure:: _static/images/scheduling/generate_schedule/step5_number_of_blocks.png
+   :class: with-border
+   :target: _static/images/scheduling/generate_schedule/step5_number_of_blocks.png
 
 6. Click on `Generate`, and after a few moments you should see a preview of
    the generated schedule in the table.
@@ -368,7 +378,9 @@ Once you have created a configuration file, you can switch over to the
    **(Optional)** See :ref:`authentication` in case you encounter problems
    with Google calendar at this stage.
 
-<image placeholder>
+.. figure:: _static/images/scheduling/generate_schedule/step6_generate_schedule.png
+   :class: with-border
+   :target: _static/images/scheduling/generate_schedule/step6_generate_schedule.png
 
 .. note::
    It is possible that the scheduler will not be able to come up with a 
