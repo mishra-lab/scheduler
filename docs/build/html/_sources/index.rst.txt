@@ -38,23 +38,17 @@ of Google API credentials, which can be generated as follows.
    :class: with-border
    :target: _static/images/google_credentials/step2_select_a_project.png
 
-|
-
 3. Click on `New Project`.
 
 .. figure:: _static/images/google_credentials/step3_new_project.png
    :class: with-border
    :target: _static/images/google_credentials/step3_new_project.png
 
-|
-
 4. Enter "Clinician Scheduler" as the `Project Name` and click `Create`.
 
 .. figure:: _static/images/google_credentials/step4_create_project.png
    :class: with-border
    :target: _static/images/google_credentials/step4_create_project.png
-
-|
 
 5. Now you should see the dashboard for the Clinician Scheduler project. 
    You will need to enable the Google calendar API. Click on `Enable APIs and Services`.
@@ -63,15 +57,11 @@ of Google API credentials, which can be generated as follows.
    :class: with-border
    :target: _static/images/google_credentials/step5_enable_apis_and_services.png
 
-|
-
 6. Search for "Google calendar API" using the search bar, and select it.
 
 .. figure:: _static/images/google_credentials/step6_search_calendar_api.png
    :class: with-border
    :target: _static/images/google_credentials/step6_search_calendar_api.png
-
-|
 
 7. Click `Enable`.
 
@@ -79,16 +69,12 @@ of Google API credentials, which can be generated as follows.
    :class: with-border
    :target: _static/images/google_credentials/step7_enable_calendar_api.png
 
-|
-
 8. Now you should see the overview page for the Google calendar API. 
    To generate the credentials, click `Create credentials`.
 
 .. figure:: _static/images/google_credentials/step8_create_credentials.png
    :class: with-border
    :target: _static/images/google_credentials/step8_create_credentials.png
-
-|
 
 9. On the credentials form, choose "Google Calendar API" for `Which API are you using?`,
    then "Other UI (e.g. Windows, CLI tool)" for `Where will you be calling the API from?`
@@ -98,15 +84,11 @@ of Google API credentials, which can be generated as follows.
    :class: with-border
    :target: _static/images/google_credentials/step9_credentials_form.png
 
-|
-
 10. Enter "Client" for `Name` and click on `Create OAuth client ID`.
 
 .. figure:: _static/images/google_credentials/step10_oauth_client_id.png
    :class: with-border
    :target: _static/images/google_credentials/step10_oauth_client_id.png
-
-|
 
 11. Choose the email address associated to your account for `Email address`
     and enter "Clinician Scheduler" for `Product name shown to users`, then 
@@ -116,8 +98,6 @@ of Google API credentials, which can be generated as follows.
    :class: with-border
    :target: _static/images/google_credentials/step11_oauth_consent_screen.png
 
-|
-
 12. Your credentials are now generated! Make sure to download and save 
     them in the same location that you unzipped the application, so that
     the credential file and the executable file (``scheduler.exe``) are in the same folder.
@@ -125,8 +105,6 @@ of Google API credentials, which can be generated as follows.
 .. figure:: _static/images/google_credentials/step12_download_credentials.png
    :class: with-border
    :target: _static/images/google_credentials/step12_download_credentials.png
-
-|
 
 .. attention::
    Make sure the credential file is saved as ``credentials.json`` (rename it, if necessary), 
@@ -138,19 +116,50 @@ Google Calendar Configuration
 Creating a calendar
 ~~~~~~~~~~~~~~~~~~~
 
-.. TODO:
+1. Navigate to https://calendar.google.com and sign in to the appropriate account.
+
+2. Click on the settings icon next on the left side, and select `New Calendar`.
+
+.. figure:: _static/images/google_calendar/create_calendar/step2_new_calendar.png
+   :class: with-border
+   :target: _static/images/google_calendar/create_calendar/step2_new_calendar.png
+
+3. Enter a name for your calendar and click `Create calendar`.
+
+.. figure:: _static/images/google_calendar/create_calendar/step3_create.png
+   :class: with-border
+   :target: _static/images/google_calendar/create_calendar/step3_create.png
 
 Adding holiday events
 ~~~~~~~~~~~~~~~~~~~~~
 
-.. TODO:
+.. note::
+   It is recommended to create full-day events for holidays and clinician requests.
+
+Create an event by clicking on any cell in the calendar. Make sure that 
+the name of the event you create starts with "**[holiday]**", so that the
+scheduler can recognize the event correctly. Click `Save` once you are done.
+
+.. figure:: _static/images/google_calendar/create_holiday.png
+   :class: with-border
+   :target: _static/images/google_calendar/create_holiday.png
 
 .. _adding-clinician-requests:
 
 Adding clinician requests
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. TODO:
+Create an event by clicking on any cell in the calendar. Make sure that 
+the name of the event you create has the format: "**[request] Name**", so that the
+scheduler can recognize the event correctly. Click `Save` once you are done.
+
+.. figure:: _static/images/google_calendar/create_request.png
+   :class: with-border
+   :target: _static/images/google_calendar/create_request.png
+
+.. Warning::
+   It is important that the name you use in the event name matches the name in 
+   the clinician configuration you create in :ref:`clinician-configuration`.
 
 Usage
 -----
@@ -178,8 +187,6 @@ or in :ref:`publishing-a-schedule-to-google-calendar`.
    :class: with-border
    :target: _static/images/authentication/open_in_browser.png
 
-|
-
 2. Follow the instructions on the access request page in order to allow
    the scheduler application to read/write from/to the calendar you specified.
 
@@ -187,16 +194,12 @@ or in :ref:`publishing-a-schedule-to-google-calendar`.
    :class: with-border
    :target: _static/images/authentication/access_request.png
 
-|
-
    **(Optional)** If you opened the access request manually in step 1, you will
    receive an authentication code which needs to be pasted into the command prompt
 
 .. figure:: _static/images/authentication/access_request_auth_code.png
    :class: with-border
    :target: _static/images/authentication/access_request_auth_code.png
-
-|
 
 3. Once you have completed the authentication process, the scheduler will
    automatically resume its functionality.
@@ -260,9 +263,6 @@ form for supplying details.
    :class: with-border
    :target: _static/images/configuration/add_clinician/step1_new_clinician.png
 
-|
-
-
 2. Fill out the name, email (optional), and divisions that the clinician
    will be covering. To add a division you can click on `Add` and a new row 
    will be added to the table which you can fill out. You can set the minimum
@@ -275,15 +275,11 @@ form for supplying details.
    :class: with-border
    :target: _static/images/configuration/add_clinician/step2_add_division.png
 
-|
-
 3. To delete a row from the table, select the row and then click `Remove`.
 
 .. figure:: _static/images/configuration/add_clinician/step3_remove_division.png
    :class: with-border
    :target: _static/images/configuration/add_clinician/step3_remove_division.png
-
-|
 
 4. When you are finished entering the data for the clinician, click `Ok`.
    You should now see a new entry in the main table for that clinician.
@@ -291,8 +287,6 @@ form for supplying details.
 .. figure:: _static/images/configuration/add_clinician/step4_add_clinician.png
    :class: with-border
    :target: _static/images/configuration/add_clinician/step4_add_clinician.png
-
-|
 
 Deleting an existing clinician
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -396,20 +390,22 @@ If you are satisfied with the generated schedule, you can choose to export
 it as an Excel file. There are two format options: `Yearly Export` and 
 `Monthly Export`. 
 
-<image placeholder>
-
 Selecting the `Yearly Export` option will generate an excel file with a single
 sheet, displaying the clinicians that are covering a particular division
 for a given week or weekend. It is very similar to the table output in
 the application itself.
 
-<image placeholder>
+.. figure:: _static/images/scheduling/export_schedule/export_yearly.png
+   :class: with-border
+   :target: _static/images/scheduling/export_schedule/export_yearly.png
 
 Selecting the `Monthly Export` option will generate a more detailed breakdown
 of the schedule, with a separate sheet for every month, detailing which
 clinician covers which division on which day.
 
-<image placeholder>
+.. figure:: _static/images/scheduling/export_schedule/export_monthly.png
+   :class: with-border
+   :target: _static/images/scheduling/export_schedule/export_monthly.png
 
 .. _publishing-a-schedule-to-google-calendar:
 
@@ -419,7 +415,9 @@ Publishing a schedule to Google Calendar
 If you are satisfied with the generated schedule, you can publish it
 to Google calendar, by clicking on `Publish`.
 
-<image placeholder>
+.. figure:: _static/images/scheduling/publish_schedule/publish_schedule.png
+   :class: with-border
+   :target: _static/images/scheduling/publish_schedule/publish_schedule.png
 
 .. warning::
    This process might take some time, especially if the number of events
@@ -431,7 +429,9 @@ Clearing a published schedule
 If you want to remove all the published events created by the application,
 simply click on `Clear`.
 
-<image placeholder>
+.. figure:: _static/images/scheduling/publish_schedule/clear_schedule.png
+   :class: with-border
+   :target: _static/images/scheduling/publish_schedule/clear_schedule.png
 
 .. warning::
    This process might take some time, especially if the number of published
