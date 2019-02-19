@@ -83,13 +83,13 @@ Our goal in the linear program is to accommodate clinician time-off requests as 
 		\item Minimize the number of blocks assigned to a clinician that they requested as time-off
 			\begin{equation}
 				\label{eqn_block_obj}
-				\min \sum_{c, b, d} (-1)^{ I(b \in \mc{S}_c) } \cdot X_{c, b, d}
+				\min_X \sum_{c, b, d} (-1)^{ I(b \in \mc{S}_c) } \cdot X_{c, b, d}
 			\end{equation}
 		where $I(\cdot)$ is the indicator function.
 		\item Minimize the number of weekends assigned to a clinician that they requested as time-off
 			\begin{equation}
 				\label{eqn_weekend_obj}
-				\min \sum_{c, w} (-1)^{ I (w \in \mc{T}_c)} \cdot Y_{c, w}
+				\min_Y \sum_{c, w} (-1)^{ I (w \in \mc{T}_c)} \cdot Y_{c, w}
 			\end{equation}
 		\item Maximize the adjacency between blocks and weekends assigned for a given clinician. In particular, if a clinician is assigned to work a given block in a given division, we will prefer it if the clinician also works in the weekend between the weeks of the block. \\ \\
 		In our formulation, this corresponds to maximizing the sum of products of $X_{c, b, d}$ and $Y_{c, w}$ where $w$ is a weekend adjacent to block $b$ (say, $w = 2b+1$, if each block covers 2 weeks). To accomplish this, we define helper variables:
@@ -104,7 +104,7 @@ Our goal in the linear program is to accommodate clinician time-off requests as 
 		Thus, the objective is:
 			\begin{equation}
 				\label{eqn_adjacency_obj}
-				\max \sum_{c, b, d} Z_{c, b, d} = \min \left(- \sum_{c, b, d} Z_{c, b, d}\right)
+				\max_Z \sum_{c, b, d} Z_{c, b, d} = \min_Z \left(- \sum_{c, b, d} Z_{c, b, d}\right)
 			\end{equation}
 	\end{itemize}	
 
