@@ -436,3 +436,18 @@ simply click on `Clear`.
 .. warning::
    This process might take some time, especially if the number of published
    events is quite large.
+
+Sample Output
+-------------
+
+Yearly output format
+
+.. figure:: _static/images/scheduling/sample_yearly.png
+   :class: with-border
+   :target: _static/images/scheduling/sample_yearly.png
+
+Monthly output format
+
+.. figure:: _static/images/scheduling/sample_monthly.png
+   :class: with-border
+   :target: _static/images/scheduling/sample_monthly.png

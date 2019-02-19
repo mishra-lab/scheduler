@@ -19,3 +19,4 @@
 \contentsline {subsection}{\numberline {2.3.2}Exporting a schedule}{21}{subsection.2.3.2}
 \contentsline {subsection}{\numberline {2.3.3}Publishing a schedule to Google Calendar}{22}{subsection.2.3.3}
 \contentsline {subsection}{\numberline {2.3.4}Clearing a published schedule}{22}{subsection.2.3.4}
+\contentsline {chapter}{\numberline {3}Sample Output}{25}{chapter.3}
