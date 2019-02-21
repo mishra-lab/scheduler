@@ -10,24 +10,18 @@ This project aims to make the task of creating schedules for clinicians automati
 
 ## Building Binaries
 ### Required Packages
-The code makes use of linear programming library [PuLP](https://github.com/coin-or/pulp#installation) and [Google Calendar API](https://developers.google.com/calendar/quickstart/python#step_2_install_the_google_client_library).
+The code makes use of linear programming library [PuLP](https://github.com/coin-or/pulp#installation), [Google Calendar API](https://developers.google.com/calendar/quickstart/python#step_2_install_the_google_client_library) and [PyQt5](https://www.riverbankcomputing.com/software/pyqt/intro)
 
 To package the program into executables, we make use of [PyInstaller](http://www.pyinstaller.org/downloads.html#installation).
 
-**Note**: Choose the correct script for your architecture. If you intend to build a 32-bit binary, check that you have a 32-bit python installation. Make sure to install the required packages using 32-bit `pip` and put 32-bit python at the beginning of your path. Likewise, if you intend to build a 64-bit binary make sure everything is setup using 64-bit python.
+**Note**: You must use a 32-bit Python 3+ installation together with the above mentioned packages in order
+to successfully build the executable.
 
-### 32-bit
 ```sh
 > git clone git@github.com:c-uhs/scheduler.git
-> cd scheduler
-> cd scripts\
-> sh make_exe32.sh              # this will create a folder called `dist_32` under scheduler with 2 exe files
+> cd scheduler\scripts
+> sh make_exe.sh
 ```
 
-### 64-bit
-```sh
-> git clone git@github.com:c-uhs/scheduler.git
-> cd scheduler
-> cd scripts\
-> sh make_exe64.sh              # this will create a folder called `dist_64` under scheduler with 2 exe files
-```
+This will create a `dist` folder under `scheduler` with the scheduler executable file.
+If you want to run the executable on a computer without PuLP installed, you must place the COIN-OR Branch-and-Cut (CBC) 32-bit executable (version 2.9.9) together with the scheduler executable. You can find it at https://projects.coin-or.org/Cbc.
