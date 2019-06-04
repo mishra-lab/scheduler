@@ -1,0 +1,6 @@
+google-api-python-client==1.7.3
+openpyxl==2.5.4
+PuLP==1.6.8
+PyQt5==5.11.2
+PyQt5-sip==4.19.12
+QtPy==1.4.2
