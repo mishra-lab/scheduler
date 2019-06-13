@@ -10,15 +10,14 @@ This project aims to make the task of creating schedules for clinicians automati
 
 ## Building Binaries
 ### Required Packages
-The code makes use of linear programming library [PuLP](https://github.com/coin-or/pulp#installation), [Google Calendar API](https://developers.google.com/calendar/quickstart/python#step_2_install_the_google_client_library) and [PyQt5](https://www.riverbankcomputing.com/software/pyqt/intro)
-
-To package the program into executables, we make use of [PyInstaller](http://www.pyinstaller.org/downloads.html#installation).
+The code makes use of linear programming library [PuLP](https://github.com/coin-or/pulp#installation), [Google Calendar API](https://developers.google.com/calendar/quickstart/python#step_2_install_the_google_client_library) and [PyQt5](https://www.riverbankcomputing.com/software/pyqt/intro) To package the program into executables, we make use of [PyInstaller](http://www.pyinstaller.org/downloads.html#installation).
 
 **Note**: You must use a 32-bit Python 3+ installation together with the above mentioned packages in order
 to successfully build the executable.
 
 ```sh
 > git clone git@github.com:c-uhs/scheduler.git
+> sudo pip install -r scheduler\src\requirements.txt
 > cd scheduler\scripts
 > sh make_exe.sh
 ```
