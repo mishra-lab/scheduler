@@ -1,5 +1,6 @@
 import os
 import sys
+import argparse
 
 from googleapiclient.discovery import build
 from httplib2 import Http
@@ -21,7 +22,12 @@ class ApiHelper:
         if not creds or creds.invalid:
             flow = client.flow_from_clientsecrets(
                 self.get_client_secret(), ApiHelper.SCOPE)
-            creds = tools.run_flow(flow, store)
+
+            # hack: force gapi library to use port 443
+            flags = tools.argparser.parse_args()
+            flags.auth_host_port = [443]
+
+            creds = tools.run_flow(flow, store, flags=flags)
 
         # discover calendar API
         self._service = build(
