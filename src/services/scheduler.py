@@ -420,10 +420,14 @@ class Scheduler:
         self._build_adjacency_variables(divisions)
         appeasement_objs = self._build_appeasement_objectives(clinicians)
 
+        num_clin = len(clinicians)
+        num_div = len(divisions)
+
+        # make sure to normalize objectives, and weigh them equally
         self.problem.setObjective(
-            (1 / 3) * appeasement_objs[0]
-            + (1 / 3) * appeasement_objs[1]
-            + (1 / 3) * self._build_adjacency_objective(clinicians)
+              (1 / 3) * (1 / (num_clin * self.num_blocks * num_div)) * appeasement_objs[0]
+            + (1 / 3) * (1 / (num_clin * self.num_weekends)) * appeasement_objs[1]
+            + (1 / 3) * (1 / (num_clin * self.num_blocks * num_div)) * self._build_adjacency_objective(clinicians)
         )
 
     def _build_clinician_variables(self, divisions, clinicians):
