@@ -22,4 +22,4 @@ fi
 
 # run pyinstaller
 echo "Building scheduler.exe..."
-pyinstaller ../src/main.py -F -n scheduler --distpath ../dist --hidden-import=PyQt5.sip
+pyinstaller --distpath ../dist scheduler.spec

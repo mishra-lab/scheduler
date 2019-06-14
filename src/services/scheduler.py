@@ -275,8 +275,9 @@ class Scheduler:
         if getattr(sys, 'frozen', False):
             # running in a bundle
             cwd = os.getcwd()
-            exe = 'cbc-2.9.9-x86\\bin\\cbc.exe'
-            solverdir = os.path.join(cwd, exe)
+            exe = 'cbc\\bin\\cbc.exe'
+            if hasattr(sys, '_MEIPASS'): solverdir = os.path.join(sys._MEIPASS, exe)
+            else: solverdir = exe
             self.solver = pulp.COIN_CMD(path=solverdir)
         else:
             # running from source
