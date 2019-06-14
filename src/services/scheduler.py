@@ -236,9 +236,9 @@ class Scheduler:
         self.set_data(clin_data)
         self.set_timeoff(timeoff_data)
 
-    def generate(self, debug=False):
+    def generate(self, debug=False, shuffle=False):
         self.setup_solver()
-        self.setup_problem()
+        self.setup_problem(shuffle=shuffle)
         ret = self.problem.solve(self.solver) == pulp.LpStatusOptimal
 
         if debug:
@@ -397,7 +397,7 @@ class Scheduler:
         self.holiday_map = lw
         self.long_weekends = list(lw.values())
     
-    def setup_problem(self):
+    def setup_problem(self, shuffle=False):
         """
         Constructs an LP program based on the clinician, division data.
         """
@@ -408,6 +408,8 @@ class Scheduler:
 
         divisions = list(self.divisions.values())
         clinicians = list(self.clinicians.values())
+
+        if shuffle: random.shuffle(clinicians)
 
         self._build_clinician_variables(divisions, clinicians)
         self._build_coverage_constraints(divisions, clinicians)

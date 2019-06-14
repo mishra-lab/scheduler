@@ -128,6 +128,9 @@ class Ui_MainWindow(object):
         self.scheduleActions.setObjectName("scheduleActions")
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.scheduleActions)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        self.shuffleCheckBox = QtWidgets.QCheckBox(self.scheduleActions)
+        self.shuffleCheckBox.setObjectName("shuffleCheckBox")
+        self.horizontalLayout_3.addWidget(self.shuffleCheckBox)
         self.generateScheduleButton = QtWidgets.QPushButton(self.scheduleActions)
         self.generateScheduleButton.setObjectName("generateScheduleButton")
         self.horizontalLayout_3.addWidget(self.generateScheduleButton)
@@ -171,7 +174,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -203,6 +206,7 @@ class Ui_MainWindow(object):
         self.numberOfBlocksLabel.setText(_translate("MainWindow", "Number of Blocks"))
         self.retrieveLongWeekendsLabel.setText(_translate("MainWindow", "Retrieve Long Weekends"))
         self.scheduleActions.setTitle(_translate("MainWindow", "Schedule"))
+        self.shuffleCheckBox.setText(_translate("MainWindow", "Shuffle?"))
         self.generateScheduleButton.setToolTip(_translate("MainWindow", "<html><head/><body><p>Generate a new schedule using the given configuration file and calendar information</p></body></html>"))
         self.generateScheduleButton.setText(_translate("MainWindow", "Generate"))
         self.exportScheduleButton.setToolTip(_translate("MainWindow", "<html><head/><body><p>Export generated schedule as an Excel spreadsheet</p></body></html>"))

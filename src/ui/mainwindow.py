@@ -213,6 +213,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         retrieveLongWeekends = self.retrieveLongWeekendsCheckBox.isChecked()
         calendarYear = self.calendarYearSpinBox.value()
         calendarId = self.gCalLineEdit.text()
+        shuffle = self.shuffleCheckBox.isChecked()
 
         requests = []
         holidays = []
@@ -246,8 +247,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             )
 
         # init scheduler with all the given data
-        schedule = scheduler.Scheduler(
-            num_blocks=numBlocks, clin_data=self.configuration, timeoff_data=requests, long_weekends=holidays).generate(debug=True)
+        schedule = scheduler \
+            .Scheduler(
+                num_blocks=numBlocks, clin_data=self.configuration, timeoff_data=requests, long_weekends=holidays) \
+            .generate(debug=True, shuffle=shuffle)
         if schedule is None:
             QMessageBox.critical(self, "Could not generate schedule!",
                 "Could not generate a schedule based on the given constraints and configuration. Try adjusting min/max values in the configuration tab.")
