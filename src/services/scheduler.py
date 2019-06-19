@@ -416,6 +416,7 @@ class Scheduler:
         self._build_coverage_constraints(divisions, clinicians)
         self._build_minmax_constraints(divisions)
         self._build_consec_constraints(clinicians)
+        self._build_spread_constraints(clinicians)
         self._build_longweekend_constraints(clinicians)
         self._build_weekend_constraints(clinicians)
         self._build_adjacency_variables(divisions)
@@ -499,6 +500,20 @@ class Scheduler:
                     )]
                 )
                 self.problem.add(sum_ <= 1)
+
+    def _build_spread_constraints(self, clinicians):
+        # we need at least 5 consecutive blocks to implement this constraint
+        # on-off-on-off-on
+        if self.num_blocks <= 5: return
+
+        for clinician in clinicians:
+            for block_num in range(1, self.num_blocks - 3):
+                # constraint: X_i + X_{i+2} + X_{i+4} <= 2
+                sum_ = pulp.lpSum(
+                    [_.get_var() for _ in clinician.get_block_vars(
+                        lambda x, block_num=block_num: x.block_num in (block_num, block_num + 2, block_num + 4))]
+                )
+                self.problem.add(sum_ <= 2)
 
     def _build_longweekend_constraints(self, clinicians):
         if self.long_weekends:

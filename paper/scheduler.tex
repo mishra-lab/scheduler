@@ -76,6 +76,10 @@ Note that weekends are not distinguished according to division, since the clinic
 			\begin{equation}
 				Y_{c, w} + Y_{c, w+1} \leq 1 \text{ for each $c$ and each $w \leq W - 1$}
 			\end{equation}
+		\item Prevent on-off-on-off-on block assignments (across all divisions) to improve the spread of assignments for any given clinician
+			\begin{equation}
+				\sum_d \left(X_{c, b, d} + X_{c, b + 2, d} + X_{c, b + 4, d}\right) \leq 2 \text{ for each $c$ and each $b \leq B - 4$}
+			\end{equation}
 	\end{itemize}
 
 \subsection{Objectives} \label{objectives}
