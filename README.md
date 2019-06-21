@@ -12,7 +12,7 @@ You can find the latest version of the executable at the [releases area](https:/
 The executable comes pre-bundled with the COIN-OR LP solver. 
 
 In order to use the Google Calendar functionality you will need a credentials file.
-Follow the steps outlined [here]() to create it.
+Follow the steps outlined [here](https://c-uhs.github.io/scheduler/build/html/manual.html#generating-google-api-credentials) to create it.
 
 ## Build it yourself
 ### Get COIN-OR LP solver
