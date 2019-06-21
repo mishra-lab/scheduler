@@ -1,19 +1,26 @@
 # Scheduler
-
-## Introduction
-This project aims to make the task of creating schedules for clinicians automatic. 
+Fast and easy generation of schedules for use in hospital departments. 
+Built in Python.
 
 ## Features
-- [x] Quick and easy generation of schedules given constraints
+- [x] Generation of schedules given clinician requests
 - [x] Integration with Google Calendar
-- [x] Robust and intuitive graphical user interface 
+- [x] Robust and intuitive Qt GUI
 
-## Building Binaries
-### Required Packages
-The code makes use of linear programming library [PuLP](https://github.com/coin-or/pulp#installation), [Google Calendar API](https://developers.google.com/calendar/quickstart/python#step_2_install_the_google_client_library) and [PyQt5](https://www.riverbankcomputing.com/software/pyqt/intro) To package the program into executables, we make use of [PyInstaller](http://www.pyinstaller.org/downloads.html#installation).
+## Download it
+You can find the latest version of the executable at the [releases area](https://github.com/c-uhs/scheduler/releases). 
+The executable comes pre-bundled with the COIN-OR LP solver. 
 
-**Note**: You must use a 32-bit Python 3+ installation together with the above mentioned packages in order
-to successfully build the executable.
+In order to use the Google Calendar functionality you will need a credentials file.
+Follow the steps outlined [here]() to create it.
+
+## Build it yourself
+### Get COIN-OR LP solver
+Before compiling the executable, you must download the a 32bit version of the COIN-OR Branch-and-Cut (CBC)
+executable, to be bundled together with the scheduler. Download the 2.9.9 version from [Bintray](https://bintray.com/coin-or/download/Cbc/2.9.9), unzip it, and place it under the ```scheduler\scripts``` folder.
+
+### Run the script
+**Note**: You must use a 32-bit Python 3 installation!
 
 ```sh
 > git clone git@github.com:c-uhs/scheduler.git
@@ -22,5 +29,4 @@ to successfully build the executable.
 > sh make_exe.sh
 ```
 
-This will create a `dist` folder under `scheduler` with the scheduler executable file.
-If you want to run the executable on a computer without PuLP installed, you must place the COIN-OR Branch-and-Cut (CBC) 32-bit executable (version 2.9.9) together with the scheduler executable. You can find it at https://projects.coin-or.org/Cbc.
+This will create a `dist` folder under the root `scheduler` folder containing the executable file.

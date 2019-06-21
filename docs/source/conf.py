@@ -130,7 +130,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'ClinicianScheduler.tex', 'Clinician Scheduler Documentation',
+    ('manual', 'ClinicianScheduler.tex', 'Clinician Scheduler Documentation',
      'David Landsman', 'manual'),
 ]
 
