@@ -12,6 +12,7 @@ from constants import WEEK_HOURS, WEEKEND_HOURS
 from helpers.apihelper import ApiHelper
 from helpers.excelhelper import ExcelHelper
 from helpers.uihelper import UiHelper
+from helpers.logger import Logger
 from services import scheduler
 
 from .dialog import DialogWindow
@@ -27,11 +28,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self._configPath = ''
 
         self.setupUi(self)
+
+        self._logger = Logger(self.outputTextEdit)
         self.tabWidget.currentChanged[int].connect(self.updateTabText)
         self.setupConfigurationTab()
         self.setupSchedulerTab()
 
-        self.handleCalendarIdChange(self.gCalLineEdit.text())
         self.tabWidget.setCurrentIndex(0)
 
         self.show()
@@ -76,15 +78,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.newConfig()
 
     def setupSchedulerTab(self):
-        # action setup
-        self.gCalLineEdit.textChanged[str].connect(self.handleCalendarIdChange)
-
-        self.loadButton.clicked.connect(self.openConfig)
+        self.loadConfigButton.clicked.connect(self.openConfig)
         self.generateScheduleButton.clicked.connect(self.generateSchedule)
         self.exportScheduleButton.clicked.connect(self.exportSchedule)
         self.exportMonthlyButton.clicked.connect(self.exportMonthlySchedule)
-        self.publishCalendarButton.clicked.connect(self.publishSchedule)
-        self.clearCalendarButton.clicked.connect(self.clearCalendar)
 
         # misc vars
         self.holidayMap = {}
@@ -134,6 +131,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self.configPath = path
                     self.configuration = json.load(f)
                     UiHelper.syncTreeView(self.treeView, self.model, self.configuration)
+                    self._logger.write_line('Loaded configuration file: {}'.format(path))
 
             except Exception as ex:
                 QMessageBox.critical(self, "Unable to open file", str(ex))
