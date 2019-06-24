@@ -16,7 +16,7 @@ Follow the steps outlined [here](https://c-uhs.github.io/scheduler/build/html/ma
 
 ## Build it yourself
 ### Get COIN-OR LP solver
-Before compiling the executable, you must download the a 32bit version of the COIN-OR Branch-and-Cut (CBC)
+Before compiling the executable, you must download the 32bit version of the COIN-OR Branch-and-Cut (CBC)
 executable, to be bundled together with the scheduler. Download the 2.9.9 version from [Bintray](https://bintray.com/coin-or/download/Cbc/2.9.9), unzip it, and place it under the ```scheduler\scripts``` folder.
 
 ### Run the script
