@@ -124,93 +124,153 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
-         <layout class="QHBoxLayout" name="settingsLayout">
+         <layout class="QHBoxLayout" name="controlsLayout">
           <item>
-           <widget class="QGroupBox" name="settingsGroupBox">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="title">
-             <string>Settings</string>
-            </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_6">
-             <item>
-              <layout class="QFormLayout" name="settingsForm">
+           <layout class="QVBoxLayout" name="setupScheduleGroupBox">
+            <item>
+             <widget class="QGroupBox" name="setupGroupBox">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="title">
+               <string>Setup</string>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_6">
+               <item>
+                <layout class="QFormLayout" name="setupForm">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="configFileLabel">
+                   <property name="text">
+                    <string>Configuration</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QPushButton" name="loadConfigButton">
+                   <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Open configuration file&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                   <property name="text">
+                    <string>Load</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="requestsHolidaysLabel">
+                   <property name="text">
+                    <string>Requests and Holidays</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QPushButton" name="loadRequestsHolidaysButton">
+                   <property name="text">
+                    <string>Load</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="calendarYearLabel">
+                   <property name="text">
+                    <string>Calendar Year</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QSpinBox" name="calendarYearSpinBox">
+                   <property name="toolTip">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the calendar year to be used by the scheduler&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                   <property name="minimum">
+                    <number>2000</number>
+                   </property>
+                   <property name="maximum">
+                    <number>3000</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="numberOfBlocksLabel">
+                   <property name="text">
+                    <string>Number of Blocks</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="1">
+                  <widget class="QSpinBox" name="numberOfBlocksSpinBox">
+                   <property name="maximum">
+                    <number>26</number>
+                   </property>
+                   <property name="value">
+                    <number>26</number>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="scheduleActions">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="title">
+               <string>Schedule</string>
+              </property>
+              <layout class="QFormLayout" name="formLayout">
                <item row="0" column="0">
-                <widget class="QLabel" name="configFileLabel">
+                <widget class="QCheckBox" name="shuffleCheckBox">
                  <property name="text">
-                  <string>Configuration</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QPushButton" name="loadConfigButton">
-                 <property name="toolTip">
-                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Open configuration file&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                 </property>
-                 <property name="text">
-                  <string>Load</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="requestsHolidaysLabel">
-                 <property name="text">
-                  <string>Requests and Holidays</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QPushButton" name="loadRequestsHolidaysButton">
-                 <property name="text">
-                  <string>Load</string>
+                  <string>Shuffle?</string>
                  </property>
                 </widget>
                </item>
                <item row="2" column="0">
-                <widget class="QLabel" name="calendarYearLabel">
+                <widget class="QPushButton" name="generateScheduleButton">
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Generate a new schedule using the given configuration file and calendar information&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="text">
-                  <string>Calendar Year</string>
+                  <string>Generate</string>
                  </property>
                 </widget>
                </item>
                <item row="2" column="1">
-                <widget class="QSpinBox" name="calendarYearSpinBox">
+                <widget class="QPushButton" name="exportScheduleButton">
                  <property name="toolTip">
-                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the calendar year to be used by the scheduler&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Export generated schedule as an Excel spreadsheet&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
-                 <property name="minimum">
-                  <number>2000</number>
-                 </property>
-                 <property name="maximum">
-                  <number>3000</number>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="0">
-                <widget class="QLabel" name="numberOfBlocksLabel">
                  <property name="text">
-                  <string>Number of Blocks</string>
+                  <string>Export Yearly</string>
                  </property>
                 </widget>
                </item>
-               <item row="3" column="1">
-                <widget class="QSpinBox" name="numberOfBlocksSpinBox">
-                 <property name="maximum">
-                  <number>26</number>
+               <item row="4" column="1">
+                <widget class="QPushButton" name="exportMonthlyButton">
+                 <property name="text">
+                  <string>Export Monthly</string>
                  </property>
-                 <property name="value">
-                  <number>26</number>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QCheckBox" name="verboseCheckBox">
+                 <property name="text">
+                  <string>Verbose Output</string>
                  </property>
                 </widget>
                </item>
               </layout>
-             </item>
-            </layout>
-           </widget>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item>
            <widget class="QGroupBox" name="outputGroupBox">
@@ -227,72 +287,6 @@
              </item>
             </layout>
            </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="schedulerButtonLayout">
-          <item>
-           <widget class="QGroupBox" name="scheduleActions">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="title">
-             <string>Schedule</string>
-            </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_3">
-             <item>
-              <widget class="QCheckBox" name="shuffleCheckBox">
-               <property name="text">
-                <string>Shuffle?</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="generateScheduleButton">
-               <property name="toolTip">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Generate a new schedule using the given configuration file and calendar information&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-               </property>
-               <property name="text">
-                <string>Generate</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="exportScheduleButton">
-               <property name="toolTip">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Export generated schedule as an Excel spreadsheet&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-               </property>
-               <property name="text">
-                <string>Export Yearly</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="exportMonthlyButton">
-               <property name="text">
-                <string>Export Monthly</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
           </item>
          </layout>
         </item>
