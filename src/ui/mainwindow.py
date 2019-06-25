@@ -9,7 +9,6 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 from constants import WEEK_HOURS, WEEKEND_HOURS
-from helpers.apihelper import ApiHelper
 from helpers.excelhelper import ExcelHelper
 from helpers.uihelper import UiHelper
 from helpers.logger import Logger
@@ -85,20 +84,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # misc vars
         self.holidayMap = {}
-
-    def handleCalendarIdChange(self, text):
-        if len(text) == 0:
-            # first, uncheck "retrieve" checkboxes
-            self.retrieveTimeOffRequestsCheckBox.setChecked(False)
-            self.retrieveLongWeekendsCheckBox.setChecked(False)
-            # then disable them altogether
-            self.retrieveTimeOffRequestsCheckBox.setDisabled(True)
-            self.retrieveLongWeekendsCheckBox.setDisabled(True)
-
-        else:
-            # enable "retrieve" checkboxes
-            self.retrieveTimeOffRequestsCheckBox.setDisabled(False)
-            self.retrieveLongWeekendsCheckBox.setDisabled(False)
 
     def updateTabText(self, selectedTabIdx):
         # clear (configPath) from all other tabs
@@ -207,42 +192,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             return
 
         numBlocks = self.numberOfBlocksSpinBox.value()
-        retrieveTimeOff = self.retrieveTimeOffRequestsCheckBox.isChecked()
-        retrieveLongWeekends = self.retrieveLongWeekendsCheckBox.isChecked()
         calendarYear = self.calendarYearSpinBox.value()
-        calendarId = self.gCalLineEdit.text()
         shuffle = self.shuffleCheckBox.isChecked()
 
         requests = []
         holidays = []
-
-        if retrieveTimeOff:    
-            if not calendarId:
-                QMessageBox.critical(self, "Missing Calendar ID", "Please supply a calendar ID!")
-                return
-
-            # read timeoff requests from gcal
-            startDate = datetime(calendarYear, 1, 1)
-            endDate = startDate + timedelta(weeks=52)
-            requests = ApiHelper(calendarId).get_events(
-                start=startDate.isoformat() + 'Z',
-                end=endDate.isoformat() + 'Z',
-                search_str='[request]'
-            )
-
-        if retrieveLongWeekends:
-            if not calendarId:
-                QMessageBox.critical(self, "Missing Calendar ID", "Please supply a calendar ID!")
-                return
-
-            # read longweekend events from gcal
-            startDate = datetime(calendarYear, 1, 1)
-            endDate = startDate + timedelta(weeks=52)
-            holidays = ApiHelper(calendarId).get_events(
-                start=startDate.isoformat() + 'Z',
-                end=endDate.isoformat() + 'Z',
-                search_str='[holiday]'
-            )
 
         # init scheduler with all the given data
         schedule = scheduler \
@@ -283,8 +237,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
             for i in range(len(weekendAssignments)):
                 clinName = weekendAssignments[i]
-                self.scheduleTable.setItem(i, weekendCol, QTableWidgetItem(clinName))
-                    
+                self.scheduleTable.setItem(i, weekendCol, QTableWidgetItem(clinName))               
     
     def exportSchedule(self):
         # open save dialog to let user choose folder + filename
@@ -308,120 +261,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         calendarYear = self.calendarYearSpinBox.value()
         ExcelHelper.saveMonthlySchedule(fileName, self.scheduleTable, calendarYear, self.holidayMap)
-
-    def publishSchedule(self):
-        calendarYear = self.calendarYearSpinBox.value()
-        calendarId = self.gCalLineEdit.text()
-
-        if not calendarId:
-            QMessageBox.critical(self, "Missing Calendar ID", "Please supply a calendar ID!")
-            return
-
-        # confirm user action
-        reply = QMessageBox.question(
-                self, 
-                "Publish Calendar Warning", 
-                "This action will publish the generated schedule to the specified calendar. Are you sure you want to continue?",
-                QMessageBox.Yes | QMessageBox.No)
-        if reply == QMessageBox.No: return
-
-
-        rows = self.scheduleTable.rowCount()
-        cols = self.scheduleTable.columnCount()
-
-        # display progress so user knows app is working
-        progress = QProgressDialog(
-            "Publishing schedule...",
-            "",
-            1,
-            # max progress = total # of events to be created
-            (cols - 1) * rows
-        )
-        progress.setCancelButton(None)
-        progress.setWindowModality(Qt.ApplicationModal)
-        progress.setMinimumDuration(0)
-        
-        # go through table, creating an event per each row, per each column
-        for i in range(rows):
-            for j in range(1, cols):
-                progress.setValue(j + (cols - 1) * i)
-                colHeader = self.scheduleTable.horizontalHeaderItem(j).text()
-
-                weekText = self.scheduleTable.item(i, 0).text() 
-                weekNum = int(weekText[:-1]) if weekText[-1] == '*' else int(weekText)
-                name = self.scheduleTable.item(i, j).text()
-                email = self.configuration[name]['email']
-
-                # figure out correct event time range
-                if colHeader == 'Weekend':
-                    summary = '[scheduler] {} - on call'.format(name)
-                    start = datetime.strptime(
-                        # year / weekNum / Friday / 5PM
-                        '{0}/{1:02d}/5/17:00'.format(calendarYear, weekNum),
-                        '%G/%V/%u/%H:%M'
-                    )
-                    end = start + timedelta(hours=WEEKEND_HOURS)
-                else:
-                    summary = '[scheduler] {} - on call ({} division)'.format(name, colHeader)
-                    start = datetime.strptime(
-                        # year / weekNum / Monday / 8AM
-                        '{0}/{1:02d}/1/08:00'.format(calendarYear, weekNum),
-                        '%G/%V/%u/%H:%M'
-                    )
-                    end = start + timedelta(hours=WEEK_HOURS)
-
-                # call api to publish event
-                ApiHelper(calendarId).create_event(
-                    start.isoformat(),
-                    end.isoformat(),
-                    [email] if email else [],
-                    summary
-                )
-
-    def clearCalendar(self, args):
-        calendarYear = self.calendarYearSpinBox.value()
-        calendarId = self.gCalLineEdit.text()
-
-        if not calendarId:
-            QMessageBox.critical(self, "Missing Calendar ID", "Please supply a calendar ID!")
-            return
-
-        # confirm user action
-        reply = QMessageBox.question(
-                self, 
-                "Clear Calendar Warning", 
-                "This action will clear all events generated by the scheduler for the year {}. Are you sure you want to continue?".format(
-                    calendarYear),
-                QMessageBox.Yes | QMessageBox.No)
-        if reply == QMessageBox.No: return
-
-        # call API
-        api = ApiHelper(calendarId)
-        startDate = datetime(calendarYear, 1, 1)
-        endDate = startDate + timedelta(weeks=52)
-
-        events = api.get_events(
-            startDate.isoformat() + 'Z',
-            endDate.isoformat() + 'Z',
-            search_str='[scheduler]'
-        )
-
-        # display progress so user knows app is working
-        progress = QProgressDialog(
-            "Clearing schedule...",
-            "",
-            0,
-            # max progress = total # of events to be created
-            len(events) - 1
-        )
-        progress.setCancelButton(None)
-        progress.setWindowModality(Qt.ApplicationModal)
-        progress.setMinimumDuration(0)
-
-        for i in range(len(events)):
-            progress.setValue(i)
-            id_ = events[i]['id']
-            api.delete_event(id_)
 
     def clearScheduleTable(self):
         while self.scheduleTable.rowCount() > 0:
