@@ -223,7 +223,7 @@ class Scheduler:
     schedule based on the supplied clinician and division data.
     """
 
-    def __init__(self, num_blocks, clin_data={}, timeoff_data=[], long_weekends=[]):
+    def __init__(self, logger, num_blocks, clin_data={}, timeoff_data=[], long_weekends=[]):
         self.num_blocks = num_blocks
         self.num_weekends = num_blocks * BLOCK_SIZE
 
@@ -231,6 +231,7 @@ class Scheduler:
         self.divisions = {}
         self.holiday_map = {}
         self.long_weekends = []
+        self._logger = logger
         
         self.set_long_weekends(long_weekends)
         self.set_data(clin_data)
@@ -240,22 +241,23 @@ class Scheduler:
         self.setup_solver()
         self.setup_problem(shuffle=shuffle)
         ret = self.problem.solve(self.solver) == pulp.LpStatusOptimal
-
-        if debug:
-            print('objective value = {}'.format(pulp.value(self.problem.objective)))
-            print('conflicts per doc:')
-            for clinician in self.clinicians.values():
-                print(clinician.name)
-                assigned_blocksoff = clinician.get_block_vars(
-                    lambda x, clinician=clinician: x.block_num in clinician.blocks_off and x.get_value() == 1.0)
-                assigned_weekendsoff = clinician.get_weekend_vars(
-                    lambda x, clinician=clinician: x.week_num in clinician.weekends_off and x.get_value() == 1.0)
-                print('\t{} out of {} blocks'.format(
-                    len(assigned_blocksoff), len(clinician.blocks_off)))
-                print('\t{} out of {} weekends'.format(
-                    len(assigned_weekendsoff), len(clinician.weekends_off)))
                     
         if ret:
+            if debug:
+                self._logger.write_line('Objective function value: {}'.format(pulp.value(self.problem.objective)))
+                conflicts_str = 'Schedule Conflicts:'
+                for clinician in self.clinicians.values():
+                    assigned_blocksoff = clinician.get_block_vars(
+                        lambda x, clinician=clinician: x.block_num in clinician.blocks_off and x.get_value() == 1.0)
+                    assigned_weekendsoff = clinician.get_weekend_vars(
+                        lambda x, clinician=clinician: x.week_num in clinician.weekends_off and x.get_value() == 1.0)
+                    
+                    conflicts_str += ' {0} ({1}/{2} blocks, {3}/{4} weekends)'.format(
+                        clinician.name, len(assigned_blocksoff), len(clinician.blocks_off),
+                        len(assigned_weekendsoff), len(clinician.weekends_off)
+                    )
+                self._logger.write_line(conflicts_str)
+
             self.assign_schedule()
             # only keep assignments mapping
             divAssignments = dict.fromkeys(self.divisions.keys())

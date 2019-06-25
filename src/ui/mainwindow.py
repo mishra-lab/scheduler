@@ -133,6 +133,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     UiHelper.convertTreeToDict(self.model.rootItem, data)
                     json.dump(data, f)
                     self.configPath = fileName
+                    self._logger.write_line('Saved configuration file: {}'.format(fileName))
 
             except Exception as ex:
                 QMessageBox.critical(self, "Unable to save file", str(ex))
@@ -200,14 +201,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # init scheduler with all the given data
         schedule = scheduler \
-            .Scheduler(
-                num_blocks=numBlocks, clin_data=self.configuration, timeoff_data=requests, long_weekends=holidays) \
+            .Scheduler(logger=self._logger, num_blocks=numBlocks, clin_data=self.configuration, \
+                 timeoff_data=requests, long_weekends=holidays) \
             .generate(debug=True, shuffle=shuffle)
         if schedule is None:
-            QMessageBox.critical(self, "Could not generate schedule!",
-                "Could not generate a schedule based on the given constraints and configuration. Try adjusting min/max values in the configuration tab.")
+            self._logger.write_line('Could not generate schedule! Try adjusting min/max values in the configuration tab.', level='ERROR')
         
         else:
+            self._logger.write_line('Generated schedule!')
             divAssignments = schedule[0]
             weekendAssignments = schedule[1]
             self.holidayMap = schedule[2]
