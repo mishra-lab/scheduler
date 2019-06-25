@@ -237,13 +237,13 @@ class Scheduler:
         self.set_data(clin_data)
         self.set_timeoff(timeoff_data)
 
-    def generate(self, debug=False, shuffle=False):
+    def generate(self, verbose=False, shuffle=False):
         self.setup_solver()
         self.setup_problem(shuffle=shuffle)
         ret = self.problem.solve(self.solver) == pulp.LpStatusOptimal
                     
         if ret:
-            if debug:
+            if verbose:
                 self._logger.write_line('Objective function value: {}'.format(pulp.value(self.problem.objective)))
                 conflicts_str = 'Schedule Conflicts:'
                 for clinician in self.clinicians.values():

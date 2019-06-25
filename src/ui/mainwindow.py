@@ -195,6 +195,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         numBlocks = self.numberOfBlocksSpinBox.value()
         calendarYear = self.calendarYearSpinBox.value()
         shuffle = self.shuffleCheckBox.isChecked()
+        verbose = self.verboseCheckBox.isChecked()
 
         requests = []
         holidays = []
@@ -203,7 +204,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         schedule = scheduler \
             .Scheduler(logger=self._logger, num_blocks=numBlocks, clin_data=self.configuration, \
                  timeoff_data=requests, long_weekends=holidays) \
-            .generate(debug=True, shuffle=shuffle)
+            .generate(verbose=verbose, shuffle=shuffle)
         if schedule is None:
             self._logger.write_line('Could not generate schedule! Try adjusting min/max values in the configuration tab.', level='ERROR')
         
