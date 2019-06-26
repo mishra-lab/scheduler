@@ -25,6 +25,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self._configuration = {}
         self._configPath = ''
+        self._requests = {}
 
         self.setupUi(self)
 
@@ -78,6 +79,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def setupSchedulerTab(self):
         self.loadConfigButton.clicked.connect(self.openConfig)
+        self.loadRequestsButton.clicked.connect(self.openRequests)
         self.generateScheduleButton.clicked.connect(self.generateSchedule)
         self.exportScheduleButton.clicked.connect(self.exportSchedule)
         self.exportMonthlyButton.clicked.connect(self.exportMonthlySchedule)
@@ -120,6 +122,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
             except Exception as ex:
                 QMessageBox.critical(self, "Unable to open file", str(ex))
+
+    def openRequests(self):
+        path, _ = QFileDialog.getOpenFileName(
+            self, "Open file", "", "Excel files (*.xlsx *.xlsm)"
+        )
+
+        if path != '':
+            try:
+                self._requests = ExcelHelper.loadRequests(path)
+                self._logger.write_line('Loaded requests file: {}'.format(path))
+
+            except Exception as ex:
+                QMessageBox.critical(self, "Unable to load requests", str(ex))
 
     def saveConfig(self):
         fileName, _ = QFileDialog.getSaveFileName(

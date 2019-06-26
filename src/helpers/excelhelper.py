@@ -4,7 +4,7 @@ import operator
 from collections import namedtuple
 from datetime import datetime, timedelta
 
-from openpyxl import Workbook
+from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Border, Side, Alignment, colors
 from openpyxl.utils import get_column_letter
 
@@ -208,6 +208,32 @@ class ExcelHelper:
         # remove the automatically created first sheet
         wb.remove(wb.active)
         wb.save(filename)
+
+    @staticmethod
+    def loadRequests(filename):
+        Range = namedtuple('Range', ['start', 'end'])
+        request_dict = {}
+
+        wb = load_workbook(filename, read_only=True)
+        for sheet in wb.sheetnames:
+            ws = wb[sheet]
+            row = 1
+                        
+            while True:
+                start = ws['A{0}'.format(row)].value
+                end = ws['B{0}'.format(row)].value
+
+                if start is None or end is None: break 
+                    
+                if sheet in request_dict:
+                    request_dict[sheet].append(Range(start, end))
+                else:
+                    request_dict[sheet] = [Range(start, end)]
+                
+                row += 1
+
+        wb.close()
+        return request_dict
 
     @staticmethod
     def getColumn(table, col_idx):
