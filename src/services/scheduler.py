@@ -223,7 +223,7 @@ class Scheduler:
     schedule based on the supplied clinician and division data.
     """
 
-    def __init__(self, logger, num_blocks, clin_data={}, timeoff_data=[], long_weekends=[]):
+    def __init__(self, logger, num_blocks, clin_data={}, request_dict=[], holidays=[]):
         self.num_blocks = num_blocks
         self.num_weekends = num_blocks * BLOCK_SIZE
 
@@ -233,9 +233,9 @@ class Scheduler:
         self.long_weekends = []
         self._logger = logger
         
-        self.set_long_weekends(long_weekends)
+        self.set_long_weekends(holidays)
         self.set_data(clin_data)
-        self.set_timeoff(timeoff_data)
+        self.set_timeoff(request_dict)
 
     def generate(self, verbose=False, shuffle=False):
         self.setup_solver()
@@ -334,25 +334,20 @@ class Scheduler:
             data = json.load(f)
             self.set_data(data)
 
-    def set_timeoff(self, events):
+    def set_timeoff(self, request_dict):
         """
         Populates timeoff for each clinician in self.clinicians based
         on the supplied list of events.
         """
-        for event in events:
-            start = datetime.strptime(
-                event['start'].get('date'),
-                '%Y-%m-%d'
-            )
-            end = datetime.strptime(
-                event['end'].get('date'),
-                '%Y-%m-%d'
-            )
-            # creator = event['creator'].get('displayName')
-            creator = event['summary'].replace('[request] ', '')
+        for clin_name in request_dict:
+            if clin_name not in self.clinicians:
+                self._logger.write_line(
+                    'Clinician \"{}\" was not found in the configuration file. Skipping their requests.'.format(clin_name),
+                    level='WARNING')
+                continue
 
-            if creator in self.clinicians:
-                clinician = self.clinicians[creator]
+            clinician = self.clinicians[clin_name]
+            for start, end in request_dict[clin_name]:
                 # figure out whether this timeoff request intersects a 
                 # week or a weekend
                 weeks = []
@@ -376,8 +371,6 @@ class Scheduler:
                 for week_num in weekends:
                     if week_num not in clinician.weekends_off:
                         clinician.weekends_off.append(week_num)
-            else:
-                print('Event creator {} was not found in clinicians'.format(creator))
 
     def set_long_weekends(self, events):
         lw = dict()

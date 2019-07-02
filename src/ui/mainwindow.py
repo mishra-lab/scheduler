@@ -26,6 +26,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self._configuration = {}
         self._configPath = ''
         self._requests = {}
+        self._holidays = []
 
         self.setupUi(self)
 
@@ -80,6 +81,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def setupSchedulerTab(self):
         self.loadConfigButton.clicked.connect(self.openConfig)
         self.loadRequestsButton.clicked.connect(self.openRequests)
+        self.loadHolidaysButton.clicked.connect(self.openHolidays)
         self.generateScheduleButton.clicked.connect(self.generateSchedule)
         self.exportScheduleButton.clicked.connect(self.exportSchedule)
         self.exportMonthlyButton.clicked.connect(self.exportMonthlySchedule)
@@ -109,7 +111,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def openConfig(self):
         path, _ = QFileDialog.getOpenFileName(
-            self, "Open file", "", "JSON files (*.json)"
+            self, "Open configuration file", "", "JSON files (*.json)"
         )
 
         if path != '':
@@ -122,10 +124,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
             except Exception as ex:
                 QMessageBox.critical(self, "Unable to open file", str(ex))
+                self._logger.write_line('Unable to open configuration file. {}'.format(str(ex)), level='ERROR')
 
     def openRequests(self):
         path, _ = QFileDialog.getOpenFileName(
-            self, "Open file", "", "Excel files (*.xlsx *.xlsm)"
+            self, "Open requests file", "", "Excel files (*.xlsx *.xlsm)"
         )
 
         if path != '':
@@ -135,6 +138,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
             except Exception as ex:
                 QMessageBox.critical(self, "Unable to load requests", str(ex))
+                self._logger.write_line('Unable to load requests. {}'.format(str(ex)), level='ERROR')
+
+    def openHolidays(self):
+        path, _ = QFileDialog.getOpenFileName(
+            self, "Open holidays file", "", "Excel files (*.xlsx *.xlsm)"
+        )
+
+        if path != '':
+            try:
+                self._holidays = ExcelHelper.loadHolidays(path)
+                self._logger.write_line('Loaded holidays file: {}'.format(path))
+
+            except Exception as ex:
+                QMessageBox.critical(self, "Unable to load holidays", str(ex))
+                self._logger.write_line('Unable to load holidays. {}'.format(str(ex)), level='ERROR')
 
     def saveConfig(self):
         fileName, _ = QFileDialog.getSaveFileName(
@@ -212,13 +230,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         shuffle = self.shuffleCheckBox.isChecked()
         verbose = self.verboseCheckBox.isChecked()
 
-        requests = []
-        holidays = []
+        # requests = []
+        # holidays = []
 
         # init scheduler with all the given data
         schedule = scheduler \
             .Scheduler(logger=self._logger, num_blocks=numBlocks, clin_data=self.configuration, \
-                 timeoff_data=requests, long_weekends=holidays) \
+                 request_dict=self._requests, holidays=self._holidays) \
             .generate(verbose=verbose, shuffle=shuffle)
         if schedule is None:
             self._logger.write_line('Could not generate schedule! Try adjusting min/max values in the configuration tab.', level='ERROR')

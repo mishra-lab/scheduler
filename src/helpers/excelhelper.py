@@ -236,6 +236,23 @@ class ExcelHelper:
         return request_dict
 
     @staticmethod
+    def loadHolidays(filename):
+        wb = load_workbook(filename, read_only=True)
+        ws = wb.active
+
+        holidays = []
+        row = 1
+        while True:
+            date = ws['A{0}'.format(row)].value
+
+            if date is None: break
+            holidays.append(date)
+            row += 1
+
+        wb.close()
+        return holidays
+
+    @staticmethod
     def getColumn(table, col_idx):
         rows = table.rowCount()
         column = []
