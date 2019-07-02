@@ -372,26 +372,19 @@ class Scheduler:
                     if week_num not in clinician.weekends_off:
                         clinician.weekends_off.append(week_num)
 
-    def set_long_weekends(self, events):
-        lw = dict()
-        for event in events:
-            start = datetime.strptime(
-                event['start'].get('date'),
-                '%Y-%m-%d'
-            )
+    def set_long_weekends(self, holidays):
+        self.holiday_map.clear()
+        for date in holidays:
+            if date.isoweekday() == 1:
+                # Mon statutory holidays are associated with their weeknum - 1
+                #   (i.e.: the previous weeknum)
+                self.holiday_map[date] = date.isocalendar()[1] - 1
 
-            # Fri statutory holidays are associated with their regular weeknum
-            # Mon statutory holidays are associated with their weeknum - 1
-            #   (i.e.: the previous weeknum)
-            if start.isoweekday() == 1:
-                lw[event['start']['date']] = start.isocalendar()[1] - 1
-                # lw.add(start.isocalendar()[1] - 1)
-            elif start.isoweekday() == 5:
-                lw[event['start']['date']] = start.isocalendar()[1]
-                # lw.add(start.isocalendar()[1])
-
-        self.holiday_map = lw
-        self.long_weekends = list(lw.values())
+            elif date.isoweekday() == 5:
+                # Fri statutory holidays are associated with their regular weeknum
+                self.holiday_map[date] = date.isocalendar()[1]
+        
+        self.long_weekends = list(self.holiday_map.values())
     
     def setup_problem(self, shuffle=False):
         """

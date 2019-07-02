@@ -11,6 +11,15 @@ from openpyxl.utils import get_column_letter
 from constants import WEEK_HOURS, WEEKEND_HOURS
 
 
+class ExcelFormatException(Exception):
+    def __init__(self, file, message):
+        self.file = file
+        self.message = message
+
+    def __str__(self):
+        return self.message + ' Filename: {}'.format(self.file)
+
+
 class ExcelHelper:
     @staticmethod
     def saveYearlySchedule(filename, table):
@@ -223,7 +232,9 @@ class ExcelHelper:
                 start = ws['A{0}'.format(row)].value
                 end = ws['B{0}'.format(row)].value
 
-                if start is None or end is None: break 
+                if start is None and end is None: break 
+                elif start is None or end is None:
+                    raise ExcelFormatException(file=filename, message='Incorrect format for requests file!')
                     
                 if sheet in request_dict:
                     request_dict[sheet].append(Range(start, end))
