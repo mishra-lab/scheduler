@@ -280,8 +280,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self, "Save Excel file", "", "Excel file (*.xlsx)"
         )
 
-        if not fileName:
-            return
+        if not fileName: return
 
         ExcelHelper.saveYearlySchedule(fileName, self.scheduleTable)
 
@@ -291,8 +290,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self, "Save Excel file", "", "Excel file (*.xlsx)"
         )
 
-        if not fileName:
-            return
+        if not fileName: return
 
         calendarYear = self.calendarYearSpinBox.value()
         ExcelHelper.saveMonthlySchedule(fileName, self.scheduleTable, calendarYear, self.holidayMap)
@@ -305,11 +303,3 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         while self.scheduleTable.columnCount() > 1:
             lastColumn = self.scheduleTable.columnCount()
             self.scheduleTable.removeColumn(lastColumn - 1)
-
-
-if __name__ == "__main__":
-    app = QApplication([])
-    app.setApplicationName("Configuration Manager")
-
-    window = MainWindow()
-    app.exec_()
