@@ -353,7 +353,7 @@ class Scheduler:
                 weeks = []
                 weekends = []
                 curr = start
-                while curr < end:
+                while curr <= end:
                     week_num = curr.isocalendar()[1]
                     if curr.isoweekday() in range(1, 6):
                         if week_num not in weeks:
