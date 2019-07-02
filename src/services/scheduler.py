@@ -3,6 +3,7 @@ import math
 import os
 import random
 import sys
+import time
 from datetime import datetime, timedelta
 
 import pulp
@@ -240,10 +241,14 @@ class Scheduler:
     def generate(self, verbose=False, shuffle=False):
         self.setup_solver()
         self.setup_problem(shuffle=shuffle)
+
+        started_solving = time.clock()
         ret = self.problem.solve(self.solver) == pulp.LpStatusOptimal
+        finished_solving = time.clock()
                     
         if ret:
             if verbose:
+                self._logger.write_line('Solved in: {} s'.format(finished_solving - started_solving))
                 self._logger.write_line('Objective function value: {}'.format(pulp.value(self.problem.objective)))
                 conflicts_str = 'Schedule Conflicts:'
                 for clinician in self.clinicians.values():

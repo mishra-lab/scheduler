@@ -60,7 +60,7 @@ class ExcelHelper:
 
         def expand_dates(weekText, clinTuple):
             '''
-            Given a week number and a set of clinicians that cover the corresponding \
+            Given a week number and a set of clinicians that cover the corresponding
             week + weekend, return a mapping between weekday and clinician(s) covering that day
             '''
 

@@ -86,6 +86,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.exportScheduleButton.clicked.connect(self.exportSchedule)
         self.exportMonthlyButton.clicked.connect(self.exportMonthlySchedule)
 
+        self.calendarYearSpinBox.setValue(datetime.now().year + 1)
+
         # misc vars
         self.holidayMap = {}
 
