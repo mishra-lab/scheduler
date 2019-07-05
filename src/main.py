@@ -18,4 +18,4 @@ if __name__ == '__main__':
     try:
         main()
     except Exception as ex:
-        QMessageBox.critical(app, "Unknown error occurred!", str(ex))
+        QMessageBox.critical(app, "", "Unknown error occurred!\nDetails: {}".format(str(ex)))

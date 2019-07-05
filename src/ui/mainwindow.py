@@ -125,7 +125,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self._logger.write_line('Loaded configuration file: {}'.format(path))
 
             except Exception as ex:
-                QMessageBox.critical(self, "Unable to open file", str(ex))
+                QMessageBox.critical(self, "", "Unable to open file!\nDetails: {}".format(str(ex)))
                 self._logger.write_line('Unable to open configuration file. {}'.format(str(ex)), level='ERROR')
 
     def openRequests(self):
@@ -139,7 +139,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self._logger.write_line('Loaded requests file: {}'.format(path))
 
             except Exception as ex:
-                QMessageBox.critical(self, "Unable to load requests", str(ex))
+                QMessageBox.critical(self, "", "Unable to load requests!\nDetails: {}".format(str(ex)))
                 self._logger.write_line('Unable to load requests. {}'.format(str(ex)), level='ERROR')
 
     def openHolidays(self):
@@ -153,7 +153,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self._logger.write_line('Loaded holidays file: {}'.format(path))
 
             except Exception as ex:
-                QMessageBox.critical(self, "Unable to load holidays", str(ex))
+                QMessageBox.critical(self, "", "Unable to load holidays!\nDetails: {}".format(str(ex)))
                 self._logger.write_line('Unable to load holidays. {}'.format(str(ex)), level='ERROR')
 
     def saveConfig(self):
@@ -171,7 +171,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self._logger.write_line('Saved configuration file: {}'.format(fileName))
 
             except Exception as ex:
-                QMessageBox.critical(self, "Unable to save file", str(ex))
+                QMessageBox.critical(self, "", "Unable to save file!\nDetails: {}".format(str(ex)))
 
     def newConfig(self):
         # clear data
@@ -224,7 +224,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         numClinicians = len(self.configuration.keys())
         if numClinicians <= 0:
-            QMessageBox.critical(self, "No Clinicians Configured", "Please load a configuration file with at least one clinician!")
+            self._logger.write_line('No clinicians configured! Please load a configuration file with at least one clinician!', level='ERROR')
             return
 
         numBlocks = self.numberOfBlocksSpinBox.value()
@@ -284,7 +284,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         if not fileName: return
 
-        ExcelHelper.saveYearlySchedule(fileName, self.scheduleTable)
+        try:
+            ExcelHelper.saveYearlySchedule(fileName, self.scheduleTable)
+        except IOError as ex:
+            QMessageBox.critical(self, "", "Unable to save file!\nDetails: {}".format(str(ex)))
 
     def exportMonthlySchedule(self):
         # open save dialog to let user choose folder + filename
@@ -295,7 +298,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if not fileName: return
 
         calendarYear = self.calendarYearSpinBox.value()
-        ExcelHelper.saveMonthlySchedule(fileName, self.scheduleTable, calendarYear, self.holidayMap)
+
+        try:
+            ExcelHelper.saveMonthlySchedule(fileName, self.scheduleTable, calendarYear, self.holidayMap)
+        except IOError as ex:
+            QMessageBox.critical(self, "", "Unable to save file!\nDetails: {}".format(str(ex)))
 
     def clearScheduleTable(self):
         while self.scheduleTable.rowCount() > 0:

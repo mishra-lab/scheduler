@@ -215,7 +215,8 @@ class ExcelHelper:
             ExcelHelper.expandColumns(ws)
             
         # remove the automatically created first sheet
-        wb.remove(wb.active)
+        if len(wb.sheetnames) > 1:
+            wb.remove(wb.active)
         wb.save(filename)
 
     @staticmethod
