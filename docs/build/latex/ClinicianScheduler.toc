@@ -1,0 +1,17 @@
+\babel@toc {english}{}
+\contentsline {chapter}{\numberline {1}Clinician Configuration}{3}{chapter.1}
+\contentsline {section}{\numberline {1.1}Creating a new configuration file}{3}{section.1.1}
+\contentsline {section}{\numberline {1.2}Saving the configuration file}{3}{section.1.2}
+\contentsline {section}{\numberline {1.3}Loading a configuration file}{4}{section.1.3}
+\contentsline {section}{\numberline {1.4}Adding a new clinician}{4}{section.1.4}
+\contentsline {section}{\numberline {1.5}Deleting an existing clinician}{6}{section.1.5}
+\contentsline {section}{\numberline {1.6}Editing an existing clinician}{7}{section.1.6}
+\contentsline {chapter}{\numberline {2}Requests \& Holiday Weekends}{9}{chapter.2}
+\contentsline {section}{\numberline {2.1}Clinician Requests Excel File}{9}{section.2.1}
+\contentsline {section}{\numberline {2.2}Holiday Weekends Excel File}{10}{section.2.2}
+\contentsline {chapter}{\numberline {3}Scheduling}{13}{chapter.3}
+\contentsline {section}{\numberline {3.1}Generating a schedule}{13}{section.3.1}
+\contentsline {section}{\numberline {3.2}Exporting a schedule}{17}{section.3.2}
+\contentsline {chapter}{\numberline {4}Sample Output}{19}{chapter.4}
+\contentsline {section}{\numberline {4.1}Yearly Excel Format}{19}{section.4.1}
+\contentsline {section}{\numberline {4.2}Monthly Excel Format}{20}{section.4.2}
