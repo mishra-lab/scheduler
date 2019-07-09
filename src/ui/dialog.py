@@ -159,8 +159,8 @@ class DialogWindow(QDialog, Ui_Dialog):
             divMin = self.divisionTable.item(i, 1).text()
             divMax = self.divisionTable.item(i, 2).text()
 
-            division['min'] = divMin
-            division['max'] = divMax
+            division['min'] = int(divMin)
+            division['max'] = int(divMax)
             clinician['divisions'][divName] = division
 
         return clinician

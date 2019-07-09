@@ -15,9 +15,17 @@ Features
 - Integration with Google Calendar
 - Robust and intuitive Qt GUI
 
+Screenshots
+-----------
+
+.. image:: _static/images/screenshots/configuration.png
+
+|
+
+.. image:: _static/images/screenshots/scheduling.png
+
 .. toctree::
     :hidden:
     :maxdepth: 1
 
-    manual
-    privacy
+    User Manual <manual>

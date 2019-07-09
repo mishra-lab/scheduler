@@ -4,11 +4,20 @@ import operator
 from collections import namedtuple
 from datetime import datetime, timedelta
 
-from openpyxl import Workbook
+from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Border, Side, Alignment, colors
 from openpyxl.utils import get_column_letter
 
 from constants import WEEK_HOURS, WEEKEND_HOURS
+
+
+class ExcelFormatException(Exception):
+    def __init__(self, file, message):
+        self.file = file
+        self.message = message
+
+    def __str__(self):
+        return self.message + ' Filename: {}'.format(self.file)
 
 
 class ExcelHelper:
@@ -51,7 +60,7 @@ class ExcelHelper:
 
         def expand_dates(weekText, clinTuple):
             '''
-            Given a week number and a set of clinicians that cover the corresponding \
+            Given a week number and a set of clinicians that cover the corresponding
             week + weekend, return a mapping between weekday and clinician(s) covering that day
             '''
 
@@ -206,8 +215,54 @@ class ExcelHelper:
             ExcelHelper.expandColumns(ws)
             
         # remove the automatically created first sheet
-        wb.remove(wb.active)
+        if len(wb.sheetnames) > 1:
+            wb.remove(wb.active)
         wb.save(filename)
+
+    @staticmethod
+    def loadRequests(filename):
+        Range = namedtuple('Range', ['start', 'end'])
+        request_dict = {}
+
+        wb = load_workbook(filename, read_only=True)
+        for sheet in wb.sheetnames:
+            ws = wb[sheet]
+            row = 1
+                        
+            while True:
+                start = ws['A{0}'.format(row)].value
+                end = ws['B{0}'.format(row)].value
+
+                if start is None and end is None: break 
+                elif start is None or end is None:
+                    raise ExcelFormatException(file=filename, message='Incorrect format for requests file!')
+                    
+                if sheet in request_dict:
+                    request_dict[sheet].append(Range(start, end))
+                else:
+                    request_dict[sheet] = [Range(start, end)]
+                
+                row += 1
+
+        wb.close()
+        return request_dict
+
+    @staticmethod
+    def loadHolidays(filename):
+        wb = load_workbook(filename, read_only=True)
+        ws = wb.active
+
+        holidays = []
+        row = 1
+        while True:
+            date = ws['A{0}'.format(row)].value
+
+            if date is None: break
+            holidays.append(date)
+            row += 1
+
+        wb.close()
+        return holidays
 
     @staticmethod
     def getColumn(table, col_idx):

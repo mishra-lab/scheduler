@@ -9,9 +9,9 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 from constants import WEEK_HOURS, WEEKEND_HOURS
-from helpers.apihelper import ApiHelper
 from helpers.excelhelper import ExcelHelper
 from helpers.uihelper import UiHelper
+from helpers.logger import Logger
 from services import scheduler
 
 from .dialog import DialogWindow
@@ -25,13 +25,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self._configuration = {}
         self._configPath = ''
+        self._requests = {}
+        self._holidays = []
 
         self.setupUi(self)
+
+        self._logger = Logger(self.outputTextEdit)
         self.tabWidget.currentChanged[int].connect(self.updateTabText)
         self.setupConfigurationTab()
         self.setupSchedulerTab()
 
-        self.handleCalendarIdChange(self.gCalLineEdit.text())
         self.tabWidget.setCurrentIndex(0)
 
         self.show()
@@ -76,32 +79,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.newConfig()
 
     def setupSchedulerTab(self):
-        # action setup
-        self.gCalLineEdit.textChanged[str].connect(self.handleCalendarIdChange)
-
-        self.loadButton.clicked.connect(self.openConfig)
+        self.loadConfigButton.clicked.connect(self.openConfig)
+        self.loadRequestsButton.clicked.connect(self.openRequests)
+        self.loadHolidaysButton.clicked.connect(self.openHolidays)
         self.generateScheduleButton.clicked.connect(self.generateSchedule)
         self.exportScheduleButton.clicked.connect(self.exportSchedule)
         self.exportMonthlyButton.clicked.connect(self.exportMonthlySchedule)
-        self.publishCalendarButton.clicked.connect(self.publishSchedule)
-        self.clearCalendarButton.clicked.connect(self.clearCalendar)
+
+        self.calendarYearSpinBox.setValue(datetime.now().year + 1)
 
         # misc vars
         self.holidayMap = {}
-
-    def handleCalendarIdChange(self, text):
-        if len(text) == 0:
-            # first, uncheck "retrieve" checkboxes
-            self.retrieveTimeOffRequestsCheckBox.setChecked(False)
-            self.retrieveLongWeekendsCheckBox.setChecked(False)
-            # then disable them altogether
-            self.retrieveTimeOffRequestsCheckBox.setDisabled(True)
-            self.retrieveLongWeekendsCheckBox.setDisabled(True)
-
-        else:
-            # enable "retrieve" checkboxes
-            self.retrieveTimeOffRequestsCheckBox.setDisabled(False)
-            self.retrieveLongWeekendsCheckBox.setDisabled(False)
 
     def updateTabText(self, selectedTabIdx):
         # clear (configPath) from all other tabs
@@ -125,7 +113,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def openConfig(self):
         path, _ = QFileDialog.getOpenFileName(
-            self, "Open file", "", "JSON files (*.json)"
+            self, "Open configuration file", "", "JSON files (*.json)"
         )
 
         if path != '':
@@ -134,9 +122,39 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self.configPath = path
                     self.configuration = json.load(f)
                     UiHelper.syncTreeView(self.treeView, self.model, self.configuration)
+                    self._logger.write_line('Loaded configuration file: {}'.format(path))
 
             except Exception as ex:
-                QMessageBox.critical(self, "Unable to open file", str(ex))
+                QMessageBox.critical(self, "", "Unable to open file!\nDetails: {}".format(str(ex)))
+                self._logger.write_line('Unable to open configuration file. {}'.format(str(ex)), level='ERROR')
+
+    def openRequests(self):
+        path, _ = QFileDialog.getOpenFileName(
+            self, "Open requests file", "", "Excel files (*.xlsx *.xlsm)"
+        )
+
+        if path != '':
+            try:
+                self._requests = ExcelHelper.loadRequests(path)
+                self._logger.write_line('Loaded requests file: {}'.format(path))
+
+            except Exception as ex:
+                QMessageBox.critical(self, "", "Unable to load requests!\nDetails: {}".format(str(ex)))
+                self._logger.write_line('Unable to load requests. {}'.format(str(ex)), level='ERROR')
+
+    def openHolidays(self):
+        path, _ = QFileDialog.getOpenFileName(
+            self, "Open holidays file", "", "Excel files (*.xlsx *.xlsm)"
+        )
+
+        if path != '':
+            try:
+                self._holidays = ExcelHelper.loadHolidays(path)
+                self._logger.write_line('Loaded holidays file: {}'.format(path))
+
+            except Exception as ex:
+                QMessageBox.critical(self, "", "Unable to load holidays!\nDetails: {}".format(str(ex)))
+                self._logger.write_line('Unable to load holidays. {}'.format(str(ex)), level='ERROR')
 
     def saveConfig(self):
         fileName, _ = QFileDialog.getSaveFileName(
@@ -150,9 +168,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     UiHelper.convertTreeToDict(self.model.rootItem, data)
                     json.dump(data, f)
                     self.configPath = fileName
+                    self._logger.write_line('Saved configuration file: {}'.format(fileName))
 
             except Exception as ex:
-                QMessageBox.critical(self, "Unable to save file", str(ex))
+                QMessageBox.critical(self, "", "Unable to save file!\nDetails: {}".format(str(ex)))
 
     def newConfig(self):
         # clear data
@@ -205,57 +224,27 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         numClinicians = len(self.configuration.keys())
         if numClinicians <= 0:
-            QMessageBox.critical(self, "No Clinicians Configured", "Please load a configuration file with at least one clinician!")
+            self._logger.write_line('No clinicians configured! Please load a configuration file with at least one clinician!', level='ERROR')
             return
 
         numBlocks = self.numberOfBlocksSpinBox.value()
-        retrieveTimeOff = self.retrieveTimeOffRequestsCheckBox.isChecked()
-        retrieveLongWeekends = self.retrieveLongWeekendsCheckBox.isChecked()
         calendarYear = self.calendarYearSpinBox.value()
-        calendarId = self.gCalLineEdit.text()
         shuffle = self.shuffleCheckBox.isChecked()
+        verbose = self.verboseCheckBox.isChecked()
 
-        requests = []
-        holidays = []
-
-        if retrieveTimeOff:    
-            if not calendarId:
-                QMessageBox.critical(self, "Missing Calendar ID", "Please supply a calendar ID!")
-                return
-
-            # read timeoff requests from gcal
-            startDate = datetime(calendarYear, 1, 1)
-            endDate = startDate + timedelta(weeks=52)
-            requests = ApiHelper(calendarId).get_events(
-                start=startDate.isoformat() + 'Z',
-                end=endDate.isoformat() + 'Z',
-                search_str='[request]'
-            )
-
-        if retrieveLongWeekends:
-            if not calendarId:
-                QMessageBox.critical(self, "Missing Calendar ID", "Please supply a calendar ID!")
-                return
-
-            # read longweekend events from gcal
-            startDate = datetime(calendarYear, 1, 1)
-            endDate = startDate + timedelta(weeks=52)
-            holidays = ApiHelper(calendarId).get_events(
-                start=startDate.isoformat() + 'Z',
-                end=endDate.isoformat() + 'Z',
-                search_str='[holiday]'
-            )
+        # requests = []
+        # holidays = []
 
         # init scheduler with all the given data
         schedule = scheduler \
-            .Scheduler(
-                num_blocks=numBlocks, clin_data=self.configuration, timeoff_data=requests, long_weekends=holidays) \
-            .generate(debug=True, shuffle=shuffle)
+            .Scheduler(logger=self._logger, num_blocks=numBlocks, clin_data=self.configuration, \
+                 request_dict=self._requests, holidays=self._holidays) \
+            .generate(verbose=verbose, shuffle=shuffle)
         if schedule is None:
-            QMessageBox.critical(self, "Could not generate schedule!",
-                "Could not generate a schedule based on the given constraints and configuration. Try adjusting min/max values in the configuration tab.")
+            self._logger.write_line('Could not generate schedule! Try adjusting min/max values in the configuration tab.', level='ERROR')
         
         else:
+            self._logger.write_line('Generated schedule!')
             divAssignments = schedule[0]
             weekendAssignments = schedule[1]
             self.holidayMap = schedule[2]
@@ -285,8 +274,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
             for i in range(len(weekendAssignments)):
                 clinName = weekendAssignments[i]
-                self.scheduleTable.setItem(i, weekendCol, QTableWidgetItem(clinName))
-                    
+                self.scheduleTable.setItem(i, weekendCol, QTableWidgetItem(clinName))               
     
     def exportSchedule(self):
         # open save dialog to let user choose folder + filename
@@ -294,10 +282,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self, "Save Excel file", "", "Excel file (*.xlsx)"
         )
 
-        if not fileName:
-            return
+        if not fileName: return
 
-        ExcelHelper.saveYearlySchedule(fileName, self.scheduleTable)
+        try:
+            ExcelHelper.saveYearlySchedule(fileName, self.scheduleTable)
+        except IOError as ex:
+            QMessageBox.critical(self, "", "Unable to save file!\nDetails: {}".format(str(ex)))
 
     def exportMonthlySchedule(self):
         # open save dialog to let user choose folder + filename
@@ -305,125 +295,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self, "Save Excel file", "", "Excel file (*.xlsx)"
         )
 
-        if not fileName:
-            return
+        if not fileName: return
 
         calendarYear = self.calendarYearSpinBox.value()
-        ExcelHelper.saveMonthlySchedule(fileName, self.scheduleTable, calendarYear, self.holidayMap)
 
-    def publishSchedule(self):
-        calendarYear = self.calendarYearSpinBox.value()
-        calendarId = self.gCalLineEdit.text()
-
-        if not calendarId:
-            QMessageBox.critical(self, "Missing Calendar ID", "Please supply a calendar ID!")
-            return
-
-        # confirm user action
-        reply = QMessageBox.question(
-                self, 
-                "Publish Calendar Warning", 
-                "This action will publish the generated schedule to the specified calendar. Are you sure you want to continue?",
-                QMessageBox.Yes | QMessageBox.No)
-        if reply == QMessageBox.No: return
-
-
-        rows = self.scheduleTable.rowCount()
-        cols = self.scheduleTable.columnCount()
-
-        # display progress so user knows app is working
-        progress = QProgressDialog(
-            "Publishing schedule...",
-            "",
-            1,
-            # max progress = total # of events to be created
-            (cols - 1) * rows
-        )
-        progress.setCancelButton(None)
-        progress.setWindowModality(Qt.ApplicationModal)
-        progress.setMinimumDuration(0)
-        
-        # go through table, creating an event per each row, per each column
-        for i in range(rows):
-            for j in range(1, cols):
-                progress.setValue(j + (cols - 1) * i)
-                colHeader = self.scheduleTable.horizontalHeaderItem(j).text()
-
-                weekText = self.scheduleTable.item(i, 0).text() 
-                weekNum = int(weekText[:-1]) if weekText[-1] == '*' else int(weekText)
-                name = self.scheduleTable.item(i, j).text()
-                email = self.configuration[name]['email']
-
-                # figure out correct event time range
-                if colHeader == 'Weekend':
-                    summary = '[scheduler] {} - on call'.format(name)
-                    start = datetime.strptime(
-                        # year / weekNum / Friday / 5PM
-                        '{0}/{1:02d}/5/17:00'.format(calendarYear, weekNum),
-                        '%G/%V/%u/%H:%M'
-                    )
-                    end = start + timedelta(hours=WEEKEND_HOURS)
-                else:
-                    summary = '[scheduler] {} - on call ({} division)'.format(name, colHeader)
-                    start = datetime.strptime(
-                        # year / weekNum / Monday / 8AM
-                        '{0}/{1:02d}/1/08:00'.format(calendarYear, weekNum),
-                        '%G/%V/%u/%H:%M'
-                    )
-                    end = start + timedelta(hours=WEEK_HOURS)
-
-                # call api to publish event
-                ApiHelper(calendarId).create_event(
-                    start.isoformat(),
-                    end.isoformat(),
-                    [email] if email else [],
-                    summary
-                )
-
-    def clearCalendar(self, args):
-        calendarYear = self.calendarYearSpinBox.value()
-        calendarId = self.gCalLineEdit.text()
-
-        if not calendarId:
-            QMessageBox.critical(self, "Missing Calendar ID", "Please supply a calendar ID!")
-            return
-
-        # confirm user action
-        reply = QMessageBox.question(
-                self, 
-                "Clear Calendar Warning", 
-                "This action will clear all events generated by the scheduler for the year {}. Are you sure you want to continue?".format(
-                    calendarYear),
-                QMessageBox.Yes | QMessageBox.No)
-        if reply == QMessageBox.No: return
-
-        # call API
-        api = ApiHelper(calendarId)
-        startDate = datetime(calendarYear, 1, 1)
-        endDate = startDate + timedelta(weeks=52)
-
-        events = api.get_events(
-            startDate.isoformat() + 'Z',
-            endDate.isoformat() + 'Z',
-            search_str='[scheduler]'
-        )
-
-        # display progress so user knows app is working
-        progress = QProgressDialog(
-            "Clearing schedule...",
-            "",
-            0,
-            # max progress = total # of events to be created
-            len(events) - 1
-        )
-        progress.setCancelButton(None)
-        progress.setWindowModality(Qt.ApplicationModal)
-        progress.setMinimumDuration(0)
-
-        for i in range(len(events)):
-            progress.setValue(i)
-            id_ = events[i]['id']
-            api.delete_event(id_)
+        try:
+            ExcelHelper.saveMonthlySchedule(fileName, self.scheduleTable, calendarYear, self.holidayMap)
+        except IOError as ex:
+            QMessageBox.critical(self, "", "Unable to save file!\nDetails: {}".format(str(ex)))
 
     def clearScheduleTable(self):
         while self.scheduleTable.rowCount() > 0:
@@ -433,11 +312,3 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         while self.scheduleTable.columnCount() > 1:
             lastColumn = self.scheduleTable.columnCount()
             self.scheduleTable.removeColumn(lastColumn - 1)
-
-
-if __name__ == "__main__":
-    app = QApplication([])
-    app.setApplicationName("Configuration Manager")
-
-    window = MainWindow()
-    app.exec_()

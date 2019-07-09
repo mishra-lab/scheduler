@@ -3,215 +3,21 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Manual
-======
+User Manual
+===========
 
 .. contents:: Table of Contents
    :local:
    :backlinks: none
-
-The clinician scheduler allows you to automatically generate and publish 
-schedules that satisfy common constraints in an on-call system, while taking
-into account the preferences of clinicians.
-
-Setup
------
-
-Generating Google API credentials
-"""""""""""""""""""""""""""""""""
-
-.. note::
-   This process should only be done the very first time you are running
-   the program. If you have previously generated a credential file using
-   this process you should be able to re-use it. Just make sure that the
-   credential file is placed in the same folder as the executable (``scheduler.exe``).
-
-The application uses Google calendar for retrieving clinician 
-time-off requests and long weekend information, as well as uploading the 
-generated schedule to the calendar. These operations require the use
-of Google API credentials, which can be generated as follows.
-
-1. Sign into https://console.developers.google.com.
-2. Click on the project selector at the top left of the page.
-
-.. figure:: _static/images/google_credentials/step2_select_a_project.png
-   :class: with-border
-   :target: _static/images/google_credentials/step2_select_a_project.png
-
-3. Click on `New Project`.
-
-.. figure:: _static/images/google_credentials/step3_new_project.png
-   :class: with-border
-   :target: _static/images/google_credentials/step3_new_project.png
-
-4. Enter "Clinician Scheduler" as the `Project Name` and click `Create`.
-
-.. figure:: _static/images/google_credentials/step4_create_project.png
-   :class: with-border
-   :target: _static/images/google_credentials/step4_create_project.png
-
-5. Now you should see the dashboard for the Clinician Scheduler project. 
-   You will need to enable the Google calendar API. Click on `Enable APIs and Services`.
-
-.. figure:: _static/images/google_credentials/step5_enable_apis_and_services.png
-   :class: with-border
-   :target: _static/images/google_credentials/step5_enable_apis_and_services.png
-
-6. Search for "Google calendar API" using the search bar, and select it.
-
-.. figure:: _static/images/google_credentials/step6_search_calendar_api.png
-   :class: with-border
-   :target: _static/images/google_credentials/step6_search_calendar_api.png
-
-7. Click `Enable`.
-
-.. figure:: _static/images/google_credentials/step7_enable_calendar_api.png
-   :class: with-border
-   :target: _static/images/google_credentials/step7_enable_calendar_api.png
-
-8. Now you should see the overview page for the Google calendar API. 
-   To generate the credentials, click `Create credentials`.
-
-.. figure:: _static/images/google_credentials/step8_create_credentials.png
-   :class: with-border
-   :target: _static/images/google_credentials/step8_create_credentials.png
-
-9. On the credentials form, choose "Google Calendar API" for `Which API are you using?`,
-   then "Other UI (e.g. Windows, CLI tool)" for `Where will you be calling the API from?`
-   and "User data" for `What data will you be accessing?`. Then click on `What credentials do I need?`.
-
-.. figure:: _static/images/google_credentials/step9_credentials_form.png
-   :class: with-border
-   :target: _static/images/google_credentials/step9_credentials_form.png
-
-10. Enter "Client" for `Name` and click on `Create OAuth client ID`.
-
-.. figure:: _static/images/google_credentials/step10_oauth_client_id.png
-   :class: with-border
-   :target: _static/images/google_credentials/step10_oauth_client_id.png
-
-11. Choose the email address associated to your account for `Email address`
-    and enter "Clinician Scheduler" for `Product name shown to users`, then 
-    click `Continue`.
-
-.. figure:: _static/images/google_credentials/step11_oauth_consent_screen.png
-   :class: with-border
-   :target: _static/images/google_credentials/step11_oauth_consent_screen.png
-
-12. Your credentials are now generated! Make sure to download and save 
-    them in the same location that you unzipped the application, so that
-    the credential file and the executable file (``scheduler.exe``) are in the same folder.
-
-.. figure:: _static/images/google_credentials/step12_download_credentials.png
-   :class: with-border
-   :target: _static/images/google_credentials/step12_download_credentials.png
-
-.. attention::
-   Make sure the credential file is saved as ``credentials.json`` (rename it, if necessary), 
-   or otherwise the application will not be able to recognize it!
-
-Google Calendar Configuration
-"""""""""""""""""""""""""""""
-
-Creating a calendar
-~~~~~~~~~~~~~~~~~~~
-
-1. Navigate to https://calendar.google.com and sign in to the appropriate account.
-
-2. Click on the settings icon next on the left side, and select `New Calendar`.
-
-.. figure:: _static/images/google_calendar/create_calendar/step2_new_calendar.png
-   :class: with-border
-   :target: _static/images/google_calendar/create_calendar/step2_new_calendar.png
-
-3. Enter a name for your calendar and click `Create calendar`.
-
-.. figure:: _static/images/google_calendar/create_calendar/step3_create.png
-   :class: with-border
-   :target: _static/images/google_calendar/create_calendar/step3_create.png
-
-Adding holiday events
-~~~~~~~~~~~~~~~~~~~~~
-
-.. note::
-   It is recommended to create full-day events for holidays and clinician requests.
-
-Create an event by clicking on any cell in the calendar. Make sure that 
-the name of the event you create starts with "**[holiday]**", so that the
-scheduler can recognize the event correctly. Click `Save` once you are done.
-
-.. figure:: _static/images/google_calendar/create_holiday.png
-   :class: with-border
-   :target: _static/images/google_calendar/create_holiday.png
-
-.. _adding-clinician-requests:
-
-Adding clinician requests
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Create an event by clicking on any cell in the calendar. Make sure that 
-the name of the event you create has the format: "**[request] Name**", so that the
-scheduler can recognize the event correctly. Click `Save` once you are done.
-
-.. figure:: _static/images/google_calendar/create_request.png
-   :class: with-border
-   :target: _static/images/google_calendar/create_request.png
-
-.. Warning::
-   It is important that the name you use in the event name matches the name in 
-   the clinician configuration you create in :ref:`clinician-configuration`.
-
-Usage
------
-
-.. _authentication:
-
-Authentication
-""""""""""""""
-When the scheduler first makes a connection to Google calendar, it needs
-to create an authentication token, which will be used to simplify future 
-connections.
-
-This requires you to allow the scheduler application to access a calendar 
-that you specified. You may encounter this when using any functionality that
-interacts with Google calendar, for example in :ref:`generating-a-schedule`
-or in :ref:`publishing-a-schedule-to-google-calendar`.
-
-1. The scheduler should have automatically opened the access request page
-   in a browser window, in which case you can skip to step 2. **Otherwise**, 
-   locate the command prompt for the scheduler. You should see instructions 
-   to open the access request printed on the command prompt. Follow these instructions
-   in order to open the access request page manually.
-
-.. figure:: _static/images/authentication/open_in_browser.png
-   :class: with-border
-   :target: _static/images/authentication/open_in_browser.png
-
-2. Follow the instructions on the access request page in order to allow
-   the scheduler application to read/write from/to the calendar you specified.
-
-.. figure:: _static/images/authentication/access_request.png
-   :class: with-border
-   :target: _static/images/authentication/access_request.png
-
-   **(Optional)** If you opened the access request manually in step 1, you will
-   receive an authentication code which needs to be pasted into the command prompt
-
-.. figure:: _static/images/authentication/access_request_auth_code.png
-   :class: with-border
-   :target: _static/images/authentication/access_request_auth_code.png
-
-3. Once you have completed the authentication process, the scheduler will
-   automatically resume its functionality.
 
 .. _clinician-configuration:
 
 Clinician Configuration
 """""""""""""""""""""""
 
-Before we can generate a schedule, we need to create a configuration file
-that specifies which clinicians are available, and how many weeks each 
-clinician should fulfill.
+The clinician configuration specifies which clinicians are available,
+which divisions they are covering, and how many weeks they should cover
+in each of their divisions.
 
 
 Creating a new configuration file
@@ -227,7 +33,7 @@ start a configuration file from scratch, simply click on `New Config`.
 
 .. warning::
    Unsaved changes to a configuration file will be discarded upon clicking
-   `New Config`.
+   on `New Config`.
 
 Saving the configuration file
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -244,7 +50,7 @@ Loading a configuration file
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you would like to open a previously created configuration file, simply
-click on `Open Config`, navigate to the location of the configuration file,
+click on `Open Config`, navigate to the location of the file,
 and select it.
 
 .. figure:: _static/images/configuration/load_config.png
@@ -257,7 +63,7 @@ Adding a new clinician
 ~~~~~~~~~~~~~~~~~~~~~~
 
 1. From the configuration tab, click `New Clinician`. You should see a
-form for supplying details.
+form for supplying clinician details.
 
 .. figure:: _static/images/configuration/add_clinician/step1_new_clinician.png
    :class: with-border
@@ -311,6 +117,46 @@ details on how to enter data in the edit dialog, see :ref:`adding-a-new-clinicia
    :class: with-border
    :target: _static/images/configuration/edit_clinician.png
 
+.. _requests_and_holidays:
+
+Requests & Holiday Weekends
+"""""""""""""""""""""""""""
+
+Clinician requests for time-off and the dates of holiday weekends are 
+supplied using a pair of excel files.
+
+Clinician Requests Excel File
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The requests file should have a single sheet per clinician that is in the
+configuration file you created in :ref:`clinician-configuration`. Inside
+each sheet, each request is entered on a separate row, containing the start
+and end date (inclusive) of the request. 
+
+.. warning::
+    Make sure each value in the Excel file is formatted as a date!
+
+.. figure:: _static/images/requests_holidays/excel_requests.png
+   :class: with-border
+   :target: _static/images/requests_holidays/excel_requests.png
+
+.. note::
+    To enter a request for a single day, use the same value for both start 
+    and end date.
+
+Holiday Weekends Excel File
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The holiday weekends file should have a single sheet with the dates of the
+holiday weekends, one in each row.
+
+.. warning::
+    Make sure each value in the Excel file is formatted as a date!
+
+.. figure:: _static/images/requests_holidays/excel_holidays.png
+   :class: with-border
+   :target: _static/images/requests_holidays/excel_holidays.png
+
 Scheduling
 """"""""""
 
@@ -321,73 +167,69 @@ Generating a schedule
 Once you have created a configuration file, you can switch over to the 
 `Scheduler` tab of the application in order to generate a schedule.
 
-1. From the scheduling tab, click on `Load` and select the configuration
-   file that you generated in :ref:`clinician-configuration` 
-
-.. figure:: _static/images/scheduling/generate_schedule/step1_load_config.png
-   :class: with-border
-   :target: _static/images/scheduling/generate_schedule/step1_load_config.png
-
-2. Enter the calendar year for the schedule that you want to generate.
-
-.. figure:: _static/images/scheduling/generate_schedule/step2_calendar_year.png
-   :class: with-border
-   :target: _static/images/scheduling/generate_schedule/step2_calendar_year.png
-
-3. **(Optional)** In order to retrieve the time-off requests that were populated
-   in Google calendar in :ref:`adding-clinician-requests`, we need to specify the
-   calendar ID. Open the calendar in your browser, and navigate to the 
-   `Settings and sharing` page.
-   On the setting page, navigate to the `Integrate calendar` section, and copy
-   the value under `Calendar ID` to your clipboard. 
-   Paste this value into the `Google Calendar ID` textbox on the `Scheduler`
-   tab.
-
-.. figure:: _static/images/scheduling/generate_schedule/step3_calendar_id.png
-   :class: with-border
-   :target: _static/images/scheduling/generate_schedule/step3_calendar_id.png
-
-4. **(Optional)** If you supplied a calendar ID in step 3, you can configure 
-   the options `Retrieve Time-off Requests` and `Retrieve Long Weekends` as necessary.
-   Enabling `Retrieve Time-off Requests` will read the time-off calendar events
-   from the calendar specified in `Calendar ID`, while enabling 
-   `Retrieve Long Weekends` will read the holiday events from that calendar.
-
-.. figure:: _static/images/scheduling/generate_schedule/step4_retrieve_events.png
-   :class: with-border
-   :target: _static/images/scheduling/generate_schedule/step4_retrieve_events.png
-
-5. **(Optional)** In the case that you only need to generate a schedule for
-   a subset of the calendar year, you can select the amount of blocks you need 
-   to generate by specifying a value in `Number of Blocks`. By default, the 
-   scheduler will generate a full schedule, corresponding to 26 blocks.
-
-.. figure:: _static/images/scheduling/generate_schedule/step5_number_of_blocks.png
-   :class: with-border
-   :target: _static/images/scheduling/generate_schedule/step5_number_of_blocks.png
-
-6. Click on `Generate`, and after a few moments you should see a preview of
-   the generated schedule in the table.
-
-   **(Optional)** See :ref:`authentication` in case you encounter problems
-   with Google calendar at this stage.
-
-.. figure:: _static/images/scheduling/generate_schedule/step6_generate_schedule.png
-   :class: with-border
-   :target: _static/images/scheduling/generate_schedule/step6_generate_schedule.png
+1. Load the configuration, requests, and holidays files that you created
+   earlier in :ref:`clinician-configuration` and :ref:`requests_and_holidays`.
 
 .. note::
+    You can be sure that everything loaded correctly by checking the output
+    on the right.
+
+.. figure:: _static/images/scheduling/generate_schedule/step1_load.png
+   :class: with-border
+   :target: _static/images/scheduling/generate_schedule/step1_load.png
+
+2. Set the starting calendar year for the schedule, as well as the number 
+   of 2-week blocks that you want the schedule to cover. By default, the calendar
+   year is the upcoming year, and the number of blocks is 26, to cover a full 
+   year.
+
+.. figure:: _static/images/scheduling/generate_schedule/step2_year_blocks.png
+   :class: with-border
+   :target: _static/images/scheduling/generate_schedule/step2_year_blocks.png
+
+3. **(Optional)** Check the `Shuffle?` checkbox if you would like the scheduler
+   to generate a slightly different schedule each time you click on `Generate`.
+
+.. figure:: _static/images/scheduling/generate_schedule/step3_optional_shuffle.png
+   :class: with-border
+   :target: _static/images/scheduling/generate_schedule/step3_optional_shuffle.png
+
+4. **(Optional)** Check the `Verbose Output` checkbox if you would like 
+   to see detailed output on the right after the scheduler finishes generating
+   the schedule.
+
+.. figure:: _static/images/scheduling/generate_schedule/step4_optional_verbose.png
+   :class: with-border
+   :target: _static/images/scheduling/generate_schedule/step4_optional_verbose.png
+
+5. Click on `Generate` to generate a schedule.
+
+.. warning::
+   Depending on the amount of clinicians and requests provided, it may take
+   some time to find an optimal schedule. 
+
+.. figure:: _static/images/scheduling/generate_schedule/step5_generate.png
+   :class: with-border
+   :target: _static/images/scheduling/generate_schedule/step5_generate.png
+
+.. warning::
    It is possible that the scheduler will not be able to come up with a 
-   schedule that satisfies your constraints. You can try adjusting 
-   some constraints by changing the minimum and maximum number of blocks of
-   clinicians in the configuration file. See :ref:`clinician-configuration`
-   for more information on changing the configuration file.
+   schedule that satisfies your constraints. This can be a result of either
+   of the following reasons:
+   
+   - There are not enough clinicians to distribute evenly throughout the year
+   - The minimum and maximum number of blocks of clinicians are too restrictive
+
+   Try changing the configuration file by adding new clinicians, or changing
+   the min/max blocks of different clinicians to allow for more flexibility.
+   
+   See :ref:`clinician-configuration` for more information on modifying the configuration file.
 
 Exporting a schedule
 ~~~~~~~~~~~~~~~~~~~~
 
 If you are satisfied with the generated schedule, you can choose to export
-it as an Excel file. There are two format options: `Yearly Export` and 
+it as an Excel file. There are two Excel format options: `Yearly Export` and 
 `Monthly Export`. 
 
 Selecting the `Yearly Export` option will generate an excel file with a single
@@ -407,46 +249,18 @@ clinician covers which division on which day.
    :class: with-border
    :target: _static/images/scheduling/export_schedule/export_monthly.png
 
-.. _publishing-a-schedule-to-google-calendar:
-
-Publishing a schedule to Google Calendar
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-If you are satisfied with the generated schedule, you can publish it
-to Google calendar, by clicking on `Publish`.
-
-.. figure:: _static/images/scheduling/publish_schedule/publish_schedule.png
-   :class: with-border
-   :target: _static/images/scheduling/publish_schedule/publish_schedule.png
-
-.. warning::
-   This process might take some time, especially if the number of events
-   to be published is quite large.
-
-Clearing a published schedule
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-If you want to remove all the published events created by the application,
-simply click on `Clear`.
-
-.. figure:: _static/images/scheduling/publish_schedule/clear_schedule.png
-   :class: with-border
-   :target: _static/images/scheduling/publish_schedule/clear_schedule.png
-
-.. warning::
-   This process might take some time, especially if the number of published
-   events is quite large.
-
 Sample Output
--------------
+"""""""""""""
 
-Yearly output format
+Yearly Excel Format
+~~~~~~~~~~~~~~~~~~~
 
 .. figure:: _static/images/scheduling/sample_yearly.png
    :class: with-border
    :target: _static/images/scheduling/sample_yearly.png
 
-Monthly output format
+Monthly Excel Format
+~~~~~~~~~~~~~~~~~~~~
 
 .. figure:: _static/images/scheduling/sample_monthly.png
    :class: with-border

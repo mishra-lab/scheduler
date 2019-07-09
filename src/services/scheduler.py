@@ -3,6 +3,7 @@ import math
 import os
 import random
 import sys
+import time
 from datetime import datetime, timedelta
 
 import pulp
@@ -223,7 +224,7 @@ class Scheduler:
     schedule based on the supplied clinician and division data.
     """
 
-    def __init__(self, num_blocks, clin_data={}, timeoff_data=[], long_weekends=[]):
+    def __init__(self, logger, num_blocks, clin_data={}, request_dict=[], holidays=[]):
         self.num_blocks = num_blocks
         self.num_weekends = num_blocks * BLOCK_SIZE
 
@@ -231,31 +232,37 @@ class Scheduler:
         self.divisions = {}
         self.holiday_map = {}
         self.long_weekends = []
+        self._logger = logger
         
-        self.set_long_weekends(long_weekends)
+        self.set_long_weekends(holidays)
         self.set_data(clin_data)
-        self.set_timeoff(timeoff_data)
+        self.set_timeoff(request_dict)
 
-    def generate(self, debug=False, shuffle=False):
+    def generate(self, verbose=False, shuffle=False):
         self.setup_solver()
         self.setup_problem(shuffle=shuffle)
-        ret = self.problem.solve(self.solver) == pulp.LpStatusOptimal
 
-        if debug:
-            print('objective value = {}'.format(pulp.value(self.problem.objective)))
-            print('conflicts per doc:')
-            for clinician in self.clinicians.values():
-                print(clinician.name)
-                assigned_blocksoff = clinician.get_block_vars(
-                    lambda x, clinician=clinician: x.block_num in clinician.blocks_off and x.get_value() == 1.0)
-                assigned_weekendsoff = clinician.get_weekend_vars(
-                    lambda x, clinician=clinician: x.week_num in clinician.weekends_off and x.get_value() == 1.0)
-                print('\t{} out of {} blocks'.format(
-                    len(assigned_blocksoff), len(clinician.blocks_off)))
-                print('\t{} out of {} weekends'.format(
-                    len(assigned_weekendsoff), len(clinician.weekends_off)))
+        started_solving = time.clock()
+        ret = self.problem.solve(self.solver) == pulp.LpStatusOptimal
+        finished_solving = time.clock()
                     
         if ret:
+            if verbose:
+                self._logger.write_line('Solved in: {} s'.format(finished_solving - started_solving))
+                self._logger.write_line('Objective function value: {}'.format(pulp.value(self.problem.objective)))
+                conflicts_str = 'Schedule Conflicts:'
+                for clinician in self.clinicians.values():
+                    assigned_blocksoff = clinician.get_block_vars(
+                        lambda x, clinician=clinician: x.block_num in clinician.blocks_off and x.get_value() == 1.0)
+                    assigned_weekendsoff = clinician.get_weekend_vars(
+                        lambda x, clinician=clinician: x.week_num in clinician.weekends_off and x.get_value() == 1.0)
+                    
+                    conflicts_str += ' {0} ({1}/{2} blocks, {3}/{4} weekends)'.format(
+                        clinician.name, len(assigned_blocksoff), len(clinician.blocks_off),
+                        len(assigned_weekendsoff), len(clinician.weekends_off)
+                    )
+                self._logger.write_line(conflicts_str)
+
             self.assign_schedule()
             # only keep assignments mapping
             divAssignments = dict.fromkeys(self.divisions.keys())
@@ -332,31 +339,26 @@ class Scheduler:
             data = json.load(f)
             self.set_data(data)
 
-    def set_timeoff(self, events):
+    def set_timeoff(self, request_dict):
         """
         Populates timeoff for each clinician in self.clinicians based
         on the supplied list of events.
         """
-        for event in events:
-            start = datetime.strptime(
-                event['start'].get('date'),
-                '%Y-%m-%d'
-            )
-            end = datetime.strptime(
-                event['end'].get('date'),
-                '%Y-%m-%d'
-            )
-            # creator = event['creator'].get('displayName')
-            creator = event['summary'].replace('[request] ', '')
+        for clin_name in request_dict:
+            if clin_name not in self.clinicians:
+                self._logger.write_line(
+                    'Clinician \"{}\" was not found in the configuration file. Skipping their requests.'.format(clin_name),
+                    level='WARNING')
+                continue
 
-            if creator in self.clinicians:
-                clinician = self.clinicians[creator]
+            clinician = self.clinicians[clin_name]
+            for start, end in request_dict[clin_name]:
                 # figure out whether this timeoff request intersects a 
                 # week or a weekend
                 weeks = []
                 weekends = []
                 curr = start
-                while curr < end:
+                while curr <= end:
                     week_num = curr.isocalendar()[1]
                     if curr.isoweekday() in range(1, 6):
                         if week_num not in weeks:
@@ -374,29 +376,20 @@ class Scheduler:
                 for week_num in weekends:
                     if week_num not in clinician.weekends_off:
                         clinician.weekends_off.append(week_num)
-            else:
-                print('Event creator {} was not found in clinicians'.format(creator))
 
-    def set_long_weekends(self, events):
-        lw = dict()
-        for event in events:
-            start = datetime.strptime(
-                event['start'].get('date'),
-                '%Y-%m-%d'
-            )
+    def set_long_weekends(self, holidays):
+        self.holiday_map.clear()
+        for date in holidays:
+            if date.isoweekday() == 1:
+                # Mon statutory holidays are associated with their weeknum - 1
+                #   (i.e.: the previous weeknum)
+                self.holiday_map[date] = date.isocalendar()[1] - 1
 
-            # Fri statutory holidays are associated with their regular weeknum
-            # Mon statutory holidays are associated with their weeknum - 1
-            #   (i.e.: the previous weeknum)
-            if start.isoweekday() == 1:
-                lw[event['start']['date']] = start.isocalendar()[1] - 1
-                # lw.add(start.isocalendar()[1] - 1)
-            elif start.isoweekday() == 5:
-                lw[event['start']['date']] = start.isocalendar()[1]
-                # lw.add(start.isocalendar()[1])
-
-        self.holiday_map = lw
-        self.long_weekends = list(lw.values())
+            elif date.isoweekday() == 5:
+                # Fri statutory holidays are associated with their regular weeknum
+                self.holiday_map[date] = date.isocalendar()[1]
+        
+        self.long_weekends = list(self.holiday_map.values())
     
     def setup_problem(self, shuffle=False):
         """
