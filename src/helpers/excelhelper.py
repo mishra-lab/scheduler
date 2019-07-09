@@ -17,7 +17,7 @@ class ExcelFormatException(Exception):
         self.message = message
 
     def __str__(self):
-        return self.message + ' Filename: {}'.format(self.file)
+        return self.message + '\nFilename: {}'.format(self.file)
 
 
 class ExcelHelper:
@@ -236,6 +236,20 @@ class ExcelHelper:
                 if start is None and end is None: break 
                 elif start is None or end is None:
                     raise ExcelFormatException(file=filename, message='Incorrect format for requests file!')
+
+                if type(start) is str:
+                    try:
+                        start = datetime.strptime(start, '%d-%b-%Y')
+                    except ValueError:
+                        wb.close()
+                        raise ExcelFormatException(file=filename, message='Incorrect date format! Make sure all dates are of the same form as 01-Jan-2019')
+
+                if type(end) is str:
+                    try:
+                        end = datetime.strptime(end, '%d-%b-%Y')
+                    except ValueError:
+                        wb.close()
+                        raise ExcelFormatException(file=filename, message='Incorrect date format! Make sure all dates are of the same form as 01-Jan-2019')
                     
                 if sheet in request_dict:
                     request_dict[sheet].append(Range(start, end))
@@ -258,6 +272,14 @@ class ExcelHelper:
             date = ws['A{0}'.format(row)].value
 
             if date is None: break
+
+            if type(date) is str:
+                try:
+                    date = datetime.strptime(date, '%d-%b-%Y')
+                except ValueError:
+                    wb.close()
+                    raise ExcelFormatException(file=filename, message='Incorrect date format! Make sure all dates are of the same form as 01-Jan-2019')
+
             holidays.append(date)
             row += 1
 
