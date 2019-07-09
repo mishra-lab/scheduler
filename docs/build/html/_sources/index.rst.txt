@@ -12,8 +12,8 @@ Built in Python.
 Features
 --------
 - Generation of schedules given clinician requests
-- Integration with Google Calendar
 - Robust and intuitive Qt GUI
+- Excel exporting options
 
 Screenshots
 -----------

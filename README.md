@@ -4,8 +4,8 @@ Built in Python.
 
 ## Features
 - [x] Generation of schedules given clinician requests
-- [x] Integration with Google Calendar
 - [x] Robust and intuitive Qt GUI
+- [x] Excel exporting options
 
 ## Download it
 You can find the latest version of the executable at the [releases area](https://github.com/c-uhs/scheduler/releases). 
