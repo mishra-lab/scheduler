@@ -17,7 +17,12 @@ Features
 
 Screenshots
 -----------
-TODO...
+
+.. image:: _static/images/screenshots/configuration.png
+
+|
+
+.. image:: _static/images/screenshots/scheduling.png
 
 .. toctree::
     :hidden:
