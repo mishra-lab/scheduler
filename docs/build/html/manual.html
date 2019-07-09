@@ -47,16 +47,19 @@
 <li><a class="reference internal" href="#editing-an-existing-clinician" id="id10">Editing an existing clinician</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#requests-holiday-weekends" id="id11">Requests &amp; Holiday Weekends</a></li>
-<li><a class="reference internal" href="#scheduling" id="id12">Scheduling</a><ul>
-<li><a class="reference internal" href="#generating-a-schedule" id="id13">Generating a schedule</a></li>
-<li><a class="reference internal" href="#exporting-a-schedule" id="id14">Exporting a schedule</a></li>
+<li><a class="reference internal" href="#requests-holiday-weekends" id="id11">Requests &amp; Holiday Weekends</a><ul>
+<li><a class="reference internal" href="#clinician-requests-excel-file" id="id12">Clinician Requests Excel File</a></li>
+<li><a class="reference internal" href="#holiday-weekends-excel-file" id="id13">Holiday Weekends Excel File</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#sample-output" id="id15">Sample Output</a><ul>
-<li><a class="reference internal" href="#application-output" id="id16">Application Output</a></li>
-<li><a class="reference internal" href="#yearly-excel-format" id="id17">Yearly Excel Format</a></li>
-<li><a class="reference internal" href="#monthly-excel-format" id="id18">Monthly Excel Format</a></li>
+<li><a class="reference internal" href="#scheduling" id="id14">Scheduling</a><ul>
+<li><a class="reference internal" href="#generating-a-schedule" id="id15">Generating a schedule</a></li>
+<li><a class="reference internal" href="#exporting-a-schedule" id="id16">Exporting a schedule</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#sample-output" id="id17">Sample Output</a><ul>
+<li><a class="reference internal" href="#yearly-excel-format" id="id18">Yearly Excel Format</a></li>
+<li><a class="reference internal" href="#monthly-excel-format" id="id19">Monthly Excel Format</a></li>
 </ul>
 </li>
 </ul>
@@ -152,8 +155,40 @@ details on how to enter data in the edit dialog, see <a class="reference interna
 </div>
 </div>
 <div class="section" id="requests-holiday-weekends">
-<h2>Requests &amp; Holiday Weekends<a class="headerlink" href="#requests-holiday-weekends" title="Permalink to this headline">¶</a></h2>
-<p>TODO….</p>
+<span id="requests-and-holidays"></span><h2>Requests &amp; Holiday Weekends<a class="headerlink" href="#requests-holiday-weekends" title="Permalink to this headline">¶</a></h2>
+<p>Clinician requests for time-off and the dates of holiday weekends are
+supplied using a pair of excel files.</p>
+<div class="section" id="clinician-requests-excel-file">
+<h3>Clinician Requests Excel File<a class="headerlink" href="#clinician-requests-excel-file" title="Permalink to this headline">¶</a></h3>
+<p>The requests file should have a single sheet per clinician that is in the
+configuration file you created in <a class="reference internal" href="#clinician-configuration"><span class="std std-ref">Clinician Configuration</span></a>. Inside
+each sheet, each request is entered on a separate row, containing the start
+and end date (inclusive) of the request.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Make sure each value in the Excel file is formatted as a date!</p>
+</div>
+<div class="figure">
+<a class="reference external image-reference" href="_static/images/requests_holidays/excel_requests.png"><img alt="_images/excel_requests.png" class="with-border" src="_images/excel_requests.png" /></a>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">To enter a request for a single day, use the same value for both start
+and end date.</p>
+</div>
+</div>
+<div class="section" id="holiday-weekends-excel-file">
+<h3>Holiday Weekends Excel File<a class="headerlink" href="#holiday-weekends-excel-file" title="Permalink to this headline">¶</a></h3>
+<p>The holiday weekends file should have a single sheet with the dates of the
+holiday weekends, one in each row.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Make sure each value in the Excel file is formatted as a date!</p>
+</div>
+<div class="figure">
+<a class="reference external image-reference" href="_static/images/requests_holidays/excel_holidays.png"><img alt="_images/excel_holidays.png" class="with-border" src="_images/excel_holidays.png" /></a>
+</div>
+</div>
 </div>
 <div class="section" id="scheduling">
 <h2>Scheduling<a class="headerlink" href="#scheduling" title="Permalink to this headline">¶</a></h2>
@@ -161,20 +196,71 @@ details on how to enter data in the edit dialog, see <a class="reference interna
 <span id="id3"></span><h3>Generating a schedule<a class="headerlink" href="#generating-a-schedule" title="Permalink to this headline">¶</a></h3>
 <p>Once you have created a configuration file, you can switch over to the
 <cite>Scheduler</cite> tab of the application in order to generate a schedule.</p>
-<p>TODO….</p>
+<ol class="arabic simple">
+<li>Load the configuration, requests, and holidays files that you created
+earlier in <a class="reference internal" href="#clinician-configuration"><span class="std std-ref">Clinician Configuration</span></a> and <a class="reference internal" href="#requests-and-holidays"><span class="std std-ref">Requests &amp; Holiday Weekends</span></a>.</li>
+</ol>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">It is possible that the scheduler will not be able to come up with a
-schedule that satisfies your constraints. You can try adjusting
-some constraints by changing the minimum and maximum number of blocks of
-clinicians in the configuration file. See <a class="reference internal" href="#clinician-configuration"><span class="std std-ref">Clinician Configuration</span></a>
-for more information on changing the configuration file.</p>
+<p class="last">You can be sure that everything loaded correctly by checking the output
+on the right.</p>
+</div>
+<div class="figure">
+<a class="reference external image-reference" href="_static/images/scheduling/generate_schedule/step1_load.png"><img alt="_images/step1_load.png" class="with-border" src="_images/step1_load.png" /></a>
+</div>
+<ol class="arabic simple" start="2">
+<li>Set the starting calendar year for the schedule, as well as the number
+of 2-week blocks that you want the schedule to cover. By default, the calendar
+year is the upcoming year, and the number of blocks is 26, to cover a full
+year.</li>
+</ol>
+<div class="figure">
+<a class="reference external image-reference" href="_static/images/scheduling/generate_schedule/step2_year_blocks.png"><img alt="_images/step2_year_blocks.png" class="with-border" src="_images/step2_year_blocks.png" /></a>
+</div>
+<ol class="arabic simple" start="3">
+<li><strong>(Optional)</strong> Check the <cite>Shuffle?</cite> checkbox if you would like the scheduler
+to generate a slightly different schedule each time you click on <cite>Generate</cite>.</li>
+</ol>
+<div class="figure">
+<a class="reference external image-reference" href="_static/images/scheduling/generate_schedule/step3_optional_shuffle.png"><img alt="_images/step3_optional_shuffle.png" class="with-border" src="_images/step3_optional_shuffle.png" /></a>
+</div>
+<ol class="arabic simple" start="4">
+<li><strong>(Optional)</strong> Check the <cite>Verbose Output</cite> checkbox if you would like
+to see detailed output on the right after the scheduler finishes generating
+the schedule.</li>
+</ol>
+<div class="figure">
+<a class="reference external image-reference" href="_static/images/scheduling/generate_schedule/step4_optional_verbose.png"><img alt="_images/step4_optional_verbose.png" class="with-border" src="_images/step4_optional_verbose.png" /></a>
+</div>
+<ol class="arabic simple" start="5">
+<li>Click on <cite>Generate</cite> to generate a schedule.</li>
+</ol>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Depending on the amount of clinicians and requests provided, it may take
+some time to find an optimal schedule.</p>
+</div>
+<div class="figure">
+<a class="reference external image-reference" href="_static/images/scheduling/generate_schedule/step5_generate.png"><img alt="_images/step5_generate.png" class="with-border" src="_images/step5_generate.png" /></a>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p>It is possible that the scheduler will not be able to come up with a
+schedule that satisfies your constraints. This can be a result of either
+of the following reasons:</p>
+<ul class="simple">
+<li>There are not enough clinicians to distribute evenly throughout the year</li>
+<li>The minimum and maximum number of blocks of clinicians are too restrictive</li>
+</ul>
+<p>Try changing the configuration file by adding new clinicians, or changing
+the min/max blocks of different clinicians to allow for more flexibility.</p>
+<p class="last">See <a class="reference internal" href="#clinician-configuration"><span class="std std-ref">Clinician Configuration</span></a> for more information on modifying the configuration file.</p>
 </div>
 </div>
 <div class="section" id="exporting-a-schedule">
 <h3>Exporting a schedule<a class="headerlink" href="#exporting-a-schedule" title="Permalink to this headline">¶</a></h3>
 <p>If you are satisfied with the generated schedule, you can choose to export
-it as an Excel file. There are two format options: <cite>Yearly Export</cite> and
+it as an Excel file. There are two Excel format options: <cite>Yearly Export</cite> and
 <cite>Monthly Export</cite>.</p>
 <p>Selecting the <cite>Yearly Export</cite> option will generate an excel file with a single
 sheet, displaying the clinicians that are covering a particular division
@@ -193,10 +279,6 @@ clinician covers which division on which day.</p>
 </div>
 <div class="section" id="sample-output">
 <h2>Sample Output<a class="headerlink" href="#sample-output" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="application-output">
-<h3>Application Output<a class="headerlink" href="#application-output" title="Permalink to this headline">¶</a></h3>
-<p>TODO…</p>
-</div>
 <div class="section" id="yearly-excel-format">
 <h3>Yearly Excel Format<a class="headerlink" href="#yearly-excel-format" title="Permalink to this headline">¶</a></h3>
 <div class="figure">
