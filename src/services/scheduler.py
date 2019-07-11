@@ -414,18 +414,18 @@ class Scheduler:
         self._build_longweekend_constraints(clinicians)
         self._build_weekend_constraints(clinicians)
         self._build_adjacency_variables(divisions)
-        appeasement_objs = self._build_appeasement_objectives(clinicians)
 
-        num_clin = len(clinicians)
-        num_div = len(divisions)
+        block_conflicts_obj = self._build_block_objective(clinicians)
+        weekend_conflicts_obj = self._build_weekend_objective(clinicians)
+        adjacency_obj = self._build_adjacency_objective(clinicians)
 
         # make sure to normalize objectives, and weigh them equally
         self.problem.setObjective(
-              (1 / 3) * (1 / (num_clin * self.num_blocks * num_div)) * appeasement_objs[0]
-            + (1 / 3) * (1 / (num_clin * self.num_weekends)) * appeasement_objs[1]
-            + (1 / 3) * (1 / (num_clin * self.num_blocks * num_div)) * self._build_adjacency_objective(clinicians)
+              (1 / 3) * (1 / len(block_conflicts_obj)) * block_conflicts_obj
+            + (1 / 3) * (1 / len(weekend_conflicts_obj)) * weekend_conflicts_obj
+            + (1 / 3) * (1 / len(adjacency_obj)) * adjacency_obj
         )
-
+        
     def _build_clinician_variables(self, divisions, clinicians):
         # create clinician BlockVariables
         for div in divisions:
@@ -593,7 +593,7 @@ class Scheduler:
             )
         return pulp.lpSum(adjacency_vars)
 
-    def _build_appeasement_objectives(self, clinicians):
+    def _build_weekend_objective(self, clinicians):
         wa_variables = []
         for clinician in clinicians:
             wa_variables.extend(
@@ -608,6 +608,9 @@ class Scheduler:
                  ]
             )
 
+        return pulp.lpSum(wa_variables)
+
+    def _build_block_objective(self, clinicians):
         ba_variables = []
         for clinician in clinicians:
             ba_variables.extend(
@@ -622,10 +625,7 @@ class Scheduler:
                  ]
             )
 
-        return (
-            pulp.lpSum(wa_variables),
-            pulp.lpSum(ba_variables)
-        )
+        return pulp.lpSum(ba_variables)
 
     def assign_schedule(self):
         """

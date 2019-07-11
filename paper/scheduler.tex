@@ -7,6 +7,7 @@
 \usepackage{hyperref}
 \usepackage{bbm}
 \usepackage{physics}
+\usepackage{xcolor}
 
 \newcommand{\mc}{\mathcal}
 \newcommand{\bb}{\mathbb}
@@ -44,7 +45,9 @@ We will attempt to solve \ref{problem} using an integer linear program. The assi
 		X_{c, b, d} \in \{0, 1\}: &\text{ clinician $c$ covers block $b$ for division $d$} \\
 		Y_{c, w} \in \{0, 1\}: &\text{ clinician $c$ covers weekend $w$}
 	\end{align}
-Note that weekends are not distinguished according to division, since the clinician assigned covers all divisions.
+Note that weekends are not distinguished according to division, since the clinician assigned covers all divisions. \\
+
+\textcolor{red}{\textbf{IMPORTANT: This assumes that each clinician works at each of the divisions $1, \ldots, D$. Some of the formulas below are not directly applicable to the case where some clinician only works a subset of those divisions}}
 
 \subsection{Constraints} \label{constraints}
 	\begin{itemize}
