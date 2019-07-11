@@ -1,11 +1,44 @@
+\subsection{Overview}
 At St. Michael's Hospital, the (???) division offers general ID and HIV consultation throughout the whole year, during regular work weeks as well as weekends and holidays. The clinicians in the division typically receive a schedule in advance, outlining their on-call service dates for the full year. In the yearly schedule each clinician is assigned to blocks of regular work weeks, as well as weekends. Each block corresponds to two consecutive work weeks. Apart from long (holiday) weekends, a work week starts on Monday at 8 A.M. and ends on Friday at 5 P.M. Conversely, weekend service starts on Friday at 5 P.M., and goes on until the start of the next work week on Monday at 8 A.M. During the weekend, all clinicians in the department provide both ID and HIV consultation, while during the week some clinicians only provide one of the two services. \\
 
 In order to provide quality service and ensure patients get the best care they can, it is important to prevent under- and over-working of clinicians. Several constraints are placed on the assignments in hopes of preventing such issues. Firstly, each clinician has limits on the number of blocks they can and must work during the year, depending on the type of consultation. For instance, a clinician might have to provide 3-5 blocks of general ID consultation as well as 2-3 blocks of HIV consultation throughout the year. These limits may change from year to year as the number of clinicians in the department changes. Moreover, the schedule does not assign a clinician to work for two blocks or two weekends in a row. It is especially important to prevent over-working during weekends, as the demand for the on-call service increases drastically. Hence, the schedule attempts to distribute both regular and holiday weekends equally among all clinicians. \\
 
-Apart from maintaining a balanced work load among clinicians, the schedule also tries to accommodate their preferences. Clinicians provide their requests for time off ahead of schedule generation so that they can be integrated into the schedule. They are free to specify days, weeks or weekends off, with the understanding that any blocks overlapping with their request will be assigned to a different clinician, if possible. For example, if a clinician only requests Monday and Tuesday off, the schedule will generally avoid assigning the entire block to that clinician. Clinicians also prefer to have their weekend and block assignments close together, so the schedule tries to take this into account when distributing assignments.
-
-%Clinicians offering ID and HIV services at St. Michael's Hospital are scheduled throughout the year to receive patients during on-call hours. Each clinician is typically scheduled for a full week or a full weekend of on-call service. To prevent under- and over-working of clinicians, they each have a minimum and maximum number of weeks that they are required to work. Moreover, during holidays weekends, the work-load for on-call service increases drastically, and it is important to distribute these weekends equally. At the same time, clinicians often request to not be put on service during certain days or weeks, and the generated schedule should attempt to respect those requests as best as possible. Other considerations also need to be taken into account, such as making sure someone is available for on-call service at any time of the year, and preventing multiple back-to-back assignments for a single clinician. It is clear that ensuring all of these conditions are met manually, especially with an increasing number of clinicians, is a difficult task and can lead to mismanagement of the schedule. Therefore, in this paper we attempt to develop an efficient algorithm that can generate a satisfying schedule, while optimizing clinician and patient contentment. \\
-
-%In order to develop an algorithm, we need to formalize the variables and constraints of the problem mathematically. Table [??] presents the sets and indices that are used in the definition of the constraints. [...] \\
+Apart from maintaining a balanced work load among clinicians, the schedule also tries to accommodate their preferences. Clinicians provide their requests for time off ahead of schedule generation so that they can be integrated into the schedule. They are free to specify days, weeks or weekends off, with the understanding that any blocks overlapping with their request will be assigned to a different clinician, if possible. For example, if a clinician only requests Monday and Tuesday off, the schedule will generally avoid assigning the entire block to that clinician. Clinicians also prefer to have their weekend and block assignments close together, so the schedule tries to take this into account when distributing assignments. \\
 
 [...]
+
+\subsection{Mathematical Formulation}
+[...] \\
+
+Table \ref{tbl:sets-indices} presents the sets and indices that are used in the definition of the constraints. Table \ref{tbl:variables-constants} presents the constants and variables in the problem.
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{ c c l }
+		\hline
+		set                                  & index & description                       \\ \hline
+		$\mathcal{D} = \{1, \ldots, D \}$    & $d$   & services/divisions                \\
+		$\mathcal{C} = \{1, \ldots, C \}$    & $c$   & clinicians                        \\
+		$\mathcal{B} = \{1, \ldots, B \}$    & $b$   & blocks                            \\
+		$\mathcal{W} = \{1, \ldots, W \}$    & $w$   & weekends                          \\
+		$\mathcal{L} \subset \mathcal{W}$    &       & long weekends                     \\
+		$\mathcal{BR}_c \subset \mathcal{B}$ &       & block requests of clinician $c$   \\
+		$\mathcal{WR}_c \subset \mathcal{W}$ &       & weekend requests of clinician $c$
+	\end{tabular}
+	\caption{Description of sets and indices in the problem}
+	\label{tbl:sets-indices}
+\end{table}
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{ c l }
+		\hline
+		name                       & description                                                          \\ \hline
+		$X_{c, b, d} \in \{0, 1\}$ & assignment of clinician $c$ for division $d$ on block $b$            \\
+		$Y_{c, w} \in \{0, 1\}$    & assignment of clinician $c$ on weekend $w$                           \\
+		$m_{c, d}$                 & minimum number of blocks clinician $c$ should cover for division $d$ \\
+		$M_{c, d}$                 & maximum number of blocks clinician $c$ should cover for division $d$
+	\end{tabular}
+	\caption{Description of variables and constants in the problem}
+	\label{tbl:variables-constants}
+\end{table}
