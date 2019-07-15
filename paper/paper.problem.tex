@@ -1,44 +1,29 @@
-\subsection{Overview}
 At St. Michael's Hospital, the (???) division offers general ID and HIV consultation throughout the whole year, during regular work weeks as well as weekends and holidays. The clinicians in the division typically receive a schedule in advance, outlining their on-call service dates for the full year. In the yearly schedule each clinician is assigned to blocks of regular work weeks, as well as weekends. Each block corresponds to two consecutive work weeks. Apart from long (holiday) weekends, a work week starts on Monday at 8 A.M. and ends on Friday at 5 P.M. Conversely, weekend service starts on Friday at 5 P.M., and goes on until the start of the next work week on Monday at 8 A.M. During the weekend, all clinicians in the department provide both ID and HIV consultation, while during the week some clinicians only provide one of the two services. \\
 
 In order to provide quality service and ensure patients get the best care they can, it is important to prevent under- and over-working of clinicians. Several constraints are placed on the assignments in hopes of preventing such issues. Firstly, each clinician has limits on the number of blocks they can and must work during the year, depending on the type of consultation. For instance, a clinician might have to provide 3-5 blocks of general ID consultation as well as 2-3 blocks of HIV consultation throughout the year. These limits may change from year to year as the number of clinicians in the department changes. Moreover, the schedule does not assign a clinician to work for two blocks or two weekends in a row. It is especially important to prevent over-working during weekends, as the demand for the on-call service increases drastically. Hence, the schedule attempts to distribute both regular and holiday weekends equally among all clinicians. \\
 
-Apart from maintaining a balanced work load among clinicians, the schedule also tries to accommodate their preferences. Clinicians provide their requests for time off ahead of schedule generation so that they can be integrated into the schedule. They are free to specify days, weeks or weekends off, with the understanding that any blocks overlapping with their request will be assigned to a different clinician, if possible. For example, if a clinician only requests Monday and Tuesday off, the schedule will generally avoid assigning the entire block to that clinician. Clinicians also prefer to have their weekend and block assignments close together, so the schedule tries to take this into account when distributing assignments. \\
-
-[...]
-
-\subsection{Mathematical Formulation}
-[...] \\
-
-Table \ref{tbl:sets-indices} presents the sets and indices that are used in the definition of the constraints. Table \ref{tbl:variables-constants} presents the constants and variables in the problem.
+Apart from maintaining a balanced work load among clinicians, the schedule also tries to accommodate their preferences. Clinicians provide their requests for time off ahead of schedule generation so that they can be integrated into the schedule. They are free to specify days, weeks or weekends off, with the understanding that any blocks overlapping with their request will be assigned to a different clinician, if possible. For example, if a clinician only requests Monday and Tuesday off, the schedule will generally avoid assigning the entire block to that clinician. Clinicians also prefer to have their weekend and block assignments close together, so the schedule tries to take this into account when distributing assignments. A summary of the outlined constraints is given in Table \ref{tbl:constraint-summary}.
 
 \begin{table}[h]
 	\centering
-	\begin{tabular}{ c c l }
+	\begin{tabular}{ l l }
 		\hline
-		set                                  & index & description                       \\ \hline
-		$\mathcal{D} = \{1, \ldots, D \}$    & $d$   & services/divisions                \\
-		$\mathcal{C} = \{1, \ldots, C \}$    & $c$   & clinicians                        \\
-		$\mathcal{B} = \{1, \ldots, B \}$    & $b$   & blocks                            \\
-		$\mathcal{W} = \{1, \ldots, W \}$    & $w$   & weekends                          \\
-		$\mathcal{L} \subset \mathcal{W}$    &       & long weekends                     \\
-		$\mathcal{BR}_c \subset \mathcal{B}$ &       & block requests of clinician $c$   \\
-		$\mathcal{WR}_c \subset \mathcal{W}$ &       & weekend requests of clinician $c$
+		\textbf{Constraint Name} & \textbf{Description}                                                                                                           \\ \hline
+		Block Coverage           & \makecell[l]{each division needs to have exactly \\ one clinician that covers any given block}                                 \\ \hline
+		Weekend Coverage         & \makecell[l]{every weekend needs to have exactly \\ one clinician that covers it}                                              \\ \hline
+		Min/Max                  & \makecell[l]{in a given division, each clinician can only \\ work between the minimum and maximum \\ number of allowed blocks} \\ \hline
+		No Consecutive Blocks    & \makecell[l]{any clinician should not work \\ two consecutive blocks, across all divisions}                                    \\ \hline
+		No Consecutive Weekends  & \makecell[l]{any clinician should not work two consecutive \\ weekends}                                                        \\ \hline
+		Equal Weekends           & \makecell[l]{weekends should be equally distributed \\ between clinicians}                                                     \\ \hline
+		Equal Holidays           & \makecell[l]{long weekends should be equally distributed \\ between clinicians}                                                \\ \hline
+		Block Requests           & \makecell[l]{each clinician can request to be off service \\ during certain blocks throughout the year}                        \\ \hline
+		Weekend Requests         & \makecell[l]{each clinician can request to be off service \\ during certain weekends throughout the year}                      \\ \hline
+		Block-Weekend Adjacency  & \makecell[l]{the block and weekend assignments of a given \\ clinician should be adjacent}
 	\end{tabular}
-	\caption{Description of sets and indices in the problem}
-	\label{tbl:sets-indices}
+	\caption{Summary of the constraints for the clinician scheduling problem}
+	\label{tbl:constraint-summary}
 \end{table}
 
-\begin{table}[h]
-	\centering
-	\begin{tabular}{ c l }
-		\hline
-		name                       & description                                                          \\ \hline
-		$X_{c, b, d} \in \{0, 1\}$ & assignment of clinician $c$ for division $d$ on block $b$            \\
-		$Y_{c, w} \in \{0, 1\}$    & assignment of clinician $c$ on weekend $w$                           \\
-		$m_{c, d}$                 & minimum number of blocks clinician $c$ should cover for division $d$ \\
-		$M_{c, d}$                 & maximum number of blocks clinician $c$ should cover for division $d$
-	\end{tabular}
-	\caption{Description of variables and constants in the problem}
-	\label{tbl:variables-constants}
-\end{table}
+In most scheduling problems, the constraints can be divided into hard and soft constraints. Hard constraints must be satisfied by any candidate solution, while soft constraints can be used to select a more favourable solution from all candidate solutions. Typically, soft constraints are encoded as an objective that needs to be maximized or minimized, rather than a constraint. In the case of the clinician scheduling problem, we chose Block Requests, Weekend Requests and Block-Weekend Adjacency as our soft constraints, while the rest of the constraints are hard. Though it is important to take clinician requests into account when constructing the schedule, it is crucial to that the work-load of the schedule is balanced among all clinicians, and the needs of the patients are fulfilled. \\
+
+It is important to note that even though the yearly schedule is generally accurate and adhered to, clinicians are able to exchange certain weeks or days throughout the year. The approach to solving the clinician scheduling problem does not attempt to take these exchanges into account, and only focuses on the full year time horizon.
