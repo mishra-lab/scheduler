@@ -1,0 +1,32 @@
+Table \ref{tbl:sets-indices} presents the sets and indices that are used in the definition of the constraints. Table \ref{tbl:variables-constants} presents the constants and variables in the problem.
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{ c c l }
+		\hline
+		\textbf{Set}                         & \textbf{Index} & \textbf{Description}              \\ \hline
+		$\mathcal{D} = \{1, \ldots, D \}$    & $d$            & services/divisions                \\
+		$\mathcal{C} = \{1, \ldots, C \}$    & $c$            & clinicians                        \\
+		$\mathcal{B} = \{1, \ldots, B \}$    & $b$            & blocks                            \\
+		$\mathcal{W} = \{1, \ldots, W \}$    & $w$            & weekends                          \\
+		$\mathcal{L} \subset \mathcal{W}$    &                & long weekends                     \\
+		$\mathcal{BR}_c \subset \mathcal{B}$ &                & block requests of clinician $c$   \\
+		$\mathcal{WR}_c \subset \mathcal{W}$ &                & weekend requests of clinician $c$
+	\end{tabular}
+	\caption{Description of sets and indices in the problem}
+	\label{tbl:sets-indices}
+\end{table}
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{ c l }
+		\hline
+		\textbf{Name}              & \textbf{Description}                                                 \\ \hline
+		$X_{c, b, d} \in \{0, 1\}$ & assignment of clinician $c$ for division $d$ on block $b$            \\
+		$Y_{c, w} \in \{0, 1\}$    & assignment of clinician $c$ on weekend $w$                           \\
+		$m_{c, d}$                 & minimum number of blocks clinician $c$ should cover for division $d$ \\
+		$M_{c, d}$                 & maximum number of blocks clinician $c$ should cover for division $d$
+	\end{tabular}
+	\caption{Description of variables and constants in the problem}
+	\label{tbl:variables-constants}
+\end{table}
