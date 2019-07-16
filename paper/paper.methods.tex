@@ -1,4 +1,7 @@
-Table \ref{tbl:sets-indices} presents the sets and indices that are used in the definition of the constraints. Table \ref{tbl:variables-constants} presents the constants and variables in the problem.
+In this section, we present an application of 0-1 Linear Programming to solve the clinician scheduling problem presented in Section \ref{???}. First, we describe the sets, indices and variables present in the formulation of the program. Later we convert the constraints given in Table \ref{tbl:constraint-summary} into mathematical terms, and outline the objective function of the linear program.
+
+\subsection{Sets and Indices}
+We denote the set of all services/divisions that clinicians in the department can provide as $\mathcal{D}$. It is important to note that in the following formulation, it is assumed that all clinicians are able to provide all services in this set, although this may not be true in practice. The set of all clinicians in the department is denoted as $\mathcal{C}$. The sets of blocks and weekends that clinicians will be assigned to are denoted as $\mathcal{B}$ and $\mathcal{W}$ respectively. Note that the size of a block is not constrained, and can be adapted to the needs of the given department. A subset of weekends are denoted $\mathcal{L}$, corresponding to the long/holiday weekends throughout the year. Lastly, we denote with $\mathcal{BR}_c$ and $\mathcal{WR}_c$ the block and weekend requests of clinicians as subsets of all blocks and weekends, respectively. For instance, if clinician $c$'s requests intersect with blocks 1 and 2, and weekend 1, then $\mathcal{BR}_c = \{1, 2\}$ and $\mathcal{WR}_c = \{1\}$. Table \ref{tbl:sets-indices} presents a summary of the sets and indices described. 
 
 \begin{table}[h]
 	\centering
@@ -17,16 +20,32 @@ Table \ref{tbl:sets-indices} presents the sets and indices that are used in the 
 	\label{tbl:sets-indices}
 \end{table}
 
+\subsection{Variables}
+Since each clinician may be assigned to work for any service, during any block of the year, we denote such an assignment as $X_{c, b, d}$. A value of 1 indicates that the given clinician $c$ is assigned to cover division $d$ during block $b$. Similarly, we define weekend assignments as $Y_{c, w}$, although these are not indexed by service, as clinicians are expected to provide all services during the weekends. The optimization of the soft constraint Block-Weekend Adjacency is done by maximizing the product $X_{c, b, d} \cdot Y_{c, w}$ for adjacent blocks and weekends. In order to formulate such an objective as a linear function of variables, we introduce another set of variables, denoted by $Z_{c, b, d}$, with additional constraints on its range. Further details regarding this variable are described in Sections \ref{???} and \ref{???}. Lastly, we introduce a set of constants $m_{c, d}$ and $M_{c, d}$ to constrain the number of blocks each clinician is allowed to work during the year. Table \ref{tbl:variables-constants} presents a summary of the constants and variables in the problem.
+
 \begin{table}[h]
 	\centering
 	\begin{tabular}{ c l }
 		\hline
 		\textbf{Name}              & \textbf{Description}                                                 \\ \hline
-		$X_{c, b, d} \in \{0, 1\}$ & assignment of clinician $c$ for division $d$ on block $b$            \\
+		$X_{c, b, d} \in \{0, 1\}$ & assignment of clinician $c$ for service/division $d$ on block $b$    \\
 		$Y_{c, w} \in \{0, 1\}$    & assignment of clinician $c$ on weekend $w$                           \\
+		$Z_{c, b, d} \in \{0, 1\}$ & helper variable for optimizing Block-Weekend adjacency               \\
 		$m_{c, d}$                 & minimum number of blocks clinician $c$ should cover for division $d$ \\
 		$M_{c, d}$                 & maximum number of blocks clinician $c$ should cover for division $d$
 	\end{tabular}
 	\caption{Description of variables and constants in the problem}
 	\label{tbl:variables-constants}
 \end{table}
+
+\subsection{Constraints}
+We now present the hard constraints in Table \ref{tbl:constraint-summary} in light of the mathematical setup given above.
+
+	\begin{align}
+		&\sum_{c=1}^{C} X_{c, b, d} = 1 &&\forall\; b\in \mathcal{B}, d \in \mathcal{D} \tag{Block Coverage} \label{eqn:constr-block-cov} \\
+		&\sum_{c=1}^{C} Y_{c, w} = 1 &&\forall\; w\in \mathcal{W} \tag{Weekend Coverage} \label{eqn:constr-weekend-cov} \\
+		&m_{c, d} \leq \sum_{b=1}^{B} X_{c, b, d} \leq M_{c, d} &&\forall\; c\in\mathcal{C}, d\in\mathcal{D} \tag{Min/Max} \label{eqn:constr-min-max} \\
+		&X_{c, b, d} + X_{c, b + 1, d} \leq 1 &&\forall c\in\mathcal{C}, b \leq B - 1, d\in\mathcal{D} \tag{No Consecutive Blocks} \label{eqn:constr-no-consec-blocks} \\
+		&Y_{c, w} + Y_{c, w + 1} \leq 1 &&\forall c\in\mathcal{C}, w \leq W - 1 \tag{No Consecutive Weekends} \label{eqn:constr-no-consec-weekends}
+%		\sum_{c=1}^{C} X_{c, b, d} = 1 \qquad\forall\; b\in \mathcal{B}, d \in \mathcal{D} \tag{Block Coverage} \label{eqn:constr-block-cov} \\		
+	\end{align}
