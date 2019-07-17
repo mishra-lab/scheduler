@@ -50,3 +50,26 @@ We now present the hard constraints in Table \ref{tbl:constraint-summary} in lig
 	&\floor*{\frac{W}{C}} \leq \sum_{w=1}^W Y_{c, w} \leq \ceil*{\frac{W}{C}} &&\forall c\in\mathcal{C} \tag{Equal Weekends} \label{eqn:constr-equal-weekends} \\
 	&\floor*{\frac{\abs{\mathcal{L}}}{C}} \leq \sum_{w\in\mathcal{L}} Y_{c, w} \leq \ceil*{\frac{\abs{\mathcal{L}}}{C}} &&\forall c\in\mathcal{C} \tag{Equal Holidays} \label{eqn:constr-equal-holidays}
 \end{align}
+
+\subsection{Objectives}
+As mentioned briefly in Section \ref{???}, the soft constraints of the clinician scheduling problem are: (1) satisfying clinician block off requests, (2) satisfying clinician weekend off requests, and (3) assigning weekends closer to blocks. We convert these constraints into linear objective functions of the binary variables defined in Section \ref{???}. The first two objectives have a straight-forward formulation as linear functions:
+\begin{align}
+	&\max_X Q_1(X) = \max_X \sum_{c=1}^{C} \sum_{b=1}^{B} \sum_{d=1}^{D} (-1)^{\ind(b\,\in\,\mathcal{BR}_c)}\cdot X_{c, b, d} \\
+	&\max_Y Q_2(Y) = \max_Y \sum_{c=1}^{C} \sum_{w=1}^{W} (-1)^{\ind(w\,\in\,\mathcal{WR}_c)}\cdot Y_{c, w}
+\end{align}
+where $\ind(\cdot)$ is the indicator function that has value 1 when the condition is met and 0 otherwise. In these two objectives, we penalize any assignments that conflict with a block or weekend request, and aim to maximize the non-conflicting assignments. The Block-Weekend Adjacency is optimized by considering the product $X_{c, b, d}\cdot Y_{c, w}$ for values of $w$ ``adjacent'' to the value of $b$. For instance, if clinician $c$ wants to work during weeks 1 and 2 (that is, block $b = 1$), as well as weekend 1, we would like the product $X_{c, b=1, d} \cdot Y_{c, w=1}$ to be 1, since that indicates both variables are assigned. If at least one of the two variables is not assigned, the product will be 0. This leads to the obvious maximization objective
+\begin{align}
+	&\max_{X, Y} Q_3(X, Y) = \max_{X, Y} \sum_{min}^{max} ...
+\end{align}
+However, as it is, $Q_3$ is not a linear function of its variables and cannot be solved in a linear programming framework. The general approach used to convert such functions into linear objectives is by introducing a helper variable [ref \ref{???}]. In our case, introducing a variable $Z_{c, b, d}$ for every product $X_{c, b, d} \cdot Y_{c, w}$ with $w = ...$, and constraining $Z$ such that 
+\begin{align}
+	&Z_{c, b, d} \leq X_{c, b, d} \\
+	&Z_{c, b, d} \leq Y_{c, w=...} &&\forall d\in\mathcal{D}
+\end{align}
+allows us to rewrite $Q_3$ as linear function of $Z$,
+\begin{align*}
+	&\max_{Z} Q_3(Z) = \max_{Z} \sum_{c=1}^{C} \sum_{b=1}^{B} \sum_{d=1}^{D} Z_{c, b, d}
+\end{align*}
+Indeed, whenever $X_{c, b, d} \cdot Y_{c, w} = 1$, $Z_{c, b, d}$ can attain a maximum value of 1, and whenever $X_{c, b, d} \cdot Y_{c, w} = 0$, at least one of $X_{c, b, d}$ or $Y_{c, w}$ must be 0, so $Z_{c, b, d}$ will be constrained to attain a maximum value of 0. \\
+
+[...]
