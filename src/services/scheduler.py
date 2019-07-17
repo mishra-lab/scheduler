@@ -408,23 +408,24 @@ class Scheduler:
         self._build_clinician_variables(divisions, clinicians)
         self._build_coverage_constraints(divisions, clinicians)
         self._build_minmax_constraints(divisions)
-        self._build_consec_constraints(clinicians)
-        self._build_spread_constraints(clinicians)
+        self._build_consec_blocks_constraints(clinicians)
+        self._build_spread_blocks_constraints(clinicians)
+        self._build_spread_weekends_constraints(clinicians)
         self._build_longweekend_constraints(clinicians)
         self._build_weekend_constraints(clinicians)
         self._build_adjacency_variables(divisions)
-        appeasement_objs = self._build_appeasement_objectives(clinicians)
 
-        num_clin = len(clinicians)
-        num_div = len(divisions)
+        block_conflicts_obj = self._build_block_objective(clinicians)
+        weekend_conflicts_obj = self._build_weekend_objective(clinicians)
+        adjacency_obj = self._build_adjacency_objective(clinicians)
 
         # make sure to normalize objectives, and weigh them equally
         self.problem.setObjective(
-              (1 / 3) * (1 / (num_clin * self.num_blocks * num_div)) * appeasement_objs[0]
-            + (1 / 3) * (1 / (num_clin * self.num_weekends)) * appeasement_objs[1]
-            + (1 / 3) * (1 / (num_clin * self.num_blocks * num_div)) * self._build_adjacency_objective(clinicians)
+              (1 / 3) * (1 / len(block_conflicts_obj)) * block_conflicts_obj
+            + (1 / 3) * (1 / len(weekend_conflicts_obj)) * weekend_conflicts_obj
+            + (1 / 3) * (1 / len(adjacency_obj)) * adjacency_obj
         )
-
+        
     def _build_clinician_variables(self, divisions, clinicians):
         # create clinician BlockVariables
         for div in divisions:
@@ -473,7 +474,7 @@ class Scheduler:
                 self.problem.add(sum_ <= max_)
                 self.problem.add(sum_ >= min_)
 
-    def _build_consec_constraints(self, clinicians):
+    def _build_consec_blocks_constraints(self, clinicians):
         for clinician in clinicians:
             for block_num in range(1, self.num_blocks):
                 # if a clinician works a given block, they should not work any
@@ -484,20 +485,10 @@ class Scheduler:
                 )
                 self.problem.add(sum_ <= 1)
 
-            # at most 1 consecutive weekend of work
-            for week_num in range(1, self.num_weekends):
-                sum_ = pulp.lpSum(
-                    [_.get_var() for _ in clinician.get_weekend_vars(
-                        lambda x, week_num=week_num: x.week_num in (
-                            week_num, week_num + 1)
-                    )]
-                )
-                self.problem.add(sum_ <= 1)
-
-    def _build_spread_constraints(self, clinicians):
+    def _build_spread_blocks_constraints(self, clinicians):
+        # on-off-on-off-on constraint for block assignment
         # we need at least 5 consecutive blocks to implement this constraint
-        # on-off-on-off-on
-        if self.num_blocks <= 5: return
+        if self.num_blocks < 5: return
 
         for clinician in clinicians:
             for block_num in range(1, self.num_blocks - 3):
@@ -507,6 +498,21 @@ class Scheduler:
                         lambda x, block_num=block_num: x.block_num in (block_num, block_num + 2, block_num + 4))]
                 )
                 self.problem.add(sum_ <= 2)
+
+    def _build_spread_weekends_constraints(self, clinicians):
+        # spreading out weekend assignments
+        # needs at least 4 weekends
+        if self.num_weekends < 4: return
+
+        for clinician in clinicians:
+            for week_num in range(1, self.num_weekends - 2):
+                # constraint: X_i + X_{i+1} + X_{i+2} + X_{i+3} <= 1
+                sum_ = pulp.lpSum(
+                    [_.get_var() for _ in clinician.get_weekend_vars(
+                        lambda x, week_num=week_num: x.week_num in list(range(week_num, week_num + 4))
+                    )]
+                )
+                self.problem.add(sum_ <= 1)
 
     def _build_longweekend_constraints(self, clinicians):
         if self.long_weekends:
@@ -587,7 +593,7 @@ class Scheduler:
             )
         return pulp.lpSum(adjacency_vars)
 
-    def _build_appeasement_objectives(self, clinicians):
+    def _build_weekend_objective(self, clinicians):
         wa_variables = []
         for clinician in clinicians:
             wa_variables.extend(
@@ -602,6 +608,9 @@ class Scheduler:
                  ]
             )
 
+        return pulp.lpSum(wa_variables)
+
+    def _build_block_objective(self, clinicians):
         ba_variables = []
         for clinician in clinicians:
             ba_variables.extend(
@@ -616,10 +625,7 @@ class Scheduler:
                  ]
             )
 
-        return (
-            pulp.lpSum(wa_variables),
-            pulp.lpSum(ba_variables)
-        )
+        return pulp.lpSum(ba_variables)
 
     def assign_schedule(self):
         """
