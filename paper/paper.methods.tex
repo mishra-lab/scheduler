@@ -41,11 +41,12 @@ Since each clinician may be assigned to work for any service, during any block o
 \subsection{Constraints}
 We now present the hard constraints in Table \ref{tbl:constraint-summary} in light of the mathematical setup given above.
 
-	\begin{align}
-		&\sum_{c=1}^{C} X_{c, b, d} = 1 &&\forall\; b\in \mathcal{B}, d \in \mathcal{D} \tag{Block Coverage} \label{eqn:constr-block-cov} \\
-		&\sum_{c=1}^{C} Y_{c, w} = 1 &&\forall\; w\in \mathcal{W} \tag{Weekend Coverage} \label{eqn:constr-weekend-cov} \\
-		&m_{c, d} \leq \sum_{b=1}^{B} X_{c, b, d} \leq M_{c, d} &&\forall\; c\in\mathcal{C}, d\in\mathcal{D} \tag{Min/Max} \label{eqn:constr-min-max} \\
-		&X_{c, b, d} + X_{c, b + 1, d} \leq 1 &&\forall c\in\mathcal{C}, b \leq B - 1, d\in\mathcal{D} \tag{No Consecutive Blocks} \label{eqn:constr-no-consec-blocks} \\
-		&Y_{c, w} + Y_{c, w + 1} \leq 1 &&\forall c\in\mathcal{C}, w \leq W - 1 \tag{No Consecutive Weekends} \label{eqn:constr-no-consec-weekends}
-%		\sum_{c=1}^{C} X_{c, b, d} = 1 \qquad\forall\; b\in \mathcal{B}, d \in \mathcal{D} \tag{Block Coverage} \label{eqn:constr-block-cov} \\		
-	\end{align}
+\begin{align}
+	&\sum_{c=1}^{C} X_{c, b, d} = 1 &&\forall b\in \mathcal{B}, d \in \mathcal{D} \tag{Block Coverage} \label{eqn:constr-block-cov} \\
+	&\sum_{c=1}^{C} Y_{c, w} = 1 &&\forall w\in \mathcal{W} \tag{Weekend Coverage} \label{eqn:constr-weekend-cov} \\
+	&m_{c, d} \leq \sum_{b=1}^{B} X_{c, b, d} \leq M_{c, d} &&\forall\ c\in\mathcal{C}, d\in\mathcal{D} \tag{Min/Max} \label{eqn:constr-min-max} \\
+	&X_{c, b, d} + X_{c, b + 1, d} \leq 1 &&\forall c\in\mathcal{C}, b \leq B - 1, d\in\mathcal{D} \tag{No Consecutive Blocks} \label{eqn:constr-no-consec-blocks} \\
+	&Y_{c, w} + Y_{c, w + 1} \leq 1 &&\forall c\in\mathcal{C}, w \leq W - 1 \tag{No Consecutive Weekends} \label{eqn:constr-no-consec-weekends} \\
+	&\floor*{\frac{W}{C}} \leq \sum_{w=1}^W Y_{c, w} \leq \ceil*{\frac{W}{C}} &&\forall c\in\mathcal{C} \tag{Equal Weekends} \label{eqn:constr-equal-weekends} \\
+	&\floor*{\frac{\abs{\mathcal{L}}}{C}} \leq \sum_{w\in\mathcal{L}} Y_{c, w} \leq \ceil*{\frac{\abs{\mathcal{L}}}{C}} &&\forall c\in\mathcal{C} \tag{Equal Holidays} \label{eqn:constr-equal-holidays}
+\end{align}
