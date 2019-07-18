@@ -54,22 +54,34 @@ We now present the hard constraints in Table \ref{tbl:constraint-summary} in lig
 \subsection{Objectives}
 As mentioned briefly in Section \ref{???}, the soft constraints of the clinician scheduling problem are: (1) satisfying clinician block off requests, (2) satisfying clinician weekend off requests, and (3) assigning weekends closer to blocks. We convert these constraints into linear objective functions of the binary variables defined in Section \ref{???}. The first two objectives have a straight-forward formulation as linear functions:
 \begin{align}
-	&\max_X Q_1(X) = \max_X \sum_{c=1}^{C} \sum_{b=1}^{B} \sum_{d=1}^{D} (-1)^{\ind(b\,\in\,\mathcal{BR}_c)}\cdot X_{c, b, d} \\
-	&\max_Y Q_2(Y) = \max_Y \sum_{c=1}^{C} \sum_{w=1}^{W} (-1)^{\ind(w\,\in\,\mathcal{WR}_c)}\cdot Y_{c, w}
+	&Q_1(X) = \sum_{c=1}^{C} \sum_{b=1}^{B} \sum_{d=1}^{D} (-1)^{\ind(b\,\in\,\mathcal{BR}_c)}\cdot X_{c, b, d} \tag{Block Requests} \label{eqn:obj-block-requests}\\
+	&Q_2(Y) = \sum_{c=1}^{C} \sum_{w=1}^{W} (-1)^{\ind(w\,\in\,\mathcal{WR}_c)}\cdot Y_{c, w} \tag{Weekend Requests} \label{eqn:obj-weekend-requests}
 \end{align}
 where $\ind(\cdot)$ is the indicator function that has value 1 when the condition is met and 0 otherwise. In these two objectives, we penalize any assignments that conflict with a block or weekend request, and aim to maximize the non-conflicting assignments. The Block-Weekend Adjacency is optimized by considering the product $X_{c, b, d}\cdot Y_{c, w}$ for values of $w$ ``adjacent'' to the value of $b$. For instance, if clinician $c$ wants to work during weeks 1 and 2 (that is, block $b = 1$), as well as weekend 1, we would like the product $X_{c, b=1, d} \cdot Y_{c, w=1}$ to be 1, since that indicates both variables are assigned. If at least one of the two variables is not assigned, the product will be 0. This leads to the obvious maximization objective
 \begin{align}
-	&\max_{X, Y} Q_3(X, Y) = \max_{X, Y} \sum_{min}^{max} ...
+	&Q_3(X, Y) = \sum_{min}^{max} ... \tag{Block-Weekend Adjacency} \label{eqn:obj-block-weekend-adj}
 \end{align}
-However, as it is, $Q_3$ is not a linear function of its variables and cannot be solved in a linear programming framework. The general approach used to convert such functions into linear objectives is by introducing a helper variable [ref \ref{???}]. In our case, introducing a variable $Z_{c, b, d}$ for every product $X_{c, b, d} \cdot Y_{c, w}$ with $w = ...$, and constraining $Z$ such that 
+However, as it is, $Q_3$ is not a linear function of its variables and cannot be optimized in a linear programming framework. The general approach used to convert such functions into linear objectives is by introducing a helper variable and additional constraints [ref \ref{???}]. In our case, introducing a variable $Z_{c, b, d}$ for every product $X_{c, b, d} \cdot Y_{c, w}$ with $w = ...$, and constraining $Z$ such that 
 \begin{align}
 	&Z_{c, b, d} \leq X_{c, b, d} \\
 	&Z_{c, b, d} \leq Y_{c, w=...} &&\forall d\in\mathcal{D}
 \end{align}
 allows us to rewrite $Q_3$ as linear function of $Z$,
-\begin{align*}
-	&\max_{Z} Q_3(Z) = \max_{Z} \sum_{c=1}^{C} \sum_{b=1}^{B} \sum_{d=1}^{D} Z_{c, b, d}
-\end{align*}
-Indeed, whenever $X_{c, b, d} \cdot Y_{c, w} = 1$, $Z_{c, b, d}$ can attain a maximum value of 1, and whenever $X_{c, b, d} \cdot Y_{c, w} = 0$, at least one of $X_{c, b, d}$ or $Y_{c, w}$ must be 0, so $Z_{c, b, d}$ will be constrained to attain a maximum value of 0. \\
+\begin{align}
+	&Q_3(Z) = \sum_{c=1}^{C} \sum_{b=1}^{B} \sum_{d=1}^{D} Z_{c, b, d}
+\end{align}
+Indeed, whenever $X_{c, b, d} \cdot Y_{c, w} = 1$, $Z_{c, b, d}$ can attain a maximum value of 1, and whenever $X_{c, b, d} \cdot Y_{c, w} = 0$, at least one of $X_{c, b, d}$ or $Y_{c, w}$ must be 0, so $Z_{c, b, d}$ will be constrained to attain a maximum value of 0, giving us the correct adjacency maximization objective. \\
+
+As we can see, these objectives turn our clinician scheduling problem into a multiple objective optimization problem. The most common approach to solving such problems is by optimizing a weighted sum of the normalized objective functions, as this guarantees the optimal solution to be Pareto optimal [ref \ref{???}]. This is the approach we decided to use in our problem, to ensure all three objectives are considered when finding a solution. Under the assumption that each clinician in $\mathcal{C}$ provides all types of services in $\mathcal{D}$, the normalized objectives can be written as follows,
+\begin{align}
+	&\bar{Q}_1(X) = \frac{Q_1(X)}{C \cdot B \cdot D} \tag{Block Requests} \label{eqn:norm-obj-block-requests}\\
+	&\bar{Q}_2(Y) = \frac{Q_2(Y)}{C \cdot W} \tag{Weekend Requests} \label{eqn:norm-obj-weekend-requests} \\
+	&\bar{Q}_3(Z) = \frac{Q_3(Z)}{C \cdot B \cdot D} \tag{Block-Weekend Adjacency} \label{eqn:norm-obj-block-weekend-adj}
+\end{align}
+where we divided each of the original objective functions by the sum of the absolute value of its coefficients [ref \ref{???}]. The final weighted objective is given by
+\begin{equation}
+	\max_{X, Y, Z} \alpha \bar{Q}_1(X) + \beta \bar{Q}_2(Y) + (1 - \alpha - \beta) \bar{Q}_3(Z)
+\end{equation}
+with $0 \leq \alpha, \beta \leq 1$. \\
 
 [...]
