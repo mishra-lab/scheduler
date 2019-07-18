@@ -57,18 +57,18 @@ As mentioned briefly in Section \ref{???}, the soft constraints of the clinician
 	&Q_1(X) = \sum_{c=1}^{C} \sum_{b=1}^{B} \sum_{d=1}^{D} (-1)^{\ind(b\,\in\,\mathcal{BR}_c)}\cdot X_{c, b, d} \tag{Block Requests} \label{eqn:obj-block-requests}\\
 	&Q_2(Y) = \sum_{c=1}^{C} \sum_{w=1}^{W} (-1)^{\ind(w\,\in\,\mathcal{WR}_c)}\cdot Y_{c, w} \tag{Weekend Requests} \label{eqn:obj-weekend-requests}
 \end{align}
-where $\ind(\cdot)$ is the indicator function that has value 1 when the condition is met and 0 otherwise. In these two objectives, we penalize any assignments that conflict with a block or weekend request, and aim to maximize the non-conflicting assignments. The Block-Weekend Adjacency is optimized by considering the product $X_{c, b, d}\cdot Y_{c, w}$ for values of $w$ ``adjacent'' to the value of $b$. For instance, if clinician $c$ wants to work during weeks 1 and 2 (that is, block $b = 1$), as well as weekend 1, we would like the product $X_{c, b=1, d} \cdot Y_{c, w=1}$ to be 1, since that indicates both variables are assigned. If at least one of the two variables is not assigned, the product will be 0. This leads to the obvious maximization objective
+where $\ind(\cdot)$ is the indicator function that has value 1 when the condition is met and 0 otherwise. In these two objectives, we penalize any assignments that conflict with a block or weekend request, and aim to maximize the non-conflicting assignments. The Block-Weekend Adjacency is optimized by considering the product $X_{c, b, d}\cdot Y_{c, w}$ for values of $w$ ``adjacent'' to the value of $b$. For instance, clinicians might want to be assigned during a weekend that falls within an assigned block. So if clinician $c$ is assigned to work during block 3, corresponding to weeks 5 and 6 assuming 2-week blocks, they might also want to be assigned to work during weekend 5. In that case, we would like $X_{c, b=3, d} \cdot Y_{c, w=5}$ to be 1, since that indicates both variables are assigned. If at least one of the two variables is not assigned, the product will be 0. This leads to the obvious maximization objective
 \begin{align}
 	&Q_3(X, Y) = \sum_{c=1}^{C} \sum_{b=1}^{B} \sum_{d=1}^{D} X_{c, b, d}\cdot Y_{c, w=\varphi(b)} \tag{Block-Weekend Adjacency} \label{eqn:obj-block-weekend-adj}
 \end{align}
-where $\varphi(b)$ maps a block one-to-one to an adjacent weekend, by whichever definition of adjacency being considered. For instance, in the above example we will have $\varphi(b) = 2b - 1$. \\
+where $\varphi(b)$ maps a block one-to-one to an adjacent weekend, by some appropriate definition of adjacency. For instance, in the above example we will have $\varphi(b) = 2b - 1$. \\
 
 However, as it is, $Q_3$ is not a linear function of its variables and cannot be optimized in a linear programming framework. The general approach used to convert such functions into linear objectives is by introducing a helper variable and additional constraints [ref \ref{???}]. In our case, introducing a variable $Z_{c, b, d}$ for every product $X_{c, b, d} \cdot Y_{c, w}$ with $w = \varphi(b)$, and constraining $Z$ such that 
 \begin{align}
 	&Z_{c, b, d} \leq X_{c, b, d} \\
 	&Z_{c, b, d} \leq Y_{c, w=\varphi(b)} &&\forall d\in\mathcal{D}
 \end{align}
-allows us to rewrite $Q_3$ as linear function of $Z$,
+allows us to rewrite $Q_3$ as a linear function of $Z$,
 \begin{align}
 	&Q_3(Z) = \sum_{c=1}^{C} \sum_{b=1}^{B} \sum_{d=1}^{D} Z_{c, b, d}
 \end{align}
@@ -80,9 +80,9 @@ As we can see, these objectives turn our clinician scheduling problem into a mul
 	&\bar{Q}_2(Y) = \frac{Q_2(Y)}{C \cdot W} \tag{Weekend Requests} \label{eqn:norm-obj-weekend-requests} \\
 	&\bar{Q}_3(Z) = \frac{Q_3(Z)}{C \cdot B \cdot D} \tag{Block-Weekend Adjacency} \label{eqn:norm-obj-block-weekend-adj}
 \end{align}
-where we divided each of the original objective functions by the sum of the absolute value of its coefficients [ref \ref{???}]. The final weighted objective is given by
+where we divided each of the original objective functions by the sum of the absolute values of its coefficients [ref \ref{???}]. The final weighted objective is given by
 \begin{equation}
-	\max_{X, Y, Z} \alpha \bar{Q}_1(X) + \beta \bar{Q}_2(Y) + (1 - \alpha - \beta) \bar{Q}_3(Z)
+	\alpha \bar{Q}_1(X) + \beta \bar{Q}_2(Y) + (1 - \alpha - \beta) \bar{Q}_3(Z)
 \end{equation}
 with $0 \leq \alpha, \beta \leq 1$. \\
 
