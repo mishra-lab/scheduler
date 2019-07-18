@@ -59,12 +59,14 @@ As mentioned briefly in Section \ref{???}, the soft constraints of the clinician
 \end{align}
 where $\ind(\cdot)$ is the indicator function that has value 1 when the condition is met and 0 otherwise. In these two objectives, we penalize any assignments that conflict with a block or weekend request, and aim to maximize the non-conflicting assignments. The Block-Weekend Adjacency is optimized by considering the product $X_{c, b, d}\cdot Y_{c, w}$ for values of $w$ ``adjacent'' to the value of $b$. For instance, if clinician $c$ wants to work during weeks 1 and 2 (that is, block $b = 1$), as well as weekend 1, we would like the product $X_{c, b=1, d} \cdot Y_{c, w=1}$ to be 1, since that indicates both variables are assigned. If at least one of the two variables is not assigned, the product will be 0. This leads to the obvious maximization objective
 \begin{align}
-	&Q_3(X, Y) = \sum_{min}^{max} ... \tag{Block-Weekend Adjacency} \label{eqn:obj-block-weekend-adj}
+	&Q_3(X, Y) = \sum_{c=1}^{C} \sum_{b=1}^{B} \sum_{d=1}^{D} X_{c, b, d}\cdot Y_{c, w=\varphi(b)} \tag{Block-Weekend Adjacency} \label{eqn:obj-block-weekend-adj}
 \end{align}
-However, as it is, $Q_3$ is not a linear function of its variables and cannot be optimized in a linear programming framework. The general approach used to convert such functions into linear objectives is by introducing a helper variable and additional constraints [ref \ref{???}]. In our case, introducing a variable $Z_{c, b, d}$ for every product $X_{c, b, d} \cdot Y_{c, w}$ with $w = ...$, and constraining $Z$ such that 
+where $\varphi(b)$ maps a block one-to-one to an adjacent weekend, by whichever definition of adjacency being considered. For instance, in the above example we will have $\varphi(b) = 2b - 1$. \\
+
+However, as it is, $Q_3$ is not a linear function of its variables and cannot be optimized in a linear programming framework. The general approach used to convert such functions into linear objectives is by introducing a helper variable and additional constraints [ref \ref{???}]. In our case, introducing a variable $Z_{c, b, d}$ for every product $X_{c, b, d} \cdot Y_{c, w}$ with $w = \varphi(b)$, and constraining $Z$ such that 
 \begin{align}
 	&Z_{c, b, d} \leq X_{c, b, d} \\
-	&Z_{c, b, d} \leq Y_{c, w=...} &&\forall d\in\mathcal{D}
+	&Z_{c, b, d} \leq Y_{c, w=\varphi(b)} &&\forall d\in\mathcal{D}
 \end{align}
 allows us to rewrite $Q_3$ as linear function of $Z$,
 \begin{align}
