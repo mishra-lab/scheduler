@@ -1,7 +1,9 @@
-In this section, we present an application of 0-1 Linear Programming to solve the clinician scheduling problem presented in Section \ref{???}. First, we describe the sets, indices and variables present in the formulation of the program. Later we convert the constraints given in Table \ref{tbl:constraint-summary} into mathematical terms, and outline the objective function of the linear program.
+In this section, we present an application of 0-1 Linear Programming to solve the clinician scheduling problem presented in Section \ref{???}. First, we describe the sets, indices and variables present in the formulation of the program. We then convert the constraints given in Table \ref{tbl:constraint-summary} into mathematical terms, and outline the objective function of the linear program.
 
 \subsection{Sets and Indices}
-We denote the set of all services/divisions that clinicians in the department can provide as $\mathcal{D}$. It is important to note that in the following formulation, it is assumed that all clinicians are able to provide all services in this set, although this may not be true in practice. The set of all clinicians in the department is denoted as $\mathcal{C}$. The sets of blocks and weekends that clinicians will be assigned to are denoted as $\mathcal{B}$ and $\mathcal{W}$ respectively. Note that the size of a block is not constrained, and can be adapted to the needs of the given department. A subset of weekends are denoted $\mathcal{L}$, corresponding to the long/holiday weekends throughout the year. Lastly, we denote with $\mathcal{BR}_c$ and $\mathcal{WR}_c$ the block and weekend requests of clinicians as subsets of all blocks and weekends, respectively. For instance, if clinician $c$'s requests intersect with blocks 1 and 2, and weekend 1, then $\mathcal{BR}_c = \{1, 2\}$ and $\mathcal{WR}_c = \{1\}$. Table \ref{tbl:sets-indices} presents a summary of the sets and indices described. 
+We denote the set of all services (or sometimes referred to as divisions) %or I think services is good (vs. services/divisions) as you define two types of services (ID vs. HIV) in the problem statement
+that clinicians in a single department can provide as $\mathcal{D}$. The following formulation assumes that all clinicians are able to provide all services. The set of all clinicians in the department is denoted as $\mathcal{C}$. The sets of blocks and weekends that clinicians will be assigned to are denoted as $\mathcal{B}$ and $\mathcal{W}$ respectively. The size of a block is not constrained and can be adapted %how?
+to the needs of the given department. A subset of weekends are denoted $\mathcal{L}$, corresponding to established long/holiday weekends such as the Canadian Civic Day weekend in August. Lastly, we denote with $\mathcal{BR}_c$ and $\mathcal{WR}_c$ the block and weekend requests of clinicians as subsets of all blocks and weekends, respectively. For instance, if clinician $c$'s requests intersect with blocks 1 and 2, and weekend 1, then $\mathcal{BR}_c = \{1, 2\}$ and $\mathcal{WR}_c = \{1\}$. Table \ref{tbl:sets-indices} presents a summary of the sets and indices described. 
 
 \begin{table}[h]
 	\centering
@@ -21,7 +23,7 @@ We denote the set of all services/divisions that clinicians in the department ca
 \end{table}
 
 \subsection{Variables}
-Since each clinician may be assigned to work for any service, during any block of the year, we denote such an assignment as $X_{c, b, d}$. A value of 1 indicates that the given clinician $c$ is assigned to cover division $d$ during block $b$. Similarly, we define weekend assignments as $Y_{c, w}$, although these are not indexed by service, as clinicians are expected to provide all services during the weekends. The optimization of the soft constraint Block-Weekend Adjacency is done by maximizing the product $X_{c, b, d} \cdot Y_{c, w}$ for adjacent blocks and weekends. In order to formulate such an objective as a linear function of variables, we introduce another set of variables, denoted by $Z_{c, b, d}$, with additional constraints on its range. Further details regarding this variable are described in Sections \ref{???} and \ref{???}. Lastly, we introduce a set of constants $m_{c, d}$ and $M_{c, d}$ to constrain the minimal and maximal number of blocks each clinician is allowed to work during the year. Table \ref{tbl:variables-constants} presents a summary of the constants and variables in the problem.
+Since each clinician may be assigned to work on any service, during any block of the year, we denote such an assignment as $X_{c, b, d}$. A value of 1 indicates that the given clinician $c$ is assigned to cover division $d$ during block $b$. Similarly, we define weekend assignments as $Y_{c, w}$, although these are not indexed by service, as clinicians are expected to provide all services during the weekends. To optimize the soft constraint Block-Weekend Adjacency, we maximize the product $X_{c, b, d} \cdot Y_{c, w}$ for adjacent blocks and weekends. To formulate such an objective as a linear function of variables, we introduce another set of variables, denoted by $Z_{c, b, d}$, with additional constraints on its range. Further details regarding this variable are described in Sections \ref{???} and \ref{???}. We then introduce a set of constants $m_{c, d}$ and $M_{c, d}$ to constrain the minimal and maximal number of blocks each clinician is allowed to work during the year. Table \ref{tbl:variables-constants} presents a summary of the constants and variables in the problem.
 
 \begin{table}[h]
 	\centering
@@ -39,7 +41,7 @@ Since each clinician may be assigned to work for any service, during any block o
 \end{table}
 
 \subsection{Constraints}
-We now present the hard constraints in Table \ref{tbl:constraint-summary} in light of the mathematical setup given above.
+We now present the hard constraints in Table \ref{tbl:constraint-summary} using the variables defined above.
 
 \begin{align}
 	&\sum_{c=1}^{C} X_{c, b, d} = 1 &&\forall b\in \mathcal{B}, d \in \mathcal{D} \tag{Block Coverage} \label{eqn:constr-block-cov} \\
@@ -52,18 +54,19 @@ We now present the hard constraints in Table \ref{tbl:constraint-summary} in lig
 \end{align}
 
 \subsection{Objectives}
-As mentioned briefly in Section \ref{???}, the soft constraints of the clinician scheduling problem are: (1) satisfying clinician block off requests, (2) satisfying clinician weekend off requests, and (3) assigning weekends closer to blocks. We convert these constraints into linear objective functions of the binary variables defined in Section \ref{???}. The first two objectives have a straightforward formulation as linear functions:
+As described in Section \ref{???}, the soft constraints of the clinician scheduling problem include: (1) satisfying clinician block off requests, (2) satisfying clinician weekend off requests, and (3) assigning weekends closer to blocks. We convert these soft constraints into linear objective functions of the binary variables defined in Section \ref{???}. The first two objectives can be written as the following linear functions:  %minor suggestion - consider numbering the objectives for ease later when saying things like "these two objectives"...or writing the full name of the objectives instead of 'this' and 'these' as sometimes can get confusing what the 'this' and the 'these' refer to. 
 \begin{align}
 	&Q_1(X) = \sum_{c=1}^{C} \sum_{b=1}^{B} \sum_{d=1}^{D} (-1)^{\ind(b\,\in\,\mathcal{BR}_c)}\cdot X_{c, b, d} \tag{Block Requests} \label{eqn:obj-block-requests}\\
 	&Q_2(Y) = \sum_{c=1}^{C} \sum_{w=1}^{W} (-1)^{\ind(w\,\in\,\mathcal{WR}_c)}\cdot Y_{c, w} \tag{Weekend Requests} \label{eqn:obj-weekend-requests}
 \end{align}
-where $\ind(\cdot)$ is the indicator function that has value 1 when the condition is met and 0 otherwise. In these two objectives, we penalize any assignments that conflict with a block or weekend request, and aim to maximize the non-conflicting assignments. The Block-Weekend Adjacency is optimized by considering the product $X_{c, b, d}\cdot Y_{c, w}$ for values of $w$ ``adjacent'' to the value of $b$. For instance, clinicians might want to be assigned during a weekend that falls within an assigned block. So if clinician $c$ is assigned to work during block 3, corresponding to weeks 5 and 6 assuming 2-week blocks, they might also want to be assigned to work during weekend 5. In that case, we would like $X_{c, b=3, d} \cdot Y_{c, w=5}$ to be 1, since that indicates both variables are assigned. If at least one of the two variables is not assigned, the product will be 0. This leads to the obvious maximization objective
+where $\ind(\cdot)$ is the indicator function that has value 1 when the condition is met and 0 otherwise. In the above two objectives, we penalize any assignments that conflict with a block or weekend request, and aim to maximize the non-conflicting assignments. The Block-Weekend Adjacency is optimized by considering the product $X_{c, b, d}\cdot Y_{c, w}$ for values of $w$ ``adjacent'' to the value of $b$. For instance, clinicians might want to be assigned during a weekend that falls within an assigned block. So if clinician $c$ is assigned to work during block 3, corresponding to weeks 5 and 6 assuming 2-week blocks, they might also want to be assigned to work during weekend 5. In that case, we would like $X_{c, b=3, d} \cdot Y_{c, w=5}$ to be 1, since that indicates both variables are assigned. If at least one of the two variables is not assigned, the product will be 0. This leads to the maximization objective  %avoid editorial adjectives
 \begin{align}
 	&Q_3(X, Y) = \sum_{c=1}^{C} \sum_{b=1}^{B} \sum_{d=1}^{D} X_{c, b, d}\cdot Y_{c, w=\varphi(b)} \tag{Block-Weekend Adjacency} \label{eqn:obj-block-weekend-adj}
 \end{align}
 where $\varphi(b)$ maps a block one-to-one to an adjacent weekend, by some appropriate definition of adjacency. For instance, in the above example we will have $\varphi(b) = 2b - 1$. \\
+% I really liked the example explanation!
 
-However, as it is, $Q_3$ is not a linear function of its variables and cannot be optimized in a linear programming framework. The general approach used to convert such functions into linear objectives is by introducing a helper variable and additional constraints [ref \ref{???}]. In our case, introducing a variable $Z_{c, b, d}$ for every product $X_{c, b, d} \cdot Y_{c, w}$ with $w = \varphi(b)$, and constraining $Z$ such that 
+However, as it is, $Q_3$ is not a linear function of its variables and cannot be optimized in a linear programming framework. An approach used to convert such functions into linear objectives involves introducing a helper variable and additional constraints [ref \ref{???}]. In our case, introducing a variable $Z_{c, b, d}$ for every product $X_{c, b, d} \cdot Y_{c, w}$ with $w = \varphi(b)$, and constraining $Z$ such that 
 \begin{align}
 	&Z_{c, b, d} \leq X_{c, b, d} \\
 	&Z_{c, b, d} \leq Y_{c, w=\varphi(b)} &&\forall d\in\mathcal{D}
@@ -74,13 +77,13 @@ allows us to rewrite $Q_3$ as a linear function of $Z$,
 \end{align}
 Indeed, whenever $X_{c, b, d} \cdot Y_{c, w} = 1$, $Z_{c, b, d}$ can attain a maximum value of 1, and whenever $X_{c, b, d} \cdot Y_{c, w} = 0$, at least one of $X_{c, b, d}$ or $Y_{c, w}$ must be 0, so $Z_{c, b, d}$ will be constrained to attain a maximum value of 0, giving us the correct adjacency maximization objective. \\
 
-As we can see, these objectives turn our clinician scheduling problem into a multiple objective optimization problem. The most common approach to solving such problems is by optimizing a weighted sum of the normalized objective functions, as this guarantees the optimal solution to be Pareto optimal [ref \ref{???}]. This is the approach we decided to use in our problem, to ensure all three objectives are considered when finding a solution. Under the assumption that each clinician in $\mathcal{C}$ provides all types of services in $\mathcal{D}$, the normalized objectives can be written as follows,
+Thus, our clinician scheduling problem is a multiple objective optimization problem. The most common approach to solving multiple objective optimization problems is by optimizing a weighted sum of the normalized objective functions, as this guarantees the optimal solution to be Pareto optimal [ref \ref{???}]. This is the approach we decided to use in our problem, to ensure all three objectives are considered when finding a solution. Under the assumption that each clinician in $\mathcal{C}$ provides all types of services in $\mathcal{D}$, the normalized objectives can be written as follows,
 \begin{align}
 	&\bar{Q}_1(X) = \frac{Q_1(X)}{C \cdot B \cdot D} \tag{Block Requests} \label{eqn:norm-obj-block-requests}\\
 	&\bar{Q}_2(Y) = \frac{Q_2(Y)}{C \cdot W} \tag{Weekend Requests} \label{eqn:norm-obj-weekend-requests} \\
 	&\bar{Q}_3(Z) = \frac{Q_3(Z)}{C \cdot B \cdot D} \tag{Block-Weekend Adjacency} \label{eqn:norm-obj-block-weekend-adj}
 \end{align}
-where we divided each of the original objective functions by the sum of the absolute values of its coefficients [ref \ref{???}]. The final weighted objective is given by
+where we divide each of the original objective functions by the sum of the absolute values of its coefficients [ref \ref{???}]. The final weighted objective is given by
 \begin{equation}
 	\alpha \bar{Q}_1(X) + \beta \bar{Q}_2(Y) + (1 - \alpha - \beta) \bar{Q}_3(Z)
 \end{equation}
