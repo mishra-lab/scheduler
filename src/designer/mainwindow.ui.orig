@@ -151,9 +151,6 @@
                    <property name="text">
                     <string>Configuration</string>
                    </property>
-                   <property name="buddy">
-                    <cstring>loadConfigButton</cstring>
-                   </property>
                   </widget>
                  </item>
                  <item row="0" column="1">
@@ -171,9 +168,6 @@
                    <property name="text">
                     <string>Requests</string>
                    </property>
-                   <property name="buddy">
-                    <cstring>loadRequestsButton</cstring>
-                   </property>
                   </widget>
                  </item>
                  <item row="1" column="1">
@@ -187,9 +181,6 @@
                   <widget class="QLabel" name="calendarYearLabel">
                    <property name="text">
                     <string>Calendar Year</string>
-                   </property>
-                   <property name="buddy">
-                    <cstring>calendarYearSpinBox</cstring>
                    </property>
                   </widget>
                  </item>
@@ -211,9 +202,6 @@
                    <property name="text">
                     <string>Number of Blocks</string>
                    </property>
-                   <property name="buddy">
-                    <cstring>numberOfBlocksSpinBox</cstring>
-                   </property>
                   </widget>
                  </item>
                  <item row="4" column="1">
@@ -233,9 +221,6 @@
                   <widget class="QLabel" name="holidaysLabel">
                    <property name="text">
                     <string>Holidays</string>
-                   </property>
-                   <property name="buddy">
-                    <cstring>loadHolidaysButton</cstring>
                    </property>
                   </widget>
                  </item>
@@ -291,6 +276,7 @@
                 </widget>
                </item>
                <item row="4" column="1">
+<<<<<<< HEAD
                 <widget class="QPushButton" name="exportMonthlyButton">
                  <property name="text">
                   <string>Export Monthly</string>
@@ -301,13 +287,37 @@
                 <widget class="QCheckBox" name="verboseCheckBox">
                  <property name="text">
                   <string>Verbose Output</string>
+=======
+                <widget class="QCheckBox" name="retrieveLongWeekendsCheckBox">
+                 <property name="checked">
+                  <bool>true</bool>
+>>>>>>> Move constraint toggles to new tab
                  </property>
                 </widget>
                </item>
               </layout>
+<<<<<<< HEAD
              </widget>
             </item>
            </layout>
+=======
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+>>>>>>> Move constraint toggles to new tab
           </item>
           <item>
            <widget class="QGroupBox" name="outputGroupBox">
@@ -358,119 +368,98 @@
            <item row="0" column="0">
             <layout class="QFormLayout" name="constraintsForm">
              <item row="0" column="0">
-              <widget class="QLabel" name="coverageLabel">
+              <widget class="QLabel" name="blockCoverageLabel">
                <property name="text">
-                <string>Cover All Blocks &amp;&amp; Weekends</string>
-               </property>
-               <property name="buddy">
-                <cstring>coverageCheckBox</cstring>
+                <string>Cover All Blocks</string>
                </property>
               </widget>
              </item>
              <item row="0" column="1">
-              <widget class="QCheckBox" name="coverageCheckBox">
+              <widget class="QCheckBox" name="blockCoverageCheckBox">
                <property name="checked">
                 <bool>true</bool>
                </property>
               </widget>
              </item>
              <item row="1" column="0">
-              <widget class="QLabel" name="minMaxBlocksLabel">
+              <widget class="QLabel" name="weekendCoverageLabel">
                <property name="text">
-                <string>Restrict Min/Max Blocks</string>
-               </property>
-               <property name="buddy">
-                <cstring>minMaxBlocksCheckBox</cstring>
+                <string>Cover All Weekends</string>
                </property>
               </widget>
              </item>
              <item row="1" column="1">
-              <widget class="QCheckBox" name="minMaxBlocksCheckBox">
+              <widget class="QCheckBox" name="weekendCoverageCheckBox">
                <property name="checked">
                 <bool>true</bool>
                </property>
               </widget>
              </item>
              <item row="2" column="0">
-              <widget class="QLabel" name="balancedWeekendsLabel">
+              <widget class="QLabel" name="minMaxBlocksLabel">
                <property name="text">
-                <string>Balance Weekends</string>
-               </property>
-               <property name="buddy">
-                <cstring>balancedWeekendsCheckBox</cstring>
+                <string>Restrict Min/Max Blocks</string>
                </property>
               </widget>
              </item>
              <item row="2" column="1">
-              <widget class="QCheckBox" name="balancedWeekendsCheckBox">
-               <property name="checked">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="0">
-              <widget class="QLabel" name="balancedLongWeekendsLabel">
-               <property name="text">
-                <string>Balance Long Weekends</string>
-               </property>
-               <property name="buddy">
-                <cstring>balancedLongWeekendsCheckBox</cstring>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="1">
-              <widget class="QCheckBox" name="balancedLongWeekendsCheckBox">
+              <widget class="QCheckBox" name="minMaxBlocksCheckBox">
                <property name="checked">
                 <bool>true</bool>
                </property>
               </widget>
              </item>
              <item row="4" column="0">
-              <widget class="QLabel" name="preventConsecutiveBlocksLabel">
+              <widget class="QLabel" name="balancedLongWeekendsLabel">
                <property name="text">
-                <string>Prevent Consecutive Blocks</string>
-               </property>
-               <property name="buddy">
-                <cstring>preventConsecutiveBlocksCheckBox</cstring>
+                <string>Balance Long Weekends</string>
                </property>
               </widget>
              </item>
              <item row="4" column="1">
-              <widget class="QCheckBox" name="preventConsecutiveBlocksCheckBox">
+              <widget class="QCheckBox" name="balancedLongWeekendsCheckBox">
                <property name="checked">
                 <bool>true</bool>
                </property>
               </widget>
              </item>
              <item row="5" column="0">
-              <widget class="QLabel" name="spreadBlocksLabel">
+              <widget class="QLabel" name="preventConsecutiveBlocksLabel">
                <property name="text">
-                <string>Spread Blocks</string>
-               </property>
-               <property name="buddy">
-                <cstring>spreadBlocksCheckBox</cstring>
+                <string>Prevent Consecutive Blocks</string>
                </property>
               </widget>
              </item>
              <item row="5" column="1">
-              <widget class="QCheckBox" name="spreadBlocksCheckBox">
+              <widget class="QCheckBox" name="preventConsecutiveBlocksCheckBox">
                <property name="checked">
                 <bool>true</bool>
                </property>
               </widget>
              </item>
              <item row="6" column="0">
-              <widget class="QLabel" name="spreadWeekendsLabel">
+              <widget class="QLabel" name="preventConsecutiveWeekendsLabel">
                <property name="text">
-                <string>Spread Weekends</string>
-               </property>
-               <property name="buddy">
-                <cstring>spreadWeekendsCheckBox</cstring>
+                <string>Prevent Consecutive Weekends</string>
                </property>
               </widget>
              </item>
              <item row="6" column="1">
-              <widget class="QCheckBox" name="spreadWeekendsCheckBox">
+              <widget class="QCheckBox" name="preventConsecutiveWeekendsCheckBox">
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="balancedWeekendsLabel">
+               <property name="text">
+                <string>Balance Weekends</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QCheckBox" name="balancedWeekendsCheckBox">
                <property name="checked">
                 <bool>true</bool>
                </property>
@@ -481,19 +470,6 @@
           </layout>
          </widget>
         </item>
-        <item>
-         <spacer name="verticalSpacer">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
        </layout>
       </widget>
      </widget>
@@ -502,5 +478,202 @@
   </widget>
  </widget>
  <resources/>
+<<<<<<< HEAD
  <connections/>
+=======
+ <connections>
+  <connection>
+   <sender>saveButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>actionSave</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>337</x>
+     <y>91</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>newButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>actionNew</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>93</x>
+     <y>118</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>exportScheduleButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>actionExport_Schedule</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>189</x>
+     <y>231</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>publishCalendarButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>actionPublish</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>317</x>
+     <y>231</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>newClinicianButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>actionNew_Clinician</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>459</x>
+     <y>91</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>deleteClinicianButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>actionDelete_Clinician</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>704</x>
+     <y>91</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>loadButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>actionOpen</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>356</x>
+     <y>92</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>openButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>actionOpen</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>215</x>
+     <y>118</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>editClinicianButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>actionEdit_Clinician</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>582</x>
+     <y>91</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>generateScheduleButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>actionGenerate_Schedule</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>85</x>
+     <y>231</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>clearCalendarButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>actionClear_Calendar</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>421</x>
+     <y>231</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>exportMonthlyButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>actionExport_Monthly</receiver>
+   <slot>trigger()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>296</x>
+     <y>309</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+>>>>>>> Move constraint toggles to new tab
 </ui>

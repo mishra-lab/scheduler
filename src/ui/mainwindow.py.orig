@@ -229,22 +229,72 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         numBlocks = self.numberOfBlocksSpinBox.value()
         calendarYear = self.calendarYearSpinBox.value()
+<<<<<<< HEAD
         shuffle = self.shuffleCheckBox.isChecked()
         verbose = self.verboseCheckBox.isChecked()
+
+        # requests = []
+        # holidays = []
+        for row in range(self.constraintsForm.rowCount()):
+            widget = self.constraintsForm.itemAt(row, QFormLayout.FieldRole).widget()
+            if widget.isChecked():
+                constraints.append(widget.objectName().replace('CheckBox', ''))
+=======
+        calendarId = self.gCalLineEdit.text()
+
+        requests = []
+        holidays = []
         constraints = []
 
-        # pull enabled constraints from UI checkboxes
+        if retrieveTimeOff:    
+            if not calendarId:
+                QMessageBox.critical(self, "Missing Calendar ID", "Please supply a calendar ID!")
+                return
+
+            # read timeoff requests from gcal
+            startDate = datetime(calendarYear, 1, 1)
+            endDate = startDate + timedelta(weeks=52)
+            requests = ApiHelper(calendarId).get_events(
+                start=startDate.isoformat() + 'Z',
+                end=endDate.isoformat() + 'Z',
+                search_str='[request]'
+            )
+
+        if retrieveLongWeekends:
+            if not calendarId:
+                QMessageBox.critical(self, "Missing Calendar ID", "Please supply a calendar ID!")
+                return
+
+            # read longweekend events from gcal
+            startDate = datetime(calendarYear, 1, 1)
+            endDate = startDate + timedelta(weeks=52)
+            holidays = ApiHelper(calendarId).get_events(
+                start=startDate.isoformat() + 'Z',
+                end=endDate.isoformat() + 'Z',
+                search_str='[holiday]'
+            )
+>>>>>>> Read toggled constraints and pass to service
+
         for row in range(self.constraintsForm.rowCount()):
             widget = self.constraintsForm.itemAt(row, QFormLayout.FieldRole).widget()
             if widget.isChecked():
                 constraints.append(widget.objectName().replace('CheckBox', ''))
 
         # init scheduler with all the given data
+<<<<<<< HEAD
         schedule = scheduler \
             .Scheduler(logger=self._logger, num_blocks=numBlocks, clin_data=self.configuration, \
                  request_dict=self._requests, holidays=self._holidays,
                  constraints=constraints) \
             .generate(verbose=verbose, shuffle=shuffle)
+=======
+        schedule = scheduler.Scheduler(
+            num_blocks=numBlocks, 
+            clin_data=self.configuration, 
+            timeoff_data=requests, 
+            long_weekends=holidays,
+            constraints=constraints).generate(debug=True)
+>>>>>>> Read toggled constraints and pass to service
         if schedule is None:
             self._logger.write_line('Could not generate schedule! Try adjusting min/max values in the configuration tab.', level='ERROR')
         

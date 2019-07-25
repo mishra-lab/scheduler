@@ -224,7 +224,11 @@ class Scheduler:
     schedule based on the supplied clinician and division data.
     """
 
+<<<<<<< HEAD
     def __init__(self, logger, num_blocks, clin_data={}, request_dict=[], holidays=[], constraints=[]):
+=======
+    def __init__(self, num_blocks, clin_data={}, timeoff_data=[], long_weekends=[], constraints=[]):
+>>>>>>> Toggle constraints in scheduler service
         self.num_blocks = num_blocks
         self.num_weekends = num_blocks * BLOCK_SIZE
 
@@ -232,22 +236,48 @@ class Scheduler:
         self.divisions = {}
         self.holiday_map = {}
         self.long_weekends = []
+<<<<<<< HEAD
         self._logger = logger
         self.constraints = []
         
         self.set_long_weekends(holidays)
         self.set_data(clin_data)
         self.set_timeoff(request_dict)
+=======
+        self.constraints = []
+
+        self.set_long_weekends(long_weekends)
+        self.set_data(clin_data)
+        self.set_timeoff(timeoff_data)
+>>>>>>> Toggle constraints in scheduler service
         self.set_constraints(constraints)
 
     def generate(self, verbose=False, shuffle=False):
         self.setup_solver()
         self.setup_problem(shuffle=shuffle)
 
+<<<<<<< HEAD
         started_solving = time.clock()
         ret = self.problem.solve(self.solver) == pulp.LpStatusOptimal
         finished_solving = time.clock()
                     
+=======
+        if debug:
+            print('objective value = {}'.format(
+                pulp.value(self.problem.objective)))
+            print('conflicts per doc:')
+            for clinician in self.clinicians.values():
+                print(clinician.name)
+                assigned_blocksoff = clinician.get_block_vars(
+                    lambda x, clinician=clinician: x.block_num in clinician.blocks_off and x.get_value() == 1.0)
+                assigned_weekendsoff = clinician.get_weekend_vars(
+                    lambda x, clinician=clinician: x.week_num in clinician.weekends_off and x.get_value() == 1.0)
+                print('\t{} out of {} blocks'.format(
+                    len(assigned_blocksoff), len(clinician.blocks_off)))
+                print('\t{} out of {} weekends'.format(
+                    len(assigned_weekendsoff), len(clinician.weekends_off)))
+
+>>>>>>> Toggle constraints in scheduler service
         if ret:
             if verbose:
                 self._logger.write_line('Solved in: {} s'.format(finished_solving - started_solving))
@@ -332,7 +362,11 @@ class Scheduler:
                     max_=div_object['max']
                 )
 
+<<<<<<< HEAD
     def set_timeoff(self, request_dict):
+=======
+    def set_timeoff(self, events):
+>>>>>>> Toggle constraints in scheduler service
         """
         Populates timeoff for each clinician in self.clinicians based
         on the supplied list of events.
@@ -344,9 +378,15 @@ class Scheduler:
                     level='WARNING')
                 continue
 
+<<<<<<< HEAD
             clinician = self.clinicians[clin_name]
             for start, end in request_dict[clin_name]:
                 # figure out whether this timeoff request intersects a 
+=======
+            if creator in self.clinicians:
+                clinician = self.clinicians[creator]
+                # figure out whether this timeoff request intersects a
+>>>>>>> Toggle constraints in scheduler service
                 # week or a weekend
                 weeks = []
                 weekends = []
@@ -370,6 +410,7 @@ class Scheduler:
                     if week_num not in clinician.weekends_off:
                         clinician.weekends_off.append(week_num)
 
+<<<<<<< HEAD
     def set_long_weekends(self, holidays):
         self.holiday_map.clear()
         for date in holidays:
@@ -389,6 +430,26 @@ class Scheduler:
             self.constraints.append(Scheduler.CONSTRAINT_MAPPING[key])
  
     def setup_problem(self, shuffle=False):
+=======
+            # Fri statutory holidays are associated with their regular weeknum
+            # Mon statutory holidays are associated with their weeknum - 1
+            #   (i.e.: the previous weeknum)
+            if start.isoweekday() == 1:
+                lw[event['start']['date']] = start.isocalendar()[1] - 1
+                # lw.add(start.isocalendar()[1] - 1)
+            elif start.isoweekday() == 5:
+                lw[event['start']['date']] = start.isocalendar()[1]
+                # lw.add(start.isocalendar()[1])
+
+        self.holiday_map = lw
+        self.long_weekends = list(lw.values())
+
+    def set_constraints(self, constraint_dict):
+        for key in constraint_dict:
+            self.constraints.append(Scheduler.CONSTRAINT_MAPPING[key])
+
+    def setup_problem(self):
+>>>>>>> Toggle constraints in scheduler service
         """
         Constructs an LP program based on the clinician, division data.
         """
@@ -405,11 +466,20 @@ class Scheduler:
         if shuffle: random.shuffle(clinicians)
 
         self._build_clinician_variables(divisions, clinicians)
-        self._build_adjacency_variables(divisions)
+<<<<<<< HEAD
+=======
 
         # add all necessary constraints
         for func in self.constraints:
-            func(self, divisions, clinicians)
+            func(self)
+
+        self._build_adjacency_variables(divisions)
+        appeasement_objs = self._build_appeasement_objectives(clinicians)
+>>>>>>> Toggle constraints in scheduler service
+
+        # add all necessary constraints
+        for func in self.constraints:
+            func(self)
 
         block_conflicts_obj = self._build_block_objective(clinicians)
         weekend_conflicts_obj = self._build_weekend_objective(clinicians)
@@ -438,9 +508,9 @@ class Scheduler:
                     WeekendVariable(clinician, week_num)
                 )
 
-    def _constraint_coverage(self, divisions=None, clinicians=None):
+    def _constrain_block_coverage(self):
         # no holes + no overlap over all divisions (BLOCKS)
-        for div in divisions:
+        for div in list(self.divisions.values()):
             for block_num in range(1, self.num_blocks + 1):
                 self.problem.add(
                     pulp.lpSum(
@@ -449,10 +519,11 @@ class Scheduler:
                     ) == 1
                 )
 
+    def _constrain_weekend_coverage(self):
         # no holes + no overlap (WEEKENDS)
         for week_num in range(1, self.num_weekends + 1):
             vars_ = \
-                [_ for clinician in clinicians
+                [_ for clinician in list(self.clinicians.values())
                     for _ in clinician.get_weekend_vars(
                         lambda x, week_num=week_num: x.week_num == week_num
                 )
@@ -460,9 +531,9 @@ class Scheduler:
             self.problem.add(pulp.lpSum(
                 [_.get_var() for _ in vars_]) == 1)
 
-    def _constraint_minmax_blocks(self, divisions=None, clinicians=None):
+    def _constrain_minmax_blocks(self):
         # mins/maxes per division
-        for div in divisions:
+        for div in list(self.divisions.values()):
             for clinician in div.clinicians:
                 (min_, max_) = div.bound_dict[clinician.name]
                 sum_ = pulp.lpSum(
@@ -470,8 +541,13 @@ class Scheduler:
                 self.problem.add(sum_ <= max_)
                 self.problem.add(sum_ >= min_)
 
-    def _constraint_consec_blocks(self, divisions=None, clinicians=None):
+<<<<<<< HEAD
+    def _build_consec_blocks_constraints(self, clinicians):
         for clinician in clinicians:
+=======
+    def _constrain_consec_blocks(self):
+        for clinician in list(self.clinicians.values()):
+>>>>>>> Toggle constraints in scheduler service
             for block_num in range(1, self.num_blocks):
                 # if a clinician works a given block, they should not work any
                 # adjacent block (even in a different division)
@@ -481,7 +557,8 @@ class Scheduler:
                 )
                 self.problem.add(sum_ <= 1)
 
-    def _constraint_spread_blocks(self, divisions=None, clinicians=None):
+<<<<<<< HEAD
+    def _build_spread_blocks_constraints(self, clinicians):
         # on-off-on-off-on constraint for block assignment
         # we need at least 5 consecutive blocks to implement this constraint
         if self.num_blocks < 5: return
@@ -495,7 +572,7 @@ class Scheduler:
                 )
                 self.problem.add(sum_ <= 2)
 
-    def _constraint_spread_weekends(self, divisions=None, clinicians=None):
+    def _build_spread_weekends_constraints(self, clinicians):
         # spreading out weekend assignments
         # needs at least 4 weekends
         if self.num_weekends < 4: return
@@ -503,6 +580,12 @@ class Scheduler:
         for clinician in clinicians:
             for week_num in range(1, self.num_weekends - 2):
                 # constraint: X_i + X_{i+1} + X_{i+2} + X_{i+3} <= 1
+=======
+    def _constrain_consec_weekends(self):
+        for clinician in list(self.clinicians.values()):
+            # at most 1 consecutive weekend of work
+            for week_num in range(1, self.num_weekends):
+>>>>>>> Toggle constraints in scheduler service
                 sum_ = pulp.lpSum(
                     [_.get_var() for _ in clinician.get_weekend_vars(
                         lambda x, week_num=week_num: x.week_num in list(range(week_num, week_num + 4))
@@ -510,14 +593,14 @@ class Scheduler:
                 )
                 self.problem.add(sum_ <= 1)
 
-    def _constraint_balance_longweekends(self, divisions=None, clinicians=None):
+    def _constrain_balanced_longweekends(self):
         if self.long_weekends:
             # (roughly) equal distribution of long weekends
             max_long_weekends = math.ceil(
                 len(self.long_weekends) / len(self.clinicians))
             min_long_weekends = math.floor(
                 len(self.long_weekends) / len(self.clinicians))
-            for clinician in clinicians:
+            for clinician in list(self.clinicians.values()):
                 sum_ = pulp.lpSum(
                     [_.get_var() for _ in clinician.get_weekend_vars(
                         lambda x, l=self.long_weekends: x.week_num in l
@@ -526,7 +609,7 @@ class Scheduler:
                 self.problem.add(sum_ <= max_long_weekends)
                 self.problem.add(sum_ >= min_long_weekends)
 
-    def _constraint_balance_weekends(self, divisions=None, clinicians=None):
+    def _build_weekend_constraints(self, clinicians):
         # (roughly) equal distribution of weekends
         max_weekends = math.ceil(
             self.num_weekends / len(clinicians)
@@ -643,11 +726,10 @@ class Scheduler:
             clinician.weekends_assigned = [_.week_num for _ in vars_]
 
     CONSTRAINT_MAPPING = {
-        'coverage': _constraint_coverage,
-        'minMaxBlocks': _constraint_minmax_blocks,
-        'preventConsecutiveBlocks': _constraint_consec_blocks,
-        'spreadBlocks': _constraint_spread_blocks,
-        'spreadWeekends': _constraint_spread_weekends,
-        'balancedLongWeekends': _constraint_balance_longweekends,
-        'balancedWeekends': _constraint_balance_weekends
+        'balancedLongWeekends': _constrain_balanced_longweekends,
+        'blockCoverage': _constrain_block_coverage,
+        'minMaxBlocks': _constrain_minmax_blocks,
+        'preventConsecutiveBlocks': _constrain_consec_blocks,
+        'preventConsecutiveWeekends': _constrain_consec_weekends,
+        'weekendCoverage': _constrain_weekend_coverage
     }
