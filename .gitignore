@@ -25,6 +25,7 @@ wheels/
 .installed.cfg
 *.egg
 MANIFEST
+dist*
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -165,3 +166,7 @@ Thumbs.db
 # Don't ignore HTML subdir of Sphinx docs!
 !docs/build/
 docs/build/doctrees
+
+# ignore cbc files
+!scripts/
+scripts/cbc*
