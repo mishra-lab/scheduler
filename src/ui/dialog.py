@@ -155,9 +155,12 @@ class DialogWindow(QDialog, Ui_Dialog):
         for i in range(self.divisionTable.rowCount()):
             division = dict()
 
-            divName = self.divisionTable.item(i, 0).text()
-            divMin = self.divisionTable.item(i, 1).text()
-            divMax = self.divisionTable.item(i, 2).text()
+            try:
+                divName = self.divisionTable.item(i, 0).text()
+                divMin = self.divisionTable.item(i, 1).text()
+                divMax = self.divisionTable.item(i, 2).text()
+            except AttributeError:
+                break
 
             division['min'] = int(divMin)
             division['max'] = int(divMax)
