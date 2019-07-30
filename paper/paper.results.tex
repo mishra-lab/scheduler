@@ -18,7 +18,7 @@ We began by evaluating the runtime in a single-division department, with an incr
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[scale=.6]{fig/avg_runtime_clinicians}
+	\includegraphics[scale=.7]{fig/avg_runtime_clinicians}
 	\caption{Plot of average runtime for LP with an increasing number of clinicians}
 	\label{fig:avg-runtime-clinicians}
 \end{figure}
@@ -27,16 +27,16 @@ Next we evaluated the effect of increasing the number of departments. Figure \re
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[scale=.6]{fig/avg_runtime_divisions}
+	\includegraphics[scale=.7]{fig/avg_runtime_divisions}
 	\caption{Plot of average runtime for LP with an increasing number of divisions}
 	\label{fig:avg-runtime-divisions}
 \end{figure}
 
-We plotted the effect of an increasing number of requests per clinician on the average runtime of the LP solver in figure \ref{fig:avg-runtime-requests}. We ran the program on a single-division department with 10 clinicians, and $R = \abs{\mathcal{WR}} + \abs{\mathcal{BR}} = \{1, 2, 3, 5, 10\}$ non-overlapping requests per clinician. The increase in the number of requests did not affect the runtime of the LP solver, indicating that it can handle and accommodate much flexibility in clinician requests. \\
+We plotted the effect of an increasing number of requests per clinician on the average runtime of the LP solver in figure \ref{fig:avg-runtime-requests}. We ran the program on a single-division department with 10 clinicians, and $R = \abs{\mathcal{WR}} + \abs{\mathcal{BR}} = \{1, 2, 3, 5, 10\}$ non-overlapping requests per clinician. The increase in the number of requests did not affect the runtime of the LP solver, indicating that it can accommodate a lot of flexibility in clinician requests. \\
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[scale=.6]{fig/avg_runtime_requests}
+	\includegraphics[scale=.7]{fig/avg_runtime_requests}
 	\caption{Plot of average runtime for LP with an increasing number of requests per clinician}
 	\label{fig:avg-runtime-requests}
 \end{figure}
