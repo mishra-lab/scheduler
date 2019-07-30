@@ -1,6 +1,6 @@
-In this section, we present an application of 0-1 Linear Programming to solve the clinician scheduling problem presented in Section \ref{???}. First, we describe the sets, indices and variables present in the formulation of the program. We then convert the constraints given in Table \ref{tbl:constraint-summary} into mathematical terms, and outline the objective function of the linear program.
+In this section, we present an application of 0-1 Linear Programming to solve the clinician scheduling problem presented in Section \ref{sec:problem}. First, we describe the sets, indices and variables present in the formulation of the program. We then convert the constraints given in Table \ref{tbl:constraint-summary} into mathematical terms, and outline the objective function of the linear program.
 
-\subsection{Sets and Indices}
+\subsection{Sets and Indices} \label{sec:meth-sets-indices}
 We denote the set of all services (or sometimes referred to as divisions) %or I think services is good (vs. services/divisions) as you define two types of services (ID vs. HIV) in the problem statement
 that clinicians in a single department can provide as $\mathcal{D}$. The following formulation assumes that all clinicians are able to provide all services. The set of all clinicians in the department is denoted as $\mathcal{C}$. The sets of blocks and weekends that clinicians will be assigned to are denoted as $\mathcal{B}$ and $\mathcal{W}$ respectively. The size of a block is not constrained and can be adapted %how?
 to the needs of the given department. A subset of weekends are denoted $\mathcal{L}$, corresponding to established long/holiday weekends such as the Canadian Civic Day weekend in August. Lastly, we denote with $\mathcal{BR}_c$ and $\mathcal{WR}_c$ the block and weekend requests of clinicians as subsets of all blocks and weekends, respectively. For instance, if clinician $c$'s requests intersect with blocks 1 and 2, and weekend 1, then $\mathcal{BR}_c = \{1, 2\}$ and $\mathcal{WR}_c = \{1\}$. Table \ref{tbl:sets-indices} presents a summary of the sets and indices described. 
@@ -22,8 +22,8 @@ to the needs of the given department. A subset of weekends are denoted $\mathcal
 	\label{tbl:sets-indices}
 \end{table}
 
-\subsection{Variables}
-Since each clinician may be assigned to work on any service, during any block of the year, we denote such an assignment as $X_{c, b, d}$. A value of 1 indicates that the given clinician $c$ is assigned to cover division $d$ during block $b$. Similarly, we define weekend assignments as $Y_{c, w}$, although these are not indexed by service, as clinicians are expected to provide all services during the weekends. To optimize the soft constraint Block-Weekend Adjacency, we maximize the product $X_{c, b, d} \cdot Y_{c, w}$ for adjacent blocks and weekends. To formulate such an objective as a linear function of variables, we introduce another set of variables, denoted by $Z_{c, b, d}$, with additional constraints on its range. Further details regarding this variable are described in Sections \ref{???} and \ref{???}. We then introduce a set of constants $m_{c, d}$ and $M_{c, d}$ to constrain the minimal and maximal number of blocks each clinician is allowed to work during the year. Table \ref{tbl:variables-constants} presents a summary of the constants and variables in the problem.
+\subsection{Variables} \label{sec:meth-variables}
+Since each clinician may be assigned to work on any service, during any block of the year, we denote such an assignment as $X_{c, b, d}$. A value of 1 indicates that the given clinician $c$ is assigned to cover division $d$ during block $b$. Similarly, we define weekend assignments as $Y_{c, w}$, although these are not indexed by service, as clinicians are expected to provide all services during the weekends. To optimize the soft constraint Block-Weekend Adjacency, we maximize the product $X_{c, b, d} \cdot Y_{c, w}$ for adjacent blocks and weekends. To formulate such an objective as a linear function of variables, we introduce another set of variables, denoted by $Z_{c, b, d}$, with additional constraints on its range. Further details regarding this variable are described in Section \ref{sec:meth-objectives}. We then introduce a set of constants $m_{c, d}$ and $M_{c, d}$ to constrain the minimal and maximal number of blocks each clinician is allowed to work during the year. Table \ref{tbl:variables-constants} presents a summary of the constants and variables in the problem.
 
 \begin{table}[h]
 	\centering
@@ -40,7 +40,7 @@ Since each clinician may be assigned to work on any service, during any block of
 	\label{tbl:variables-constants}
 \end{table}
 
-\subsection{Constraints}
+\subsection{Constraints} \label{sec:meth-constraints}
 We now present the hard constraints in Table \ref{tbl:constraint-summary} using the variables defined above.
 
 \begin{align}
@@ -53,8 +53,8 @@ We now present the hard constraints in Table \ref{tbl:constraint-summary} using 
 	&\floor*{\frac{\abs{\mathcal{L}}}{C}} \leq \sum_{w\in\mathcal{L}} Y_{c, w} \leq \ceil*{\frac{\abs{\mathcal{L}}}{C}} &&\forall c\in\mathcal{C} \tag{Equal Holidays} \label{eqn:constr-equal-holidays}
 \end{align}
 
-\subsection{Objectives}
-As described in Section \ref{???}, the soft constraints of the clinician scheduling problem include: (1) satisfying clinician block off requests, (2) satisfying clinician weekend off requests, and (3) assigning weekends closer to blocks. We convert these soft constraints into linear objective functions of the binary variables defined in Section \ref{???}. Objectives (1) and (2) can be written as the following linear functions:  %minor suggestion - consider numbering the objectives for ease later when saying things like "these two objectives"...or writing the full name of the objectives instead of 'this' and 'these' as sometimes can get confusing what the 'this' and the 'these' refer to. 
+\subsection{Objectives} \label{sec:meth-objectives}
+As described in Section \ref{sec:problem}, the soft constraints of the clinician scheduling problem include: (1) satisfying clinician block off requests, (2) satisfying clinician weekend off requests, and (3) assigning weekends closer to blocks. We convert these soft constraints into linear objective functions of the binary variables defined in Section \ref{sec:meth-variables}. Objectives (1) and (2) can be written as the following linear functions:  %minor suggestion - consider numbering the objectives for ease later when saying things like "these two objectives"...or writing the full name of the objectives instead of 'this' and 'these' as sometimes can get confusing what the 'this' and the 'these' refer to. 
 \begin{align}
 	&Q_1(X) = \sum_{c=1}^{C} \sum_{b=1}^{B} \sum_{d=1}^{D} (-1)^{\ind(b\,\in\,\mathcal{BR}_c)}\cdot X_{c, b, d} \tag{Block Requests} \label{eqn:obj-block-requests}\\
 	&Q_2(Y) = \sum_{c=1}^{C} \sum_{w=1}^{W} (-1)^{\ind(w\,\in\,\mathcal{WR}_c)}\cdot Y_{c, w} \tag{Weekend Requests} \label{eqn:obj-weekend-requests}

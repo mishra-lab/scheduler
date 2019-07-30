@@ -7,7 +7,7 @@ We used clinician time-off requests and minimum/maximum requirements from 2015-2
 \include{tbl/2017_schedule_comparison}
 \include{tbl/2018_schedule_comparison}
 
-In order to evaluate the generated schedule and compare it with the manually created schedule, we outline the adherence of each schedule to the constraints presented in section \ref{???}. As we can see from table \ref{tbl:constraints-comparison}, the generated schedule was able to satisfy all mandatory constraints, however for the years of [???] it could not find an optimal schedule while ensuring that the block assignments are spread out ([???] constraint). On the other hand, we can see that the manually created schedule was not able to satisfy all mandatory constraints. In particular, we see that it contains consecutive block assignments for the years of [???], [...]. Evaluating the objectives, we see that [...\textit{request conflicts}]. Moreover, the manual schedule does not attempt to align weekend assignments with block assignments, unlike the optimal schedule found by the software.
+In order to evaluate the generated schedule and compare it with the manually created schedule, we outline the adherence of each schedule to the constraints presented in table \ref{tbl:constraint-summary}. As we can see from table \ref{tbl:constraints-comparison}, the generated schedule was able to satisfy all mandatory constraints, however for the years of [???] it could not find an optimal schedule while ensuring that the block assignments are spread out ([???] constraint). On the other hand, we can see that the manually created schedule was not able to satisfy all mandatory constraints. In particular, we see that it contains consecutive block assignments for the years of [???], [...]. Evaluating the objectives, we see that [...\textit{request conflicts}]. Moreover, the manual schedule does not attempt to align weekend assignments with block assignments, unlike the optimal schedule found by the software.
 
 \include{tbl/constraints_comparison}
 
@@ -32,7 +32,7 @@ Next we evaluated the effect of increasing the number of departments. Figure \re
 	\label{fig:avg-runtime-divisions}
 \end{figure}
 
-We plotted the effect of an increasing number of requests per clinician on the average runtime of the LP solver in figure \ref{fig:avg-runtime-requests}. We ran the program on a single-division department with 10 clinicians, and $R = \abs{\mathcal{WR}} + \abs{\mathcal{BR}} = \{1, 2, 3, 5, 10\}$ non-overlapping requests per clinician. The increase in the number of requests did not affect the runtime of the LP solver, indicating that it can handle and accommodate much flexibility in clinician requests.
+We plotted the effect of an increasing number of requests per clinician on the average runtime of the LP solver in figure \ref{fig:avg-runtime-requests}. We ran the program on a single-division department with 10 clinicians, and $R = \abs{\mathcal{WR}} + \abs{\mathcal{BR}} = \{1, 2, 3, 5, 10\}$ non-overlapping requests per clinician. The increase in the number of requests did not affect the runtime of the LP solver, indicating that it can handle and accommodate much flexibility in clinician requests. \\
 
 \begin{figure}[h]
 	\centering
@@ -41,3 +41,4 @@ We plotted the effect of an increasing number of requests per clinician on the a
 	\label{fig:avg-runtime-requests}
 \end{figure}
 
+[...]
