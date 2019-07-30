@@ -12,4 +12,32 @@ In order to evaluate the generated schedule and compare it with the manually cre
 \include{tbl/constraints_comparison}
 
 \subsection{Simulations}
-In this section, we want to analyze properties of the LP problem on simulated data. Our goal is to see whether the aforementioned formulation of the problem is going to suffer from run-time issues, when presented with a large set of constraints arising from a hypothetical department with many clinicians, or clinicians with many time-off requests throughout the year. We also want to analyze the behaviour of the LP problem when applied to a longer time horizon than just a single year.
+In this section, we want to analyze properties of the LP problem on simulated data. Our goal is to see whether the aforementioned formulation of the problem is going to suffer from runtime issues, when presented with a large set of constraints arising from a hypothetical department with many clinicians, or clinicians with many time-off requests throughout the year. We also want to analyze the effect of a longer time-horizon or a large number of divisions in a department, on the run-time of the algorithm. \\
+
+We began by evaluating the runtime in a single-division department, with an increasing number of clinicians, over a 1-year time-span. Figure \ref{fig:avg-runtime-clinicians} shows the average runtime in seconds of 10 runs, for different numbers of clinicians, $C = \{5, 10, 15, 25, 50, 100\}$. From the graph, we can see that the LP formulation performs extremely well on a typical hospital department with no more than 30 clinicians [ref \ref{??}], and can even handle busier departments with upwards of 100 clinicians. \\
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=.6]{fig/avg_runtime_clinicians}
+	\caption{Plot of average runtime for LP with an increasing number of clinicians}
+	\label{fig:avg-runtime-clinicians}
+\end{figure}
+
+Next we evaluated the effect of increasing the number of departments. Figure \ref{fig:avg-runtime-divisions} shows the average runtime for a department with a 10 clinicians, and a range of divisions, $D = \{1, 2, 3\}$. We can see that increasing the number of divisions even by 2 greatly affects the runtime. The LP solver had significant trouble when we increased the number of divisions further, making it impractical to quickly generate schedules for departments with many divisions. \\
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=.6]{fig/avg_runtime_divisions}
+	\caption{Plot of average runtime for LP with an increasing number of divisions}
+	\label{fig:avg-runtime-divisions}
+\end{figure}
+
+We plotted the effect of an increasing number of requests per clinician on the average runtime of the LP solver in figure \ref{fig:avg-runtime-requests}. We ran the program on a single-division department with 10 clinicians, and $R = \abs{\mathcal{WR}} + \abs{\mathcal{BR}} = \{1, 2, 3, 5, 10\}$ non-overlapping requests per clinician. The increase in the number of requests did not affect the runtime of the LP solver, indicating that it can handle and accommodate much flexibility in clinician requests.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=.6]{fig/avg_runtime_requests}
+	\caption{Plot of average runtime for LP with an increasing number of requests per clinician}
+	\label{fig:avg-runtime-requests}
+\end{figure}
+
