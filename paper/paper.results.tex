@@ -41,4 +41,11 @@ We plot the effect of an increasing number of requests per clinician on the aver
 	\label{fig:avg-runtime-requests}
 \end{figure}
 
-[...]
+We evaluate the effect of a longer time-horizon on the runtime of the algorithm. Figure \ref{fig:avg-runtime-blocks} presents the average runtime over 10 runs for an increasing number of 2-week blocks $B = \{26, 52, 78, 104\}$ to simulate a department that generates schedules for a few years in advance. We can see that there is an increase in the runtime, however the solver is still able to find an optimal schedule for a 4-year time horizon in a very reasonable amount of time.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=.7]{fig/avg_runtime_blocks}
+	\caption{Plot of average runtime for LP with an increasing number of 2-week blocks}
+	\label{fig:avg-runtime-blocks}
+\end{figure}
