@@ -2,21 +2,21 @@
 \begin{table}[htbp]
 	\centering
 	\begin{tabular}{l|cc|cc|cc|cc}
-		\multirow{2}[1]{*}{}                     & \multicolumn{2}{c|}{\textbf{2015}} & \multicolumn{2}{c|}{\textbf{2016}} & \multicolumn{2}{c|}{\textbf{2017}} & \multicolumn{2}{c}{\textbf{2018}} \\
-		                                         &     LP     &      Historical       &     LP     &      Historical       &     LP     &      Historical       &     LP     &      Historical      \\ \midrule
-		\multicolumn{1}{c|}{\textbf{Constraint}} &            &                       &            &                       &            &                       &            &                      \\ \midrule
-		Block Coverage                           & \checkmark &      \checkmark       & \checkmark &      \checkmark       & \checkmark &      \checkmark       & \checkmark &      \checkmark      \\
-		Weekend Coverage                         & \checkmark &      \checkmark       & \checkmark &      \checkmark       & \checkmark &      \checkmark       & \checkmark &      \checkmark      \\
-		Min/Max                                  & \checkmark &      \checkmark       & \checkmark &      \checkmark       & \checkmark &      \checkmark       & \checkmark &      \checkmark      \\
-		No Consecutive Blocks                    & \checkmark &                       & \checkmark &                       & \checkmark &                       & \checkmark &                      \\
-		No Consecutive Weekends                  & \checkmark &                       & \checkmark &                       & \checkmark &      \checkmark       & \checkmark &      \checkmark      \\
-		Equal Weekends                           & \checkmark &                       & \checkmark &                       & \checkmark &                       & \checkmark &                      \\
-		Equal Holidays                           & \checkmark &                       & \checkmark &      \checkmark       & \checkmark &                       & \checkmark &      \checkmark      \\ \midrule
-		\multicolumn{1}{c|}{\textbf{Objective}}  &            &                       &            &                       &            &                       &            &                      \\ \midrule
-		Block Requests                           &            &                       &            &                       &            &                       &            &                      \\
-		Weekend Requests                         &            &                       &            &                       &            &                       &            &                      \\
-		Block-Weekend Adjacency                  &     26     &           9           &     26     &           6           &     26     &           7           &     26     &          5
+		\multirow{2}[1]{*}{}                                & \multicolumn{2}{c|}{\textbf{2015}} & \multicolumn{2}{c|}{\textbf{2016}} & \multicolumn{2}{c|}{\textbf{2017}} & \multicolumn{2}{c}{\textbf{2018}} \\
+		                                                    &     LP     &      Historical       &     LP     &      Historical       &     LP     &      Historical       &     LP     &      Historical      \\ \midrule
+		\multicolumn{1}{c|}{\textbf{Constraint}}            &            &                       &            &                       &            &                       &            &                      \\ \midrule
+		Block Coverage                                      & \checkmark &      \checkmark       & \checkmark &      \checkmark       & \checkmark &      \checkmark       & \checkmark &      \checkmark      \\
+		Weekend Coverage                                    & \checkmark &      \checkmark       & \checkmark &      \checkmark       & \checkmark &      \checkmark       & \checkmark &      \checkmark      \\
+		Min/Max                                             & \checkmark &      \checkmark       & \checkmark &      \checkmark       & \checkmark &      \checkmark       & \checkmark &      \checkmark      \\
+		No Consecutive Blocks                               & \checkmark &                       & \checkmark &                       & \checkmark &                       & \checkmark &                      \\
+		No Consecutive Weekends                             & \checkmark &                       & \checkmark &                       & \checkmark &      \checkmark       & \checkmark &      \checkmark      \\
+		Equal Weekends                                      & \checkmark &                       & \checkmark &                       & \checkmark &                       & \checkmark &                      \\
+		Equal Holidays                                      & \checkmark &                       & \checkmark &      \checkmark       & \checkmark &                       & \checkmark &      \checkmark      \\ \midrule
+		\multicolumn{1}{c|}{\textbf{Objective}}             &            &                       &            &                       &            &                       &            &                      \\ \midrule
+		\makecell[l]{Unsatisfied Block \\ Requests}         &     6      &           8           &     6      &          10           &     0      &           4           &     4      &          7           \\
+		\makecell[l]{Unsatisfied Weekend \\ Requests}       &     0      &           2           &     0      &           7           &     0      &           0           &     0      &          2           \\
+		\makecell[l]{Adjacent Block-Weekend \\ Assignments} &     26     &           9           &     26     &           6           &     26     &           7           &     26     &          5
 	\end{tabular}%
-	\caption{Comparison of constraint satisfaction and objective values in LP-generated and Historical schedules}
+	\caption{Comparison of constraint satisfaction and objectives in LP-generated and historical schedules}
 	\label{tbl:constraints-comparison}%
 \end{table}%
