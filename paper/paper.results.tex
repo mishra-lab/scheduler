@@ -23,7 +23,7 @@ We begin by evaluating the runtime in a single-division department, with an incr
 	\label{fig:avg-runtime-clinicians}
 \end{figure}
 
-Next we evaluate the effect of increasing the number of departments. Figure \ref{fig:avg-runtime-divisions} shows the average runtime for a department with a 10 clinicians, and a range of divisions, $D = \{1, 2, 3\}$. We can see that increasing the number of divisions even by 2 greatly affects the runtime. The LP solver had significant trouble when we increased the number of divisions further, making it impractical to quickly generate schedules for departments with many divisions. \\
+Next we evaluate the effect of increasing the number of departments. Figure \ref{fig:avg-runtime-divisions} shows the average runtime for a department with 10 clinicians, and a range of divisions, $D = \{1, 2, 3\}$. We can see that increasing the number of divisions even by 2 greatly affects the runtime. The LP solver had significant trouble when we increased the number of divisions further, making it impractical to quickly generate schedules for departments with many divisions. \\
 
 \begin{figure}[h]
 	\centering
@@ -41,7 +41,7 @@ We plot the effect of an increasing number of requests per clinician on the aver
 	\label{fig:avg-runtime-requests}
 \end{figure}
 
-We evaluate the effect of a longer time-horizon on the runtime of the algorithm. Figure \ref{fig:avg-runtime-blocks} presents the average runtime over 10 runs for an increasing number of 2-week blocks $B = \{26, 52, 78, 104\}$ to simulate a department that generates schedules for a few years in advance. We can see that there is an increase in the runtime, however the solver is still able to find an optimal schedule for a 4-year time horizon in a very reasonable amount of time.
+We evaluate the effect of a longer time-horizon on the runtime of the algorithm. Figure \ref{fig:avg-runtime-blocks} presents the average runtime over 10 runs for an increasing number of 2-week blocks $B = \{26, 52, 78, 104\}$ to simulate a department that generates schedules for a few years in advance. We can see that there is an increasing trend in the runtime, however the solver is still able to find an optimal schedule for a 4-year time horizon in a very reasonable amount of time.
 
 \begin{figure}[h]
 	\centering
