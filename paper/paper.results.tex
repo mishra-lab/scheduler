@@ -50,7 +50,7 @@ We evaluate the effect of a longer time-horizon on the runtime of the algorithm.
 	\label{fig:avg-runtime-blocks}
 \end{figure}
 
-Lastly, we analyze the effect of increasing the number of divisions on the runtime of the program. Table \ref{tbl:runtime-divisions-comparison} presents the runtime for $D = \{1, 2, 3\}$ divisions and $C = \{10, 20, 30, 50\}$ clinicians in total across all divisions. For 2 divisions, a roster of more than 20 clinicians becomes impractical, if all constraints must be satisfied, but the runtime can be improved if we allow consecutive blocks to be assigned. For 3 divisions, the problem becomes impractical faster, with any more than 10 clinicians leading to unreasonable runtime for finding an optimal solution, and the problem cannot be improved by relaxing the consecutive blocks constraint.
+Lastly, we analyze the effect of increasing the number of divisions on the runtime of the program. Table \ref{tbl:runtime-divisions-comparison} presents the runtime for $D = \{1, 2, 3\}$ divisions and $C = \{10, 20, 30, 50\}$ clinicians in total across all divisions. For 2 divisions, a roster of more than 20 clinicians becomes impractical to solve, as searching requires more than 24 hours. For 3 divisions we can see issues with runtime occur earlier, where configurations of more than 10 clinicians are unable to be solved in 24 hours. When relaxing the consecutive blocks constraint, we see a great improvement in runtime for 2 and 3 divisions, and even a schedule for 50 clinicians or more can be generated. 
 
 \include{tbl/runtime_divisions}
 
