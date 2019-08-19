@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'designer\mainwindow.ui'
+# Form implementation generated from reading ui file 'src\designer\mainwindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
@@ -208,20 +208,13 @@ class Ui_MainWindow(object):
         self.preventConsecutiveBlocksCheckBox.setChecked(True)
         self.preventConsecutiveBlocksCheckBox.setObjectName("preventConsecutiveBlocksCheckBox")
         self.constraintsForm.setWidget(4, QtWidgets.QFormLayout.FieldRole, self.preventConsecutiveBlocksCheckBox)
-        self.spreadBlocksLabel = QtWidgets.QLabel(self.constraintsGroupBox)
-        self.spreadBlocksLabel.setObjectName("spreadBlocksLabel")
-        self.constraintsForm.setWidget(5, QtWidgets.QFormLayout.LabelRole, self.spreadBlocksLabel)
-        self.spreadBlocksCheckBox = QtWidgets.QCheckBox(self.constraintsGroupBox)
-        self.spreadBlocksCheckBox.setChecked(True)
-        self.spreadBlocksCheckBox.setObjectName("spreadBlocksCheckBox")
-        self.constraintsForm.setWidget(5, QtWidgets.QFormLayout.FieldRole, self.spreadBlocksCheckBox)
-        self.spreadWeekendsLabel = QtWidgets.QLabel(self.constraintsGroupBox)
-        self.spreadWeekendsLabel.setObjectName("spreadWeekendsLabel")
-        self.constraintsForm.setWidget(6, QtWidgets.QFormLayout.LabelRole, self.spreadWeekendsLabel)
-        self.spreadWeekendsCheckBox = QtWidgets.QCheckBox(self.constraintsGroupBox)
-        self.spreadWeekendsCheckBox.setChecked(True)
-        self.spreadWeekendsCheckBox.setObjectName("spreadWeekendsCheckBox")
-        self.constraintsForm.setWidget(6, QtWidgets.QFormLayout.FieldRole, self.spreadWeekendsCheckBox)
+        self.preventConsecutiveWeekendsLabel = QtWidgets.QLabel(self.constraintsGroupBox)
+        self.preventConsecutiveWeekendsLabel.setObjectName("preventConsecutiveWeekendsLabel")
+        self.constraintsForm.setWidget(5, QtWidgets.QFormLayout.LabelRole, self.preventConsecutiveWeekendsLabel)
+        self.preventConsecutiveWeekendsCheckBox = QtWidgets.QCheckBox(self.constraintsGroupBox)
+        self.preventConsecutiveWeekendsCheckBox.setChecked(True)
+        self.preventConsecutiveWeekendsCheckBox.setObjectName("preventConsecutiveWeekendsCheckBox")
+        self.constraintsForm.setWidget(5, QtWidgets.QFormLayout.FieldRole, self.preventConsecutiveWeekendsCheckBox)
         self.formLayout1.setLayout(0, QtWidgets.QFormLayout.LabelRole, self.constraintsForm)
         self.verticalLayout_3.addWidget(self.constraintsGroupBox)
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
@@ -239,8 +232,7 @@ class Ui_MainWindow(object):
         self.balancedWeekendsLabel.setBuddy(self.balancedWeekendsCheckBox)
         self.balancedLongWeekendsLabel.setBuddy(self.balancedLongWeekendsCheckBox)
         self.preventConsecutiveBlocksLabel.setBuddy(self.preventConsecutiveBlocksCheckBox)
-        self.spreadBlocksLabel.setBuddy(self.spreadBlocksCheckBox)
-        self.spreadWeekendsLabel.setBuddy(self.spreadWeekendsCheckBox)
+        self.preventConsecutiveWeekendsLabel.setBuddy(self.preventConsecutiveWeekendsCheckBox)
 
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(2)
@@ -292,7 +284,6 @@ class Ui_MainWindow(object):
         self.balancedWeekendsLabel.setText(_translate("MainWindow", "Balance Weekends"))
         self.balancedLongWeekendsLabel.setText(_translate("MainWindow", "Balance Long Weekends"))
         self.preventConsecutiveBlocksLabel.setText(_translate("MainWindow", "Prevent Consecutive Blocks"))
-        self.spreadBlocksLabel.setText(_translate("MainWindow", "Spread Blocks"))
-        self.spreadWeekendsLabel.setText(_translate("MainWindow", "Spread Weekends"))
+        self.preventConsecutiveWeekendsLabel.setText(_translate("MainWindow", "Prevent Consecutive Weekends"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.settingsTab), _translate("MainWindow", "Settings"))
 
