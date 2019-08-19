@@ -11,9 +11,6 @@ Built in Python.
 You can find the latest version of the executable at the [releases area](https://github.com/c-uhs/scheduler/releases). 
 The executable comes pre-bundled with the COIN-OR LP solver. 
 
-In order to use the Google Calendar functionality you will need a credentials file.
-Follow the steps outlined [here](https://c-uhs.github.io/scheduler/build/html/manual.html#generating-google-api-credentials) to create it.
-
 ## Build it yourself
 ### Get COIN-OR LP solver
 Before compiling the executable, you must download the 32bit version of the COIN-OR Branch-and-Cut (CBC)
