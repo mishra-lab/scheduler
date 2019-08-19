@@ -2,9 +2,8 @@
 We develop a software package with a user interface that implements the above LP problem and allows configuration of clinicians at [ref \ref{???}], to be used by the ID division at St. Michael's Hospital. The software was used to generate the results in the following sections, using real data as well as simulated data as input.
 
 \subsection{Infectious Diseases Division}
-We use clinician time-off requests and minimum/maximum requirements from 2015-2018 as input data for the LP problem. Tables \ref{tbl:2017-schedule-comparison}, \ref{tbl:2018-schedule-comparison}, \ref{??}, \ref{??} present the optimal schedule generated using the software as well as the manually created schedule, color-coded to distinguish between the different clinicians assigned.
+We use clinician time-off requests and minimum/maximum requirements from 2015-2018 as input data for the LP problem. Table \ref{tbl:2018-schedule-comparison} presents a the optimal schedule generated using the software as well as the manually created schedule for data from 2018, color-coded to distinguish between the different clinicians assigned.
 
-\include{tbl/2017_schedule_comparison}
 \include{tbl/2018_schedule_comparison}
 
 In order to evaluate the generated schedule and compare it with the manually created schedule, we outline the adherence of each schedule to the constraints presented in table \ref{tbl:constraint-summary}. As we can see from table \ref{tbl:constraints-comparison}, the optimal schedule generated using the software was able to satisfy all mandatory constraints. On the other hand, we can see that the manually created schedule was not able to satisfy all mandatory constraints. In particular, we see that it assigned clinicians to multiple consecutive blocks for all four years. Moreover, the manual schedule did not have an equal distribution of weekends and holidays for all four years of data. Evaluating the objectives, we see that LP outperforms the manually created schedule in all four years, by accommodating almost all time-off requests and ensuring that weekends are always assigned close to blocks.
