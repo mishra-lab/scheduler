@@ -285,7 +285,7 @@ class Scheduler:
             exe = 'cbc\\bin\\cbc.exe'
             if hasattr(sys, '_MEIPASS'): solverdir = os.path.join(sys._MEIPASS, exe)
             else: solverdir = exe
-            self.solver = pulp.COIN_CMD(path=solverdir)
+            self.solver = pulp.COIN_CMD(path=solverdir, msg=1)
         else:
             # running from source
             self.solver = pulp.PULP_CBC_CMD(msg=1)
