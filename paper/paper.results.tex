@@ -1,17 +1,16 @@
 \subsection{Software}
-We develop a software package with a user interface that implements the above LP problem and allows configuration of clinicians at [ref \ref{???}], to be used by the ID division at St. Michael's Hospital. The software was used to generate the results in the following sections, using real data as well as simulated data as input.
+We developed a software package with a user interface that implements the above LP problem and allows configuration of clinicians at [ref \ref{???}], to be used by the ID division at St. Michael's Hospital. The software was used to generate the results in the following sections, using real data as well as simulated data as input.
 
-\subsection{Infectious Diseases Division}
-We use clinician time-off requests and minimum/maximum requirements from 2015-2018 as input data for the LP problem. Table \ref{tbl:2018-schedule-comparison} presents a the optimal schedule generated using the software as well as the manually created schedule for data from 2018, color-coded to distinguish between the different clinicians assigned.
+\subsection{Infectious Diseases Division}  %main comment  = I think use past tense in writing
+We use clinician time-off requests and minimum/maximum requirements from 2015-2018 as input data for the LP problem. Table \ref{tbl:2018-schedule-comparison} presents a the optimal schedule generated using the software as well as the manually-created schedule for data from 2018. The schedule is color-coded to distinguish between the different clinicians assigned.
 
 \include{tbl/2018_schedule_comparison}
-
-In order to evaluate the generated schedule and compare it with the manually created schedule, we outline the adherence of each schedule to the constraints presented in table \ref{tbl:constraint-summary}. As we can see from table \ref{tbl:constraints-comparison}, the optimal schedule generated using the software was able to satisfy all mandatory constraints. On the other hand, we can see that the manually created schedule was not able to satisfy all mandatory constraints. In particular, we see that it assigned clinicians to multiple consecutive blocks for all four years. Moreover, the manual schedule did not have an equal distribution of weekends and holidays for all four years of data. Evaluating the objectives, we see that LP outperforms the manually created schedule in all four years, by accommodating almost all time-off requests and ensuring that weekends are always assigned close to blocks.
+First, we evaluated the software-generated schedule by comparing it with the manually-created schedule. Specifically, we examined the adherence of each schedule to the constraints presented in table \ref{tbl:constraint-summary}. As shown in table \ref{tbl:constraints-comparison}, the optimal schedule generated using the software satisfied all mandatory constraints. In contrast, the manually-created schedule was not able to satisfy all mandatory constraints. In particular, we see that manual schedule assigned clinicians to multiple consecutive blocks for all four years. Moreover, the manual schedule did not have an equal distribution of weekends and holidays for all four years of data. Evaluating the objectives, we see that LP outperforms the manually created schedule in all four years, by accommodating almost all time-off requests and ensuring that weekends are always assigned close to blocks.
 
 \include{tbl/constraints_comparison}
 
 \subsection{Simulations}
-In this section, we want to analyze properties of the LP problem on simulated data. Our goal is to see whether the aforementioned formulation of the problem is going to suffer from runtime issues, when presented with a large set of constraints arising from a hypothetical department with many clinicians, or clinicians with many time-off requests throughout the year. We also want to analyze the effect of a longer time-horizon or a large number of divisions in a department, on the run-time of the algorithm. \\
+We then examined the properties of the LP problem using simulated data. Specifically, we examined the influence of expanding the following constraints on the runtime of the algorithm: larger number of  clinicians; clinicians with many time-off requests throughout the year. We then examined the effect of a longer time-horizon or a large number of services within a single department serviced by the same clinicians, on the runtime. \\
 
 %We begin by evaluating the runtime in a single-division department, with an increasing number of clinicians, over a 1-year time-span. Figure \ref{fig:avg-runtime-clinicians} shows the average runtime in seconds of 10 runs, for different numbers of clinicians, $C = \{5, 10, 15, 25, 50, 100\}$. From the graph, we can see that the LP formulation performs extremely well on a typical hospital department with no more than 30 clinicians [ref \ref{??}], and can even handle busier departments with upwards of 100 clinicians. \\
 
@@ -31,7 +30,7 @@ In this section, we want to analyze properties of the LP problem on simulated da
 %	\label{fig:avg-runtime-divisions}
 %\end{figure}
 
-We plot the effect of an increasing number of requests per clinician on the average runtime of the LP solver in figure \ref{fig:avg-runtime-requests}. We run the program on a single-division department with 10 clinicians, and $R = \abs{\mathcal{WR}} + \abs{\mathcal{BR}} = \{1, 2, 3, 5, 10\}$ non-overlapping requests per clinician. The increase in the number of requests did not affect the runtime of the LP solver, indicating that it can accommodate a lot of flexibility in clinician requests. \\
+The effect of an increasing number of requests per clinician on the average runtime of the LP solver is shown in figure \ref{fig:avg-runtime-requests}. We executed the program on a single-division department with 10 clinicians, and $R = \abs{\mathcal{WR}} + \abs{\mathcal{BR}} = \{1, 2, 3, 5, 10\}$ non-overlapping requests per clinician. The increase in the number of requests did not affect the runtime of the LP solver, indicating that it can accommodate a lot of flexibility in clinician requests. \\
 
 \begin{figure}[h]
 	\centering
@@ -40,7 +39,7 @@ We plot the effect of an increasing number of requests per clinician on the aver
 	\label{fig:avg-runtime-requests}
 \end{figure}
 
-We evaluate the effect of a longer time-horizon on the runtime of the algorithm. Figure \ref{fig:avg-runtime-blocks} presents the average runtime over 10 runs for an increasing number of 2-week blocks $B = \{26, 52, 78, 104\}$ to simulate a department that generates schedules for a few years in advance. We can see that there is an increasing trend in the runtime, however the solver is still able to find an optimal schedule for a 4-year time horizon in a very reasonable amount of time. \\
+Figure \ref{fig:avg-runtime-blocks} presents the average runtime over 10 runs for an increasing number of 2-week blocks $B = \{26, 52, 78, 104\}$ to simulate a department that generates schedules for a few years in advance. Although here was an increasing trend in the runtime, the solver was able to find an optimal schedule for a 4-year time horizon in a very reasonable amount of time. \\ % 'very reasonable amount of time" is vague. what is reasonable? better to give a range in value.
 
 \begin{figure}[h]
 	\centering
@@ -49,7 +48,8 @@ We evaluate the effect of a longer time-horizon on the runtime of the algorithm.
 	\label{fig:avg-runtime-blocks}
 \end{figure}
 
-Lastly, we analyze the effect of increasing the number of divisions on the runtime of the program. Table \ref{tbl:runtime-divisions-comparison} presents the runtime for $D = \{1, 2, 3\}$ divisions and $C = \{10, 20, 30, 50\}$ clinicians in total across all divisions. For 2 or more divisions, a roster of more than 10 clinicians becomes impractical to schedule, as searching requires more than 24 hours. However, when relaxing the `No Consecutive Blocks' constraint, we see a great improvement in runtime for 2 and 3 divisions, and we are able to generate a schedule with upwards of 50 clinicians.
+The effect of increasing the number of divisions %do you mean services?
+on the runtime of the program is shown in Table \ref{tbl:runtime-divisions-comparison} which presents the runtime for $D = \{1, 2, 3\}$ divisions and $C = \{10, 20, 30, 50\}$ clinicians in total across all divisions. For 2 or more divisions, a roster of more than 10 clinicians becomes impractical to schedule, as searching requires more than 24 hours. However, when relaxing the `No Consecutive Blocks' constraint, we see a great improvement in runtime for 2 and 3 divisions, and we are able to generate a schedule with upwards of 50 clinicians.  %what does division mean? do you mean services?
 
 \include{tbl/runtime_divisions}
 
