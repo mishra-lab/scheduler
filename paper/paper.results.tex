@@ -13,25 +13,25 @@ First, we evaluated the software-generated schedule by comparing it with the man
 \subsection{Simulations}
 We then examined the properties of the LP problem using simulated data. Specifically, we examined the influence of expanding the following parameters on the runtime of the algorithm: number of clinicians; number of services offered in the division; amount of time-off requests per clinician throughout the year. We also examined the effect of a longer time-horizon on the runtime. \\
 
-The effect of an increasing number of requests per clinician on the runtime of the LP solver is shown in figure \ref{fig:avg-runtime-requests}. We executed the program on a department with 10 clinicians offering two services, similar to the department at St. Michael's Hospital. Each clinician had $R = \abs{\mathcal{WR}} + \abs{\mathcal{BR}} = \{???\}$ non-overlapping requests. The increase in the number of requests did not affect the runtime of the LP solver, indicating that it can accommodate a lot of flexibility in clinician requests. \\
+The effect of an increasing number of requests per clinician on the runtime of the LP solver is shown in figure \ref{fig:runtime-requests}. We executed the program on a department with 10 clinicians offering two services, similar to the department at St. Michael's Hospital. For simplicity, each clinician was configured with $\abs{\mathcal{BR}} = \{0, 5, 10, 15\}$ non-overlapping block requests. The increase in the number of requests did not affect the runtime of the LP solver, indicating that it can accommodate a lot of flexibility in clinician requests. Moreover, we see that all four runs were completed in under 1 second. \\
 
-%\begin{figure}[h]
-%	\centering
-%	\includegraphics[scale=.7]{fig/avg_runtime_requests}
-%	\caption{Average runtime for LP with an increasing number of requests per clinician}
-%	\label{fig:avg-runtime-requests}
-%\end{figure}
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=.5]{fig/runtime_requests}
+	\caption{Runtime of LP solver with an increasing number of requests per clinician}
+	\label{fig:runtime-requests}
+\end{figure}
 
-Figure \ref{fig:avg-runtime-blocks} presents the change in runtime when increasing the number of 2-week blocks $B = \{26, 52, 78, 104\}$ in a department with 10 clinicians offering two services. Although here was an increasing trend in the runtime, the solver was able to find an optimal schedule for all time horizons in under XX amount of time. \\ % 'very reasonable amount of time" is vague. what is reasonable? better to give a range in value.
+Figure \ref{fig:runtime-blocks} presents the change in runtime when increasing the number of 2-week blocks $B = \{26, 52, 78, 104\}$ in a department with 10 clinicians offering two services. There does not seem to be a strong effect on runtime when we lengthen the time-horizon of the schedule, and in fact the solver was able to find an optimal schedule for all time horizons within 3 seconds. \\ % 'very reasonable amount of time" is vague. what is reasonable? better to give a range in value.
 
-%\begin{figure}[h]
-%	\centering
-%	\includegraphics[scale=.7]{fig/avg_runtime_blocks}
-%	\caption{Average runtime for LP with an increasing number of 2-week blocks}
-%	\label{fig:avg-runtime-blocks}
-%\end{figure}
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=.5]{fig/runtime_blocks}
+	\caption{Runtime of LP solver with an increasing number of 2-week blocks}
+	\label{fig:runtime-blocks}
+\end{figure}
 
 The effect of increasing the number of services %divisions %do you mean services?
-on the runtime of the program is shown in Table \ref{tbl:runtime-services-clinicians-comparison}. We executed the algorithm for $S = \{1, 2, 3\}$ total services and $C = \{10, 20, 30, 50\}$ clinicians in total across all services. For 2 or more services, a roster of more than XX clinicians becomes impractical to schedule, as searching requires more than 24 hours. However, when relaxing the `No Consecutive Blocks' constraint, we see a great improvement in runtime for 2 and 3 services, and we are able to generate a schedule with upwards of 50 clinicians in under XX amount of time.  %what does division mean? do you mean services?
+on the runtime of the program is shown in Table \ref{tbl:runtime-services-clinicians-comparison}. We executed the algorithm for $S = \{1, 2, 3\}$ total services and $C = \{10, 20, 30, 50\}$ clinicians in total across all services. For 2 concurrent services, a roster of 30 or more clinicians becomes impractical to schedule, as searching for a solution requires over 24 hours. We see similar issues for a roster of 20 or more clinicians assigned to a division with 3 concurrent services. However, when relaxing the `No Consecutive Blocks' constraint, we see a great improvement in runtime for divisions with 2 and 3 services, and we are able to generate a schedule with upwards of 50 clinicians in under 1.5 seconds. \\  %what does division mean? do you mean services?
 
 \include{tbl/runtime_services_clinicians}
