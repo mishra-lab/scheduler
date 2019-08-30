@@ -1,8 +1,8 @@
 \subsection{Software}
-We developed a software package with a user interface that implements the above LP problem and allows configuration of clinicians at [ref \ref{???}], to be used by the ID division at St. Michael's Hospital. The software was used to generate the results in the following sections, using real data as well as simulated data as input. All the following experiments were conducted on a [X-Core CPU] computer @ [Y GHz] and [Z GB] of RAM running 64bit Windows 10. The software was implemented using the COIN-OR Branch-and-Cut open source solver version 2.9.9 \cite{johnjforrest_coin-or/cbc:_2019}.
+We developed a software package with a user interface that implements the above linear program and allows configuration of clinicians at [ref \ref{???}], to be used by the ID division at St. Michael's Hospital. The software was used to generate the results in the following sections, using real data as well as simulated data as input. All the following experiments were conducted on a [X-Core CPU] computer @ [Y GHz] and [Z GB] of RAM running 64bit Windows 10. The software was implemented using the COIN-OR Branch-and-Cut open source solver version 2.9.9 \cite{johnjforrest_coin-or/cbc:_2019}.
 
 \subsection{Infectious Diseases Division}  %main comment  = I think use past tense in writing
-We used clinician time-off requests and minimum/maximum requirements from 2015-2018 as input data for the LP problem. Table \ref{tbl:2018-schedule-comparison} presents the optimal schedule generated using the software as well as the manually-created schedule for data from 2018. The schedule is color-coded to distinguish between the different clinicians assigned. \\
+We used clinician time-off requests and minimum/maximum requirements from 2015-2018 as input data for the ILP problem. Table \ref{tbl:2018-schedule-comparison} presents the optimal schedule generated using the software as well as the manually-created schedule for data from 2018. The schedule is color-coded to distinguish between the different clinicians assigned. \\
 
 \include{tbl/2018_schedule_comparison}
 
@@ -11,14 +11,14 @@ First, we evaluated the software-generated schedule by comparing it with the man
 \include{tbl/constraints_comparison}
 
 \subsection{Simulations}
-We then examined the properties of the LP problem using simulated data. Specifically, we examined the influence of expanding the following parameters on the runtime of the algorithm: number of clinicians; number of services offered in the division; amount of time-off requests per clinician throughout the year. We also examined the effect of a longer time-horizon on the runtime. \\
+We then examined the properties of the ILP problem using simulated data. Specifically, we examined the influence of expanding the following parameters on the runtime of the algorithm: number of clinicians; number of services offered in the division; amount of time-off requests per clinician throughout the year. We also examined the effect of a longer time-horizon on the runtime. \\
 
-The effect of an increasing number of requests per clinician on the runtime of the LP solver is shown in figure \ref{fig:runtime-requests}. We executed the program on a department with 10 clinicians offering two services, similar to the department at St. Michael's Hospital. For simplicity, each clinician was configured with $\abs{\mathcal{BR}} = \{0, 5, 10, 15\}$ non-overlapping block requests. The increase in the number of requests did not affect the runtime of the LP solver, indicating that it can accommodate a lot of flexibility in clinician requests. Moreover, we see that all four runs were completed in under 1 second. \\
+The effect of an increasing number of requests per clinician on the runtime of the ILP solver is shown in figure \ref{fig:runtime-requests}. We executed the program on a department with 10 clinicians offering two services, similar to the department at St. Michael's Hospital. For simplicity, each clinician was configured with $\abs{\mathcal{BR}} = \{0, 5, 10, 15\}$ non-overlapping block requests. The increase in the number of requests did not affect the runtime of the ILP solver, indicating that it can accommodate a lot of flexibility in clinician requests. Moreover, we see that all four runs were completed in under 1 second. \\
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=.5]{fig/runtime_requests}
-	\caption{Runtime of LP solver with an increasing number of requests per clinician}
+	\caption{Runtime of ILP solver with an increasing number of requests per clinician}
 	\label{fig:runtime-requests}
 \end{figure}
 
@@ -27,7 +27,7 @@ Figure \ref{fig:runtime-blocks} presents the change in runtime when increasing t
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=.5]{fig/runtime_blocks}
-	\caption{Runtime of LP solver with an increasing number of 2-week blocks}
+	\caption{Runtime of ILP solver with an increasing number of 2-week blocks}
 	\label{fig:runtime-blocks}
 \end{figure}
 
