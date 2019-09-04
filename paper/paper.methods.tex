@@ -68,7 +68,7 @@ The Block-Weekend Adjacency is optimized by considering the product $X_{c, b, s}
 \begin{align}
 &Q_3(X, Y) = \sum_{c=1}^{C} \sum_{b=1}^{B} \sum_{s=1}^{S} X_{c, b, s}\cdot Y_{c, w=\varphi(b)} \tag{BWA} \label{eqn:obj-block-weekend-adj}
 \end{align}
-where $\varphi(b)$ maps a block one-to-one to an adjacent weekend, by some appropriate definition of adjacency. For instance, clinicians might want to be assigned during a weekend that falls within an assigned block. In this case, we will have $\varphi(b) = 2b-1$. \\
+where $\varphi(b)$ is a one-to-one mapping of a block to an adjacent weekend, by some appropriate definition of adjacency. For instance, clinicians might want to be assigned during a weekend that falls within an assigned block. In this case, we will have $\varphi(b) = 2b-1$. \\
 
 %So if clinician $c$ is assigned to work during block 3, corresponding to weeks 5 and 6 assuming 2-week blocks, they might also want to be assigned to work during weekend 5. In that case, we would like $X_{c, b=3, s} \cdot Y_{c, w=5}$ to be 1, since that indicates both variables are assigned. If at least one of the two variables is not assigned, the product will be 0. 
 % I really liked the example explanation!
