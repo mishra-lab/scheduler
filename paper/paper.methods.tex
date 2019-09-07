@@ -1,10 +1,10 @@
 In this section, we present an application of ILP to solve the clinician
-scheduling problem presented in Section \ref{sec:problem}. First, we describe
+scheduling problem presented in Section~\ref{sec:problem}. First, we describe
 the sets, indices and variables present in the formulation of the program. We
-then convert the constraints given in Table \ref{tbl:constraint-summary} into
+then convert the constraints given in Table~\ref{tbl:constraint-summary} into
 mathematical terms, and outline the objective function of the linear program.
 
-\subsection{Sets and Indices} \label{sec:meth-sets-indices}
+\subsection{Sets and Indices}\label{sec:meth-sets-indices}
 We denote the set of all services %or I think services is good (vs.
 %services/divisions) as you define two types of services (ID vs. HIV) in the
 %problem statement
@@ -23,8 +23,7 @@ long/holiday weekends such as the Canadian Civic Day weekend in August. Lastly,
 we denote with $\mathcal{BR}_c$ and $\mathcal{WR}_c$ the block and weekend
 requests of clinicians as subsets of all blocks and weekends, respectively. For
 instance, if clinician $c$'s requests intersect with blocks 1 and 2, and weekend
-1, then $\mathcal{BR}_c = \{1, 2\}$ and $\mathcal{WR}_c = \{1\}$. Table
-\ref{tbl:sets-indices} presents a summary of the sets and indices described. 
+1, then $\mathcal{BR}_c = \{1, 2\}$ and $\mathcal{WR}_c = \{1\}$. Table~\ref{tbl:sets-indices} presents a summary of the sets and indices described. 
 
 \begin{table}[h]
 	\centering
@@ -47,11 +46,10 @@ instance, if clinician $c$'s requests intersect with blocks 1 and 2, and weekend
 		$\mathcal{WR}_c \subset \mathcal{W}$ &                & weekend requests of
 		clinician $c$
 	\end{tabular}
-	\caption{Description of sets and indices in the problem}
-	\label{tbl:sets-indices}
+	\caption{Description of sets and indices in the problem}\label{tbl:sets-indices}
 \end{table}
 
-\subsection{Variables} \label{sec:meth-variables}
+\subsection{Variables}\label{sec:meth-variables}
 Since each clinician may be assigned to work on any service, during any block of
 the year, we denote such an assignment as a binary variable $X_{c, b, s}$. A
 value of 1 indicates that the given clinician $c$ is assigned to provide service
@@ -59,8 +57,7 @@ $s$ during block $b$. Weekend assignments are similarly defined using a binary
 variable $Y_{c, w}$, but without a service index, as clinicians are expected to
 provide all services during the weekends. We then introduce a set of constants
 $m_{c, s}$ and $M_{c, s}$ to constrain the minimal and maximal number of blocks
-each clinician is allowed to work during the year. Table
-\ref{tbl:variables-constants} presents a summary of the constants and variables
+each clinician is allowed to work during the year. Table~\ref{tbl:variables-constants} presents a summary of the constants and variables
 in the problem.
 %To optimize the soft constraint Block-Weekend Adjacency, we maximize the
 %product $X_{c, b, s} \cdot Y_{c, w}$ for adjacent blocks and weekends. To
@@ -86,12 +83,11 @@ in the problem.
 		$M_{c, s}$                 & maximum number of blocks clinician $c$ should
 		cover on service $s$
 	\end{tabular}
-	\caption{Description of variables and constants in the problem}
-	\label{tbl:variables-constants}
+	\caption{Description of variables and constants in the problem}\label{tbl:variables-constants}
 \end{table}
 
-\subsection{Constraints} \label{sec:meth-constraints}
-We now formalize the hard constraints in Table \ref{tbl:constraint-summary}
+\subsection{Constraints}\label{sec:meth-constraints}
+We now formalize the hard constraints in Table~\ref{tbl:constraint-summary}
 using the variables defined above.
 
 \begin{align}
@@ -112,12 +108,12 @@ s\in\mathcal{S} \tag{NCB} \label{eqn:constr-no-consec-blocks} \\
 \label{eqn:constr-equal-holidays}
 \end{align}
 
-\subsection{Objectives} \label{sec:meth-objectives}
-As described in Section \ref{sec:problem}, the soft constraints of the clinician
+\subsection{Objectives}\label{sec:meth-objectives}
+As described in Section~\ref{sec:problem}, the soft constraints of the clinician
 scheduling problem include: satisfying clinician block off requests (BR),
 satisfying clinician weekend off requests (WR), and assigning weekends closer to
 blocks (BWA). We convert these soft constraints into linear objective functions
-of the binary variables defined in Section \ref{sec:meth-variables}. Objectives
+of the binary variables defined in Section~\ref{sec:meth-variables}. Objectives
 (\ref{eqn:obj-block-requests}) and (\ref{eqn:obj-weekend-requests}) can be
 written as the following linear functions:  %minor suggestion - consider
 %numbering the objectives for ease later when saying things like "these two
@@ -126,10 +122,10 @@ written as the following linear functions:  %minor suggestion - consider
 %to. 
 \begin{align}
 &Q_1(X) = \sum_{c=1}^{C} \sum_{b=1}^{B} \sum_{s=1}^{S}
-(-1)^{\ind(b\,\in\,\mathcal{BR}_c)}\cdot X_{c, b, s} \tag{BR}
+{(-1)}^{\ind(b\,\in\,\mathcal{BR}_c)}\cdot X_{c, b, s} \tag{BR}
 \label{eqn:obj-block-requests}\\
 &Q_2(Y) = \sum_{c=1}^{C} \sum_{w=1}^{W}
-(-1)^{\ind(w\,\in\,\mathcal{WR}_c)}\cdot Y_{c, w} \tag{WR}
+{(-1)}^{\ind(w\,\in\,\mathcal{WR}_c)}\cdot Y_{c, w} \tag{WR}
 \label{eqn:obj-weekend-requests}
 \end{align}
 where $\ind(P)$ is the indicator function that has value 1 when predicate $P$
@@ -161,7 +157,7 @@ we will have $\varphi(b) = 2b-1$. \\
 However, as it is, $Q_3$ is not a linear function of its variables and cannot be
 optimized in a linear programming framework. An approach used to convert such
 functions into linear objectives involves introducing a helper variable and
-additional constraints \cite{hammer_boolean_1968}. In our case, introducing a
+additional constraints~\cite{hammer_boolean_1968}. In our case, introducing a
 variable $Z_{c, b, s}$ for every product $X_{c, b, s} \cdot Y_{c, w}$ with $w =
 \varphi(b)$, and constraining $Z$ such that 
 \begin{align}
@@ -190,8 +186,7 @@ of the normalized objective functions,
 \bar{Q}_3(Z)
 \end{equation}
 where $\bar{Q}_i$ is the normalization of objective $Q_i$, and $0 \leq \alpha,
-\beta \leq 1$. This method guarantees an optimal solution to be Pareto optimal
-\cite{stanimirovic_linear_2011}. \\
+\beta \leq 1$. This method guarantees an optimal solution to be Pareto optimal~\cite{stanimirovic_linear_2011}. \\
 
 %Thus, our clinician scheduling problem is a multiple objective optimization
 %problem. The most common approach to solving multiple objective optimization

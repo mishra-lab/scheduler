@@ -21,25 +21,22 @@ hospital department. \\
 %optimally, to ensure the best possible service for its patients.
 
 Automated methods to optimize schedules have been studied and applied in many
-industries, including transportation \cite{aickelin_improved_2006,
-	goel_truck_2012, gunther_combined_2010}, manufacturing
-\cite{al-yakoob_mixed-integer_2007, al-yakoob_column_2008,
-	alfares_simulation_2007}, retail \cite{chapados_retail_2011,
-	nissen_automatic_2010} and military \cite{horn_scheduling_2007,
+industries, including transportation~\cite{aickelin_improved_2006,
+	goel_truck_2012, gunther_combined_2010}, manufacturing~\cite{al-yakoob_mixed-integer_2007, al-yakoob_column_2008,
+	alfares_simulation_2007}, retail~\cite{chapados_retail_2011,
+	nissen_automatic_2010} and military~\cite{horn_scheduling_2007,
 	laguna_modeling_2005}. Of special interest to a clinician on-call scheduling
 problem are the approaches to schedule nurses, who often work in shifts. In the
 nurse scheduling problem, the goal is to find an optimal assignment of nurses to
 shifts that satisfies all of the hard constraints, such as hospital regulations,
 and as many soft constraints as possible, which may include nurse preferences. A
 wide variety of approaches, including exact and heuristic approaches, have been
-used to solve the nurse scheduling problem: integer linear programming
-\cite{azaiez_0-1_2005, trilling_nurse_2006, widyastiti_nurses_2016}, network
-flows \cite{el_adoly_new_2018}, genetic algorithms
-\cite{aickelin_exploiting_2000, jan_evolutionary_2000, kawanaka_genetic_2001},
-simulated annealing \cite{jaszkiewicz_metaheuristic_1997}, and artificial
-intelligence \cite{abdennadher_nurse_nodate, li_hybrid_2003}. A comprehensive
+used to solve the nurse scheduling problem: integer linear programming~\cite{azaiez_0-1_2005, trilling_nurse_2006, widyastiti_nurses_2016}, network
+flows~\cite{el_adoly_new_2018}, genetic algorithms~\cite{aickelin_exploiting_2000, jan_evolutionary_2000, kawanaka_genetic_2001},
+simulated annealing~\cite{jaszkiewicz_metaheuristic_1997}, and artificial
+intelligence~\cite{abdennadher_nurse_nodate, li_hybrid_2003}. A comprehensive
 literature review of these and other methods applied to nurse rostering is
-presented in \cite{burke_state_2004}. \\
+presented in~\cite{burke_state_2004}. \\
 
 %An extensive literature review of these and other methods is presented by [??].
 %We will briefly summarize the main ideas of some of these approaches. \\ SM -
@@ -55,11 +52,11 @@ clinicians in that department, they are difficult to readily adapt to other
 departments in the same hospital or other hospitals. % explain why hard to
 %adapt?... what makes their generalizablility/adaptability limited?
 Moreover, the large number of variables and constraints also leads to
-computational complexity issues \cite{goos_complexity_1996}, especially when
+computational complexity issues~\cite{goos_complexity_1996}, especially when
 using exact methods for finding the solution. In this paper, we tackle a version
 of the nurse scheduling problem arising from a case study of one clinical
 division, providing two different services simultaneously (general infectious
-disease (ID) consults; and HIV consults service) at St. Michael's Hospital in
+disease (ID) consults; and HIV consults service) at St.\ Michael's Hospital in
 Toronto, Canada. Our goal is to (1) present a simple integer linear programming
 (ILP) formulation for the scheduling problem as developed for the hospital, and
 describe the adaptability of the formulation to solving similar problems in
@@ -73,9 +70,9 @@ in difficult instances of the problem. \\
 %describe the adaptability of the formulation as a basic framework for solving
 %similar problems in other departments. \\ %make #3 an objective
 
-We begin by describing the problem in Section \ref{sec:problem}, and presenting
-our ILP formulation in Section \ref{sec:methods}. Next, we compare the results
+We begin by describing the problem in Section~\ref{sec:problem}, and presenting
+our ILP formulation in Section~\ref{sec:methods}. Next, we compare the results
 of our formulation to manually-created schedules, and evaluate the performance
-of the algorithm on simulated data in Section \ref{sec:results}. Finally, we
-discuss and interpret the results in Section \ref{sec:discussion}. % list the
+of the algorithm on simulated data in Section~\ref{sec:results}. Finally, we
+discuss and interpret the results in Section~\ref{sec:discussion}. % list the
 %main contents/elements of the paper.
