@@ -1,28 +1,71 @@
 \subsection{Software}
-We developed a software package with a user interface that implements the above linear program and allows configuration of clinicians at [ref \ref{???}], to be used by the ID division at St. Michael's Hospital. The software was used to generate the results in the following sections, using real data as well as simulated data as input. All the following experiments were conducted on an Intel Core i7-4770k CPU @ 3.50 GHz and 16 GB of RAM running 64-bit Windows 10. The software was implemented using the COIN-OR Branch-and-Cut open source solver version 2.9.9 \cite{johnjforrest_coin-or/cbc:_2019}.
+We developed a software package with a user interface that implements the above
+linear program and allows configuration of clinicians at [ref \ref{???}], to be
+used by the ID division at St. Michael's Hospital. The software was used to
+generate the results in the following sections, using real data as well as
+simulated data as input. All the following experiments were conducted on an
+Intel Core i7-4770k CPU @ 3.50 GHz and 16 GB of RAM running 64-bit Windows 10.
+The software was implemented using the COIN-OR Branch-and-Cut open source solver
+version 2.9.9 \cite{johnjforrest_coin-or/cbc:_2019}.
 
-\subsection{Infectious Diseases Division}  %main comment  = I think use past tense in writing
-We used clinician time-off requests and minimum/maximum requirements from 2015-2018 as input data for the ILP problem. Table \ref{tbl:2018-schedule-comparison} presents the optimal schedule generated using the software as well as the manually-created schedule for data from 2018. The schedule is color-coded to distinguish between the different clinicians assigned. \\
+\subsection{Infectious Diseases Division}  %main comment  = I think use past
+%tense in writing
+We used clinician time-off requests and minimum/maximum requirements from
+2015-2018 as input data for the ILP problem. Table
+\ref{tbl:2018-schedule-comparison} presents the optimal schedule generated using
+the software as well as the manually-created schedule for data from 2018. The
+schedule is color-coded to distinguish between the different clinicians
+assigned. \\
 
 \include{tbl/2018_schedule_comparison}
 
-First, we evaluated the software-generated schedule by comparing it with the manually-created schedule. Specifically, we examined the adherence of each schedule to the constraints presented in Table \ref{tbl:constraint-summary}. As shown in Table \ref{tbl:constraints-comparison}, the optimal schedule generated using the software satisfied all mandatory constraints. In contrast, the manually-created schedule was not able to satisfy all mandatory constraints. In particular, we see that the manual schedule assigned clinicians to multiple consecutive blocks in all four years. Moreover, the manual schedule did not have an equal distribution of weekends and holidays for all four years of data. Evaluating the objectives, we see that LP outperforms the manually created schedule in all four years, by accommodating almost all time-off requests and ensuring that weekends are always assigned close to blocks. \\
+First, we evaluated the software-generated schedule by comparing it with the
+manually-created schedule. Specifically, we examined the adherence of each
+schedule to the constraints presented in Table \ref{tbl:constraint-summary}. As
+shown in Table \ref{tbl:constraints-comparison}, the optimal schedule generated
+using the software satisfied all mandatory constraints. In contrast, the
+manually-created schedule was not able to satisfy all mandatory constraints. In
+particular, we see that the manual schedule assigned clinicians to multiple
+consecutive blocks in all four years. Moreover, the manual schedule did not have
+an equal distribution of weekends and holidays for all four years of data.
+Evaluating the objectives, we see that LP outperforms the manually created
+schedule in all four years, by accommodating almost all time-off requests and
+ensuring that weekends are always assigned close to blocks. \\
 
 \include{tbl/constraints_comparison}
 
 \subsection{Simulations}
-We then examined the properties of the ILP problem using simulated data. Specifically, we examined the influence of expanding the following parameters on the runtime of the algorithm: number of clinicians; number of services offered in the division; amount of time-off requests per clinician throughout the year. We also examined the effect of a longer time-horizon on the runtime. \\
+We then examined the properties of the ILP problem using simulated data.
+Specifically, we examined the influence of expanding the following parameters on
+the runtime of the algorithm: number of clinicians; number of services offered
+in the division; amount of time-off requests per clinician throughout the year.
+We also examined the effect of a longer time-horizon on the runtime. \\
 
-The effect of an increasing number of requests per clinician on the runtime of the ILP solver is shown in Figure \ref{fig:runtime-requests}. We executed the program on a department with 10 clinicians offering two services, similar to the department at St. Michael's Hospital. For simplicity, each clinician was configured with $\abs{\mathcal{BR}} = \{0, 5, 10, 15\}$ non-overlapping block requests. The increase in the number of requests did not affect the runtime of the ILP solver, indicating that it can accommodate a lot of flexibility in clinician requests. Moreover, we see that all four runs were completed in under 1 second. \\
+The effect of an increasing number of requests per clinician on the runtime of
+the ILP solver is shown in Figure \ref{fig:runtime-requests}. We executed the
+program on a department with 10 clinicians offering two services, similar to the
+department at St. Michael's Hospital. For simplicity, each clinician was
+configured with $\abs{\mathcal{BR}} = \{0, 5, 10, 15\}$ non-overlapping block
+requests. The increase in the number of requests did not affect the runtime of
+the ILP solver, indicating that it can accommodate a lot of flexibility in
+clinician requests. Moreover, we see that all four runs were completed in under
+1 second. \\
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=.5]{fig/runtime_requests}
-	\caption{Runtime of ILP solver with an increasing number of requests per clinician}
+	\caption{Runtime of ILP solver with an increasing number of requests per
+		clinician}
 	\label{fig:runtime-requests}
 \end{figure}
 
-Figure \ref{fig:runtime-blocks} presents the change in runtime when increasing the number of 2-week blocks $B = \{26, 52, 78, 104\}$ in a department with 10 clinicians offering two services. There does not seem to be a strong effect on runtime when we lengthen the time-horizon of the schedule, and in fact the solver was able to find an optimal schedule for all time horizons within 3 seconds. \\ % 'very reasonable amount of time" is vague. what is reasonable? better to give a range in value.
+Figure \ref{fig:runtime-blocks} presents the change in runtime when increasing
+the number of 2-week blocks $B = \{26, 52, 78, 104\}$ in a department with 10
+clinicians offering two services. There does not seem to be a strong effect on
+runtime when we lengthen the time-horizon of the schedule, and in fact the
+solver was able to find an optimal schedule for all time horizons within 3
+seconds. \\ % 'very reasonable amount of time" is vague. what is reasonable?
+%better to give a range in value.
 
 \begin{figure}[h]
 	\centering
@@ -31,7 +74,17 @@ Figure \ref{fig:runtime-blocks} presents the change in runtime when increasing t
 	\label{fig:runtime-blocks}
 \end{figure}
 
-The effect of increasing the number of services %divisions %do you mean services?
-on the runtime of the program is shown in Table \ref{tbl:runtime-services-clinicians-comparison}. We executed the algorithm for $S = \{1, 2, 3\}$ total services and $C = \{10, 20, 30, 50\}$ clinicians in total across all services. For 2 concurrent services, a roster of 30 or more clinicians becomes impractical to schedule, as searching for a solution required over 24 hours. We saw similar issues for a roster of 20 or more clinicians assigned to a division with 3 concurrent services. However, when relaxing the NCB constraint, we saw a great improvement in runtime for divisions with 2 and 3 services, and we were able to generate a schedule with upwards of 50 clinicians in under 1.5 seconds. \\  %what does division mean? do you mean services?
+The effect of increasing the number of services %divisions %do you mean
+%services?
+on the runtime of the program is shown in Table
+\ref{tbl:runtime-services-clinicians-comparison}. We executed the algorithm for
+$S = \{1, 2, 3\}$ total services and $C = \{10, 20, 30, 50\}$ clinicians in
+total across all services. For 2 concurrent services, a roster of 30 or more
+clinicians becomes impractical to schedule, as searching for a solution required
+over 24 hours. We saw similar issues for a roster of 20 or more clinicians
+assigned to a division with 3 concurrent services. However, when relaxing the
+NCB constraint, we saw a great improvement in runtime for divisions with 2 and 3
+services, and we were able to generate a schedule with upwards of 50 clinicians
+in under 1.5 seconds. \\  %what does division mean? do you mean services?
 
 \include{tbl/runtime_services_clinicians}
