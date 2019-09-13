@@ -27,10 +27,12 @@ instance, if clinician $c$'s requests intersect with blocks 1 and 2, and weekend
 
 \begin{table}[h]
 	\centering
+  \caption{Description of sets and indices in the problem}%
+  \label{tbl:sets-indices}
 	\begin{tabular}{ c c l }
-		\hline
+		\toprule
 		\textbf{Set}                         & \textbf{Index} & \textbf{Description}  
-		\\ \hline
+		\\ \midrule
 		$\mathcal{S} = \{1, \ldots, S \}$    & $s$            & services              
 		\\
 		$\mathcal{C} = \{1, \ldots, C \}$    & $c$            & clinicians            
@@ -44,9 +46,10 @@ instance, if clinician $c$'s requests intersect with blocks 1 and 2, and weekend
 		$\mathcal{BR}_c \subset \mathcal{B}$ &                & block requests of
 		clinician $c$   \\
 		$\mathcal{WR}_c \subset \mathcal{W}$ &                & weekend requests of
-		clinician $c$
+		clinician $c$ \\
+    \bottomrule
 	\end{tabular}
-	\caption{Description of sets and indices in the problem}\label{tbl:sets-indices}
+	
 \end{table}
 
 \subsection{Variables}\label{sec:meth-variables}
@@ -68,10 +71,12 @@ in the problem.
 
 \begin{table}[h]
 	\centering
+  \caption{Description of variables and constants in the problem}%
+  \label{tbl:variables-constants}
 	\begin{tabular}{ c l }
-		\hline
+		\toprule
 		\textbf{Name}              & \textbf{Description}                             
-		\\ \hline
+		\\ \midrule
 		$X_{c, b, s} \in \{0, 1\}$ & assignment of clinician $c$ to service $s$ on
 		block $b$            \\
 		$Y_{c, w} \in \{0, 1\}$    & assignment of clinician $c$ on weekend $w$       
@@ -81,9 +86,9 @@ in the problem.
 		$m_{c, s}$                 & minimum number of blocks clinician $c$ should
 		cover on service $s$ \\
 		$M_{c, s}$                 & maximum number of blocks clinician $c$ should
-		cover on service $s$
+		cover on service $s$ \\
+    \bottomrule
 	\end{tabular}
-	\caption{Description of variables and constants in the problem}\label{tbl:variables-constants}
 \end{table}
 
 \subsection{Constraints}\label{sec:meth-constraints}
