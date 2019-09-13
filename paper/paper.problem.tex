@@ -35,11 +35,18 @@ Table~\ref{tbl:constraint-summary}.
 
 \begin{table}[h]
 	\centering
+	\caption{Summary of the constraints for the clinician scheduling problem}%
+  \label{tbl:constraint-summary}
+  % JK: table caption should go at the top.
+  %     The spacing can be funny so I use:
+  %     \usepackage{caption}\captionsetup[table]{skip=1em}
+  %     also labels should be on their own line.
+  % JK: below: I would consider making the 2-3 letter abbreviations its own column
 	\begin{tabular}{ l l l }
-		\hline
+		\toprule % JK: different line weights support table structure
 		\textbf{Constraint Name} & \textbf{Description}                               
 		&
-		\textbf{Type} \\ \hline
+		\textbf{Type} \\ \midrule
 		Block Coverage (BC)           & \makecell[l]{each service needs to have
 			exactly \\ one clinician that covers any given block}                           
 		& Hard          \\ \hline
@@ -70,8 +77,9 @@ Table~\ref{tbl:constraint-summary}.
 		Block-Weekend Adjacency (BWA)  & \makecell[l]{the block and weekend
 			assignments of a given \\ clinician should be adjacent}                         
 		& Soft
+    \\\bottomrule % JK: I think usually table bottom also has a rule
 	\end{tabular}
-	\caption{Summary of the constraints for the clinician scheduling problem}\label{tbl:constraint-summary}
+  % JK: please define Hard & Soft constraints in a footnote
 \end{table}
 
 In most scheduling problems, the constraints can be divided into hard and soft

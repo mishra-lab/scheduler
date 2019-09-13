@@ -16,7 +16,9 @@ the software as well as the manually-created schedule for data from 2018. The
 schedule is color-coded to distinguish between the different clinicians
 assigned.
 
-\include{tbl/2018_schedule_comparison}
+\input{tbl/2018_schedule_comparison}
+% JK: I think use input not include here to avoid unnecessary page breaks
+%     https://tex.stackexchange.com/questions/246
 
 First, we evaluated the software-generated schedule by comparing it with the
 manually-created schedule. Specifically, we examined the adherence of each
@@ -31,7 +33,7 @@ Evaluating the objectives, we see that LP outperforms the manually created
 schedule in all four years, by accommodating almost all time-off requests and
 ensuring that weekends are always assigned close to blocks.
 
-\include{tbl/constraints_comparison}
+\input{tbl/constraints_comparison}
 
 \subsection{Simulations}
 We then examined the properties of the ILP problem using simulated data.
@@ -52,9 +54,15 @@ clinician requests. Moreover, we see that all four runs were completed in under
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[scale=.5]{fig/runtime_requests}
-	\caption{Runtime of ILP solver with an increasing number of requests per
-		clinician}\label{fig:runtime-requests}
+	\includegraphics[scale=.5]{fig/runtime_requests} % JK: can you export this to PDF or SVG to avoid pixelation?
+	\caption{Runtime of ILP solver with an increasing number of requests per clinician}
+  \label{fig:runtime-requests}
+  % JK: The trend here is a bit confusing, since I think you're trying to say
+  %     that the runtime is not affected by the number of constraints,
+  %     but there is noise in these results.
+  %     I would re-run this 10-100 times and average the results so that (I expect)
+  %     the mean trend is actually flat. You could (should) then also present the runtimes
+  %     as box-plots to show that the trend is less than the variability.
 \end{figure}
 
 Figure~\ref{fig:runtime-blocks} presents the change in runtime when increasing
@@ -68,7 +76,10 @@ seconds. % 'very reasonable amount of time" is vague. what is reasonable?
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=.5]{fig/runtime_blocks}
-	\caption{Runtime of ILP solver with an increasing number of 2-week blocks}\label{fig:runtime-blocks}
+	\caption{Runtime of ILP solver with an increasing number of 2-week blocks}%
+  \label{fig:runtime-blocks}
+  % JK: same comment as above re. trends -- are you trying to show one?
+  % JK: Thess figures could also possible be Figure 1. a) and b) 
 \end{figure}
 
 The effect of increasing the number of services %divisions %do you mean
@@ -83,4 +94,4 @@ NCB constraint, we saw a great improvement in runtime for divisions with 2 and 3
 services, and we were able to generate a schedule with upwards of 50 clinicians
 in under 1.5 seconds.  %what does division mean? do you mean services?
 
-\include{tbl/runtime_services_clinicians}
+\input{tbl/runtime_services_clinicians}
