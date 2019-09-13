@@ -131,7 +131,7 @@ written as the following linear functions:  %minor suggestion - consider
 where $\ind(P)$ is the indicator function that has value 1 when predicate $P$
 holds and 0 otherwise. In the above two objectives, we penalize any assignments
 that conflict with a block or weekend request, and aim to maximize the
-non-conflicting assignments. \\
+non-conflicting assignments.
 
 The Block-Weekend Adjacency is optimized by considering the product $X_{c, b,
 	s}\cdot Y_{c, w}$ for values of $w$ ``adjacent'' to the value of $b$. This
@@ -144,7 +144,7 @@ to the maximization objective %avoid editorial adjectives
 where $\varphi(b)$ is a one-to-one mapping of a block to an adjacent weekend, by
 some appropriate definition of adjacency. For instance, clinicians might want to
 be assigned during a weekend that falls within an assigned block. In this case,
-we will have $\varphi(b) = 2b-1$. \\
+we will have $\varphi(b) = 2b-1$.
 
 %So if clinician $c$ is assigned to work during block 3, corresponding to weeks
 %5 and 6 assuming 2-week blocks, they might also want to be assigned to work
@@ -172,7 +172,7 @@ allows us to rewrite $Q_3$ as a linear function of $Z$,
 Indeed from Eqns. (\ref{eqn:helper-x-constraint}) and
 (\ref{eqn:helper-y-constraint}),  whenever $X_{c, b, s} \cdot Y_{c, w} = 1$
 (respectively, 0), $Z_{c, b, s}$ can attain a maximum value of 1 (respectively,
-0), giving us the correct adjacency maximization objective. \\
+0), giving us the correct adjacency maximization objective.
 %Indeed, whenever $X_{c, b, s} \cdot Y_{c, w} = 1$, $Z_{c, b, s}$ can attain a
 %maximum value of 1, and whenever $X_{c, b, s} \cdot Y_{c, w} = 0$, at least one
 %of $X_{c, b, s}$ or $Y_{c, w}$ must be 0, so $Z_{c, b, s}$ will be constrained
@@ -186,7 +186,7 @@ of the normalized objective functions,
 \bar{Q}_3(Z)
 \end{equation}
 where $\bar{Q}_i$ is the normalization of objective $Q_i$, and $0 \leq \alpha,
-\beta \leq 1$. This method guarantees an optimal solution to be Pareto optimal~\cite{stanimirovic_linear_2011}. \\
+\beta \leq 1$. This method guarantees an optimal solution to be Pareto optimal~\cite{stanimirovic_linear_2011}.
 
 %Thus, our clinician scheduling problem is a multiple objective optimization
 %problem. The most common approach to solving multiple objective optimization
