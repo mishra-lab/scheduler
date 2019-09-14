@@ -1,36 +1,42 @@
 At St.\ Michael's Hospital, the division of infectious diseases (ID) offers
-general ID and HIV consultation on inpatients as two parallel services. Each
-service provides clinical care throughout the year, during regular work weeks as
-well as weekends and holidays. The clinicians in the division typically receive
-a schedule in advance, outlining their on-call service dates for the full year.
-In the yearly schedule each clinician is assigned to blocks of regular work
-weeks and weekends. Each block corresponds to two consecutive work weeks. Apart
+separate but concurrent services for general ID and HIV consultation. Each
+service provides clinical care throughout the year, during regular working hours
+and on weekends and holidays. The schedule is created in advance,
+outlining all work-week and weekend shifts for the full year.
+In the yearly schedule clinicians are assigned to ``blocks'' of
+two consecutive regular work weeks and individual weekends. Apart
+% JK: when I first read this I thought weekends were also in 2-week blocks
 from long (holiday) weekends, a work week starts on Monday at 8 A.M. and ends on
 Friday at 5 P.M. Accordingly, weekend service starts on Friday at 5 P.M., and
 ends on Monday at 8 A.M. During the weekend, ID and HIV consultation services
 are combined and provided by one clinician. During the regular work week the ID
 and HIV services are led by one clinician each.
 
-Several constraints are placed on the on-call assignments. First, each clinician
-has limits on the number of blocks they can and must work during the year,
-depending on the type of consultation. For instance, a clinician might have to
-provide 3-5 blocks of general ID consultation as well as 2-3 blocks of HIV
-consultation throughout the year. These limits may change from year to year as
-the number of clinicians in the department changes. Moreover, the schedule
+Two types of constraints are placed on the clinician assignments. 
+% JK: I think you need to introduce BC and WC constraints here,
+%     since they appear in Table 1 without text in the body.
+First, each clinician
+must work between a minimum and maximum number of blocks of each service during the year.
+For instance, one clinician might have to
+provide 3-5 blocks of general ID service and 2-3 blocks of HIV service
+% JK: trying to reduce synonyms "service" / "consultation"
+throughout the year. These limits may be different fo each clinician,
+and they may change from year to year as
+the number of clinicians in the department changes. Second, the schedule
 should not assign a clinician to work for two consecutive blocks or two
-consecutive weekends in a row. The schedule should also distribute both regular
-and holiday weekends equally among all clinicians.
+consecutive weekends. The schedule should also distribute regular
+weekends and holiday weekends each equally among all clinicians.
 
-In addition to maintaining a balanced work load among clinicians, the schedule
-should also accommodate their preferences. Clinicians provide their requests for
-time off ahead of schedule generation so that the requests may be integrated
-into the schedule. Individuals may specify days, weeks or weekends off, with the
+In addition to balancing the work load among clinicians, the schedule
+should accommodate their preferences. Clinicians provide their requests for
+time off before schedule generation so that the requests may be integrated
+into the schedule. Clinician may specify days, weeks or weekends off, with the
 understanding that any blocks overlapping with their request will be assigned to
 a different clinician where possible. For example, if a clinician only requests
-a given Monday and Tuesday off, the schedule will generally avoid assigning the
-entire block to that clinician. Clinicians also prefer to have their weekend and
-block assignments close together, so the schedule should account for this when
-distributing assignments. A summary of the outlined constraints is given in
+a given Monday and Tuesday off, the schedule should avoid assigning the
+entire block to that clinician. Clinicians also typically prefer to have their weekend and
+block assignments side by side, so the schedule should accommodate this where possible.
+A summary of the outlined constraints is given in
 Table~\ref{tbl:constraint-summary}.
 
 \begin{table}[h]
@@ -84,16 +90,24 @@ Table~\ref{tbl:constraint-summary}.
 
 In most scheduling problems, the constraints can be divided into hard and soft
 constraints. Hard constraints must be satisfied by any candidate solution, while
-soft constraints can be used to select a more favourable solution from all
-candidate solutions. Typically, soft constraints are encoded as objective
-functions rather than actual constraints. These objective functions are
-maximized or minimized when finding a solution. In the case of our clinician
-scheduling problem, we chose Block Requests, Weekend Requests and Block-Weekend
+soft constraints can be used to select a more favourable solution from a set of
+candidate solutions. Typically, soft constraints are therefore encoded as objective
+functions which are
+maximized when finding a solution. In the case of the clinician
+% JK: the direction of max / minimization is arbitrary,
+%     I think sufficient to pick one here to avoid confusion.
+scheduling problem described above, we chose Block Requests, Weekend Requests and Block-Weekend
 Adjacency as our soft constraints, while the rest of the constraints are hard.
-Though it is important to take clinician requests into account when constructing
+While it is important to take clinician requests into account when constructing
 the schedule, it is crucial that the work-load of the schedule is balanced among
-all clinicians, and the needs of the patients are fulfilled. It is important to
-note that - irrespective of how the schedule is generated - clinicians may
-exchange certain weeks or days throughout the year after the schedule is
-implemented. The approach to solving the clinician scheduling problem does not
-account for these future exchanges, and only focuses on the full time horizon.
+all clinicians, and all services are assigned.
+After the schedule is generated, clinicians may
+exchange certain weeks or days throughout the year.
+Our approach to schedule generation does not
+consider such future exchanges, and instead generates on one full year at a time.
+% JK: I think this para (4) should go instead as the 2nd in this section.
+%     you could introduce the ideas of hard and soft constraints (this para) first,
+%     and then have the current paras (2) and (3) after this one, where the reader
+%     is already aware that (2) is hard constraints and (3) is soft.
+%     Oh, I see that they're not currently split up exactly, but I think it would be
+%     helpful to do so. Maybe double check with SM though.
