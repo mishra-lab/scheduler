@@ -1,56 +1,75 @@
-\subsection{Software}
+% JK: I think give an overview here of the experiments here
+%     and what you're going to show in this section (and why)
+\subsection{Implementation}
 We developed a software package with a user interface that implements the above
 linear program and allows configuration of clinicians at [ref \ref{???}], to be
+% JK: what is this ref? Do you want to mention it is in Python?
 used by the ID division at St.\ Michael's Hospital. The software was used to
 generate the results in the following sections, using real data as well as
 simulated data as input. All the following experiments were conducted on an
 Intel Core i7-4770k CPU @ 3.50 GHz and 16 GB of RAM running 64-bit Windows 10.
 The software was implemented using the COIN-OR Branch-and-Cut open source solver
+% JK: "software" here is not clear to me, is it the solver for the ILP formulation?
 version 2.9.9~\cite{johnjforrest_coin-or/cbc:_2019}.
 
-\subsection{Infectious Diseases Division}  %main comment  = I think use past
+\subsection{Comparison with Manually Generated Schedules}  %main comment  = I think use past
 %tense in writing
 We used clinician time-off requests and minimum/maximum requirements from
-2015-2018 as input data for the ILP problem. Table~\ref{tbl:2018-schedule-comparison} presents the optimal schedule generated using
-the software as well as the manually-created schedule for data from 2018. The
-schedule is color-coded to distinguish between the different clinicians
-assigned.
+2015-2018 as input data for the ILP problem.
+Table~\ref{tbl:2018-schedule-comparison} compares the optimal schedule generated using
+the software with the manually-created schedule for data from 2018. The
+schedule is color-coded to distinguish between the different clinicians.
 
 \input{tbl/2018_schedule_comparison}
 % JK: I think use input not include here to avoid unnecessary page breaks
 %     https://tex.stackexchange.com/questions/246
 
-First, we evaluated the software-generated schedule by comparing it with the
+First, we evaluated the automatically-generated schedule by comparing it with the
+% JK: I think it would be good to give a short name for manual and the proposed
+%     data -- e.g. LP Solution as in Table 4 and Manual Generation.
+%     Then check for consistency throughout.
+%     While lack of synonyms can sound repetitive, it can help avoid confusion.
 manually-created schedule. Specifically, we examined the adherence of each
 schedule to the constraints presented in Table~\ref{tbl:constraint-summary}. As
 shown in Table~\ref{tbl:constraints-comparison}, the optimal schedule generated
 using the software satisfied all mandatory constraints. In contrast, the
-manually-created schedule was not able to satisfy all mandatory constraints. In
+% JK: "mandatory" = "hard"? if possible just use one.
+manually-created schedule did not satisfy all mandatory constraints. In
 particular, we see that the manual schedule assigned clinicians to multiple
 consecutive blocks in all four years. Moreover, the manual schedule did not have
 an equal distribution of weekends and holidays for all four years of data.
-Evaluating the objectives, we see that LP outperforms the manually created
+Considering all objectives, we see that LP outperforms the manually created
 schedule in all four years, by accommodating almost all time-off requests and
 ensuring that weekends are always assigned close to blocks.
 
 \input{tbl/constraints_comparison}
+% JK: If you want to be funny, you can estimate the approximate time to
+%     generate the schedule and include that too (16 hours vs 1 second)...
 
-\subsection{Simulations}
-We then examined the properties of the ILP problem using simulated data.
-Specifically, we examined the influence of expanding the following parameters on
-the runtime of the algorithm: number of clinicians; number of services offered
-in the division; amount of time-off requests per clinician throughout the year.
-We also examined the effect of a longer time-horizon on the runtime.
+\subsection{Influence of Problem Complexity of Runtime}
+Next, we examined the influence of the following four parameters on the
+runtime of the ILP solver using simulated data:
+number of clinicians;
+number of services offered;
+number of time-off requests per clinician per year;
+time-horizon of the schedule.
 
+% JK: Good to introduce the detault parameters first, then for each parameter explored,
+%     Describe what varied.
+We simulated a department with 10 clinicians offering two services, similar to the
+department at St.\ Michael's Hospital. Each clinician was
+configured with $[0, 5, 10, 15]$ non-overlapping block
+% JK: \abs{BR} does not clearly imply number of blocks (could be confused with week indices),
+%     so just leave out the LHS here I think.
+% JK: What do you mean by non-overlapping? And why only increments of 5?
+requests.
 The effect of an increasing number of requests per clinician on the runtime of
-the ILP solver is shown in Figure~\ref{fig:runtime-requests}. We executed the
-program on a department with 10 clinicians offering two services, similar to the
-department at St.\ Michael's Hospital. For simplicity, each clinician was
-configured with $\abs{\mathcal{BR}} = \{0, 5, 10, 15\}$ non-overlapping block
-requests. The increase in the number of requests did not affect the runtime of
+the ILP solver is shown in Figure~\ref{fig:runtime-requests}.
+The increase in the number of requests did not affect the runtime of
 the ILP solver, indicating that it can accommodate a lot of flexibility in
 clinician requests. Moreover, we see that all four runs were completed in under
 1 second.
+% JK: See somments below about trends and repeating simulations.
 
 \begin{figure}[h]
 	\centering
@@ -65,6 +84,9 @@ clinician requests. Moreover, we see that all four runs were completed in under
   %     as box-plots to show that the trend is less than the variability.
 \end{figure}
 
+% JK: Introduce what you did first and then the figure showing results (see above)
+% JK: Try to introduce these results in the same order as they appear in the
+%     first paragraph of this section.
 Figure~\ref{fig:runtime-blocks} presents the change in runtime when increasing
 the number of 2-week blocks $B = \{26, 52, 78, 104\}$ in a department with 10
 clinicians offering two services. There does not seem to be a strong effect on
@@ -72,19 +94,22 @@ runtime when we lengthen the time-horizon of the schedule, and in fact the
 solver was able to find an optimal schedule for all time horizons within 3
 seconds. % 'very reasonable amount of time" is vague. what is reasonable?
 %better to give a range in value.
+% JK: same comment as above re. trends
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=.5]{fig/runtime_blocks}
 	\caption{Runtime of ILP solver with an increasing number of 2-week blocks}%
   \label{fig:runtime-blocks}
-  % JK: same comment as above re. trends -- are you trying to show one?
+  % JK: same comment as above re. trends
   % JK: Thess figures could also possible be Figure 1. a) and b) 
 \end{figure}
 
+% JK: Introduce what you did first and then the figure showing results (see above)
 The effect of increasing the number of services %divisions %do you mean
 %services?
-on the runtime of the program is shown in Table~\ref{tbl:runtime-services-clinicians-comparison}. We executed the algorithm for
+on the runtime of the program is shown in Table~\ref{tbl:runtime-services-clinicians-comparison}.
+We executed the algorithm for
 $S = \{1, 2, 3\}$ total services and $C = \{10, 20, 30, 50\}$ clinicians in
 total across all services. For 2 concurrent services, a roster of 30 or more
 clinicians becomes impractical to schedule, as searching for a solution required
