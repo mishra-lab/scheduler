@@ -1,28 +1,44 @@
-In this section, we present an application of ILP to solve the clinician
+In this section, we present an application of integer linear programming to solve the clinician
+% JK: there are a few variations of
+%     "nurse scheduling problem", "scheduling problem" "clinician scheduling problem"
+%     floating around. Can you do a consistency check throughout?
 scheduling problem presented in Section~\ref{sec:problem}. First, we describe
-the sets, indices and variables present in the formulation of the program. We
-then convert the constraints given in Table~\ref{tbl:constraint-summary} into
-mathematical terms, and outline the objective function of the linear program.
+% JK: Also, while the intro gives a reference for ILP,
+%     I think you should define it here. e.g. It is not clear to the naive reader (me!)
+%     that ILP needs an objective function
+%     or (most importantly) how ILP works to satisfy multiple constraints.
+the sets, indices and variables necessary for the formulation of the problem. We
+then write the constraints given in Table~\ref{tbl:constraint-summary} as
+mathematical equations, and define the objective function of the linear program.
 
 \subsection{Sets and Indices}\label{sec:meth-sets-indices}
 We denote the set of all services %or I think services is good (vs.
 %services/divisions) as you define two types of services (ID vs. HIV) in the
 %problem statement
+% JK: same thing, consistency check with division / service
+%     I think maybe you already did this...
 that clinicians in a single department can provide as $\mathcal{S}$. The
 following formulation assumes that all clinicians are able to provide all
+% JK: but could you not also just set some clinician-service max-mins zero
+%     to deal with if some clinicians are not able to provide some services?
 services. The set of all clinicians in the department is denoted as
-$\mathcal{C}$. The sets of blocks and weekends that clinicians will be assigned
-to are denoted as $\mathcal{B}$ and $\mathcal{W}$ respectively. The block size
+$\mathcal{C}$. The sets of blocks and weekends
+% JK: removed "will be assigned to" since on first read I confused it with
+%     the binary assignment variable X below.
+are denoted as $\mathcal{B}$ and $\mathcal{W}$ respectively. The block size
 used in our experiments is 2 weeks, but the following LP formulation does not
-specify a particular size for blocks, and so it can be adapted to the needs of
-the department in question.
+require a particular size for blocks, and so it can be adapted for other cases.
 %The size of a block is not constrained and can be adapted %how?
 %to the needs of the given department. 
 A subset of weekends are denoted $\mathcal{L}$, corresponding to established
 long/holiday weekends such as the Canadian Civic Day weekend in August. Lastly,
-we denote with $\mathcal{BR}_c$ and $\mathcal{WR}_c$ the block and weekend
-requests of clinicians as subsets of all blocks and weekends, respectively. For
-instance, if clinician $c$'s requests intersect with blocks 1 and 2, and weekend
+% JK: I'm being picky, but maybe a non-Canadian holiday like Thanksgiving as the e.g.
+the block and weekend request-off dates of clinicians as are denoted as the following
+subsets of all blocks and weekends: $\mathcal{BR}_c$ and $\mathcal{WR}_c$, respectively.
+% JK: keeping "x is denoted as x" sentence structure
+% JK: Also, I'm generally not a fan of multiple-letter variables since they can be 
+%     easily confused for multiplication. Can you find another notation?
+For instance, if clinician $c$'s request-off dates intersect with blocks 1 and 2, and weekend
 1, then $\mathcal{BR}_c = \{1, 2\}$ and $\mathcal{WR}_c = \{1\}$. Table~\ref{tbl:sets-indices} presents a summary of the sets and indices described. 
 
 \begin{table}[h]
@@ -54,13 +70,16 @@ instance, if clinician $c$'s requests intersect with blocks 1 and 2, and weekend
 
 \subsection{Variables}\label{sec:meth-variables}
 Since each clinician may be assigned to work on any service, during any block of
-the year, we denote such an assignment as a binary variable $X_{c, b, s}$. A
-value of 1 indicates that the given clinician $c$ is assigned to provide service
-$s$ during block $b$. Weekend assignments are similarly defined using a binary
-variable $Y_{c, w}$, but without a service index, as clinicians are expected to
-provide all services during the weekends. We then introduce a set of constants
-$m_{c, s}$ and $M_{c, s}$ to constrain the minimal and maximal number of blocks
-each clinician is allowed to work during the year. Table~\ref{tbl:variables-constants} presents a summary of the constants and variables
+the year, we denote such an assignment as a binary variable $X_{c, b, s} \in \{0,1\}$.
+% JK: I know its implied but if its easy to spell it out might as well.
+A value of 1 indicates that clinician $c$ is assigned to service $s$ during block $b$,
+while a value of 0 indicates they are not assigned.
+Weekend assignments are similarly defined using a binary
+variable $Y_{c, w} \in \{0,1\}$, but without a service index, as clinicians are expected to
+provide all services during the weekends. We then define
+$m_{c, s}$ and $M_{c, s}$ to represent the minimal and maximal number of blocks of service $s$
+that clinician $c$ is required to work during the year.
+Table~\ref{tbl:variables-constants} presents a summary of the constants and variables
 in the problem.
 %To optimize the soft constraint Block-Weekend Adjacency, we maximize the
 %product $X_{c, b, s} \cdot Y_{c, w}$ for adjacent blocks and weekends. To
@@ -95,6 +114,7 @@ in the problem.
 We now formalize the hard constraints in Table~\ref{tbl:constraint-summary}
 using the variables defined above.
 
+% JK: not sure how I feel about these letters as equation refs
 \begin{align}
 &\sum_{c=1}^{C} X_{c, b, s} = 1 &&\forall b\in \mathcal{B}, s \in \mathcal{S}
 \tag{BC} \label{eqn:constr-block-cov} \\
@@ -178,6 +198,7 @@ Indeed from Eqns. (\ref{eqn:helper-x-constraint}) and
 (\ref{eqn:helper-y-constraint}),  whenever $X_{c, b, s} \cdot Y_{c, w} = 1$
 (respectively, 0), $Z_{c, b, s}$ can attain a maximum value of 1 (respectively,
 0), giving us the correct adjacency maximization objective.
+% JK: not sure I follow these (respectively, 0).
 %Indeed, whenever $X_{c, b, s} \cdot Y_{c, w} = 1$, $Z_{c, b, s}$ can attain a
 %maximum value of 1, and whenever $X_{c, b, s} \cdot Y_{c, w} = 0$, at least one
 %of $X_{c, b, s}$ or $Y_{c, w}$ must be 0, so $Z_{c, b, s}$ will be constrained
@@ -186,12 +207,18 @@ Indeed from Eqns. (\ref{eqn:helper-x-constraint}) and
 
 In order to optimize all objectives simultaneously, we optimize a weighted sum
 of the normalized objective functions,
+% JK: This only considers the soft constraints.
+%     Should this maximization not also be subject to the Constraints in 3.3?
 \begin{equation}
 \max_{X, Y, Z} \alpha \bar{Q}_1(X) + \beta \bar{Q}_2(Y) + (1 - \alpha - \beta)
 \bar{Q}_3(Z)
 \end{equation}
+% JK: I would use $\alpha_1, \alpha_2, \alpha_3$ here which could take any value,
+%     and then not necessary to have any bounds like \sum_i^3 \alpha_i = 1,
+%     though you could enforce it to compare across permutations of \alpha
 where $\bar{Q}_i$ is the normalization of objective $Q_i$, and $0 \leq \alpha,
 \beta \leq 1$. This method guarantees an optimal solution to be Pareto optimal~\cite{stanimirovic_linear_2011}.
+% JK: How can ILP be used solve such problems? Can you briefly describe?
 
 %Thus, our clinician scheduling problem is a multiple objective optimization
 %problem. The most common approach to solving multiple objective optimization
