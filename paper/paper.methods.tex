@@ -2,14 +2,18 @@ In this section, we present an application of integer linear programming to solv
 % JK: there are a few variations of
 %     "nurse scheduling problem", "scheduling problem" "clinician scheduling problem"
 %     floating around. Can you do a consistency check throughout?
-scheduling problem presented in Section~\ref{sec:problem}. First, we describe
+scheduling problem presented in Section~\ref{sec:problem}. 
+An integer linear program (ILP) consists of a linear objective function and linear constraints,
+with integer-valued variables. The optimal solution to the ILP must lie within the space
+defined by the constraints while also maximizing the objective value.
+First, we describe
 % JK: Also, while the intro gives a reference for ILP,
 %     I think you should define it here. e.g. It is not clear to the naive reader (me!)
 %     that ILP needs an objective function
 %     or (most importantly) how ILP works to satisfy multiple constraints.
 the sets, indices and variables necessary for the formulation of the problem. We
 then write the constraints given in Table~\ref{tbl:constraint-summary} as
-mathematical equations, and define the objective function of the linear program.
+linear functions of the variables, and define the objective function of the ILP.
 
 \subsection{Sets and Indices}\label{sec:meth-sets-indices}
 We denote the set of all services %or I think services is good (vs.
@@ -17,11 +21,11 @@ We denote the set of all services %or I think services is good (vs.
 %problem statement
 % JK: same thing, consistency check with division / service
 %     I think maybe you already did this...
-that clinicians in a single department can provide as $\mathcal{S}$. The
-following formulation assumes that all clinicians are able to provide all
+that clinicians in a single department can provide as $\mathcal{S}$. 
+%The following formulation assumes that all clinicians are able to provide all services. 
 % JK: but could you not also just set some clinician-service max-mins zero
 %     to deal with if some clinicians are not able to provide some services?
-services. The set of all clinicians in the department is denoted as
+The set of all clinicians in the department is denoted as
 $\mathcal{C}$. The sets of blocks and weekends
 % JK: removed "will be assigned to" since on first read I confused it with
 %     the binary assignment variable X below.
@@ -30,16 +34,16 @@ used in our experiments is 2 weeks, but the following LP formulation does not
 require a particular size for blocks, and so it can be adapted for other cases.
 %The size of a block is not constrained and can be adapted %how?
 %to the needs of the given department. 
-A subset of weekends are denoted $\mathcal{L}$, corresponding to established
-long/holiday weekends such as the Canadian Civic Day weekend in August. Lastly,
+A subset of weekends are denoted $\mathcal{L} \subset \mathcal{W}$, corresponding to established
+long/holiday weekends such as the Thanksgiving weekend. Lastly,
 % JK: I'm being picky, but maybe a non-Canadian holiday like Thanksgiving as the e.g.
-the block and weekend request-off dates of clinicians as are denoted as the following
-subsets of all blocks and weekends: $\mathcal{BR}_c$ and $\mathcal{WR}_c$, respectively.
+the block and weekend time-off requests of clinicians are denoted as the following
+subsets of all blocks and weekends: $\mathcal{U}_c \subset \mathcal{B}$ and $\mathcal{V}_c \subset \mathcal{W}$, respectively.
 % JK: keeping "x is denoted as x" sentence structure
 % JK: Also, I'm generally not a fan of multiple-letter variables since they can be 
 %     easily confused for multiplication. Can you find another notation?
-For instance, if clinician $c$'s request-off dates intersect with blocks 1 and 2, and weekend
-1, then $\mathcal{BR}_c = \{1, 2\}$ and $\mathcal{WR}_c = \{1\}$. Table~\ref{tbl:sets-indices} presents a summary of the sets and indices described. 
+For instance, if clinician $c$'s time-off requests intersect with blocks 1 and 2, and weekend
+1, then $\mathcal{U}_c = \{1, 2\}$ and $\mathcal{V}_c = \{1\}$. Table~\ref{tbl:sets-indices} presents a summary of the sets and indices described. 
 
 \begin{table}[h]
 	\centering
@@ -59,9 +63,9 @@ For instance, if clinician $c$'s request-off dates intersect with blocks 1 and 2
 		\\
 		$\mathcal{L} \subset \mathcal{W}$    &                & long weekends         
 		\\
-		$\mathcal{BR}_c \subset \mathcal{B}$ &                & block requests of
+		$\mathcal{U}_c \subset \mathcal{B}$ &                & block requests of
 		clinician $c$   \\
-		$\mathcal{WR}_c \subset \mathcal{W}$ &                & weekend requests of
+		$\mathcal{V}_c \subset \mathcal{W}$ &                & weekend requests of
 		clinician $c$ \\
     \bottomrule
 	\end{tabular}
@@ -147,10 +151,10 @@ written as the following linear functions:  %minor suggestion - consider
 %to. 
 \begin{align}
 &Q_1(X) = \sum_{c=1}^{C} \sum_{b=1}^{B} \sum_{s=1}^{S}
-{(-1)}^{\ind(b\,\in\,\mathcal{BR}_c)}\cdot X_{c, b, s} \tag{BR}
+{(-1)}^{\ind(b\,\in\,\mathcal{U}_c)}\cdot X_{c, b, s} \tag{BR}
 \label{eqn:obj-block-requests}\\
 &Q_2(Y) = \sum_{c=1}^{C} \sum_{w=1}^{W}
-{(-1)}^{\ind(w\,\in\,\mathcal{WR}_c)}\cdot Y_{c, w} \tag{WR}
+{(-1)}^{\ind(w\,\in\,\mathcal{V}_c)}\cdot Y_{c, w} \tag{WR}
 \label{eqn:obj-weekend-requests}
 \end{align}
 where $\ind(P)$ is the indicator function that has value 1 when predicate $P$
@@ -210,14 +214,26 @@ of the normalized objective functions,
 % JK: This only considers the soft constraints.
 %     Should this maximization not also be subject to the Constraints in 3.3?
 \begin{equation}
-\max_{X, Y, Z} \alpha \bar{Q}_1(X) + \beta \bar{Q}_2(Y) + (1 - \alpha - \beta)
+\max_{X, Y, Z} \alpha_1 \bar{Q}_1(X) + \alpha_2 \bar{Q}_2(Y) + \alpha_3
 \bar{Q}_3(Z)
 \end{equation}
 % JK: I would use $\alpha_1, \alpha_2, \alpha_3$ here which could take any value,
 %     and then not necessary to have any bounds like \sum_i^3 \alpha_i = 1,
 %     though you could enforce it to compare across permutations of \alpha
-where $\bar{Q}_i$ is the normalization of objective $Q_i$, and $0 \leq \alpha,
-\beta \leq 1$. This method guarantees an optimal solution to be Pareto optimal~\cite{stanimirovic_linear_2011}.
+subject to the constraints defined in Section \ref{sec:meth-constraints},
+where $\bar{Q}_i$ is the normalization of objective $Q_i$, and $0 \leq \alpha_i \leq 1$. 
+This method guarantees an optimal solution to be Pareto optimal~\cite{stanimirovic_linear_2011}. 
+
+Currently, the most efficient approach to finding an exact solution for 
+an ILP is called Branch-and-Cut. This method involves iteratively solving 
+relaxed versions of the ILP, then constraining the relaxed problems and
+considering various sub-problems until it finds integral solutions to the 
+original ILP~\cite{mitchell_branch-and-cut_2002}.
+The intermediate relaxations allow the variables to take on real values, 
+and can be solved efficiently using the Simplex method~\cite{shamir_efficiency_1987}. The 
+complexity of finding an optimal integral solution thus lies in the 
+branching search structure of the approach.
+
 % JK: How can ILP be used solve such problems? Can you briefly describe?
 
 %Thus, our clinician scheduling problem is a multiple objective optimization
