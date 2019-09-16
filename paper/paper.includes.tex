@@ -1,3 +1,4 @@
+% includes
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{amssymb}
@@ -6,13 +7,13 @@
 \usepackage{makecell}
 \usepackage{physics}
 \usepackage{hyperref}
-%\usepackage{bbm} % JK have trouble installing this
+\usepackage{bm}\newcommand{\ind}{\bm{1}}
 \usepackage{multirow}
 \usepackage[table]{xcolor}
 \usepackage{booktabs}
 \usepackage[utf8]{inputenc}
 \usepackage{adjustbox}
-\usepackage{caption}
+\usepackage{caption}\captionsetup[table]{skip=1em}
 \usepackage{rotating}
 % JK: personal preference: join paper.includes + paper.definitions
 %     and write any definitions which rely on the package
@@ -20,3 +21,9 @@
 
 % JK: personal formatting preference:
 \usepackage[margin=3cm]{geometry}
+
+% definitions
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\DeclareUnicodeCharacter{2713}{\checkmark}
+\setlength{\parskip}{1em}
