@@ -144,7 +144,7 @@ satisfying clinician weekend off requests (WR), and assigning weekends closer to
 blocks (BWA). We convert these soft constraints into linear objective functions
 of the binary variables defined in Section~\ref{sec:meth-variables}. Objectives
 (\ref{eqn:obj-block-requests}) and (\ref{eqn:obj-weekend-requests}) can be
-written as the following linear functions:  %minor suggestion - consider
+written as the following linear functions of $X$ and $Y$:  %minor suggestion - consider
 %numbering the objectives for ease later when saying things like "these two
 %objectives"...or writing the full name of the objectives instead of 'this' and
 %'these' as sometimes can get confusing what the 'this' and the 'these' refer
@@ -183,25 +183,42 @@ we will have $\varphi(b) = 2b-1$.
 % I really liked the example explanation!
 %For instance, in the above example we will have $\varphi(b) = 2b - 1$. \\
 
-However, as it is, $Q_3$ is not a linear function of its variables and cannot be
-optimized in a linear programming framework. An approach used to convert such
+However, as it is, $Q_3$ is not a linear function of the assignment variables
+$X$ and $Y$, and cannot be optimized in a linear programming framework. 
+An approach used to convert such
 functions into linear objectives involves introducing a helper variable and
-additional constraints~\cite{hammer_boolean_1968}. In our case, introducing a
-variable $Z_{c, b, s}$ for every product $X_{c, b, s} \cdot Y_{c, w}$ with $w =
-\varphi(b)$, and constraining $Z$ such that 
+additional constraints~\cite{hammer_boolean_1968}. 
+In our case, we introduce a variable $Z_{c, b, s}$ 
+for every product $X_{c, b, s} \cdot Y_{c, w}$ with $w = \varphi(b)$, and
+constraining $Z$ such that 
 \begin{align}
 &Z_{c, b, s} \leq X_{c, b, s} \label{eqn:helper-x-constraint}\\
 &Z_{c, b, s} \leq Y_{c, w=\varphi(b)} &&\forall s\in\mathcal{S}
 \label{eqn:helper-y-constraint}
 \end{align}
-allows us to rewrite $Q_3$ as a linear function of $Z$,
+Since $X_{c, b, s}$ and $Y_{c, w}$ are binary variables, $Z_{c, b, s}$ will be constrained
+to 0, unless both $X_{c, b, s}$ and $Y_{c, w}$ are 1. Therefore, it suffices to maximize
+the following linear function of $Z$,
 \begin{align}
 &Q_3(Z) = \sum_{c=1}^{C} \sum_{b=1}^{B} \sum_{s=1}^{S} Z_{c, b, s}
 \end{align}
-Indeed from Eqns. (\ref{eqn:helper-x-constraint}) and
-(\ref{eqn:helper-y-constraint}),  whenever $X_{c, b, s} \cdot Y_{c, w} = 1$
-(respectively, 0), $Z_{c, b, s}$ can attain a maximum value of 1 (respectively,
-0), giving us the correct adjacency maximization objective.
+to get the correct adjacency maximization objective.
+%In our case, introducing a
+%variable $Z_{c, b, s}$ for every product $X_{c, b, s} \cdot Y_{c, w}$ with $w =
+%\varphi(b)$, and constraining $Z$ such that 
+%\begin{align}
+%&Z_{c, b, s} \leq X_{c, b, s} \label{eqn:helper-x-constraint}\\
+%&Z_{c, b, s} \leq Y_{c, w=\varphi(b)} &&\forall s\in\mathcal{S}
+%\label{eqn:helper-y-constraint}
+%\end{align}
+%allows us to rewrite $Q_3$ as a linear function of $Z$,
+%\begin{align}
+%&Q_3(Z) = \sum_{c=1}^{C} \sum_{b=1}^{B} \sum_{s=1}^{S} Z_{c, b, s}
+%\end{align}
+%Indeed from Eqns. (\ref{eqn:helper-x-constraint}) and
+%(\ref{eqn:helper-y-constraint}),  whenever $X_{c, b, s} \cdot Y_{c, w} = 1$
+%(respectively, 0), $Z_{c, b, s}$ can attain a maximum value of 1 (respectively,
+%0), giving us the correct adjacency maximization objective.
 % JK: not sure I follow these (respectively, 0).
 %Indeed, whenever $X_{c, b, s} \cdot Y_{c, w} = 1$, $Z_{c, b, s}$ can attain a
 %maximum value of 1, and whenever $X_{c, b, s} \cdot Y_{c, w} = 0$, at least one
@@ -225,10 +242,11 @@ where $\bar{Q}_i$ is the normalization of objective $Q_i$, and $0 \leq \alpha_i 
 This method guarantees an optimal solution to be Pareto optimal~\cite{stanimirovic_linear_2011}. 
 
 Currently, the most efficient approach to finding an exact solution for 
-an ILP is called Branch-and-Cut. This method involves iteratively solving 
-relaxed versions of the ILP, then constraining the relaxed problems and
+an ILP is called Branch-and-Cut~\cite{mitchell_branch-and-cut_2002}. 
+This method involves iteratively solving 
+LP relaxations versions of the ILP, then constraining the relaxed problems and
 considering various sub-problems until it finds integral solutions to the 
-original ILP~\cite{mitchell_branch-and-cut_2002}.
+original ILP.
 The intermediate relaxations allow the variables to take on real values, 
 and can be solved efficiently using the Simplex method~\cite{shamir_efficiency_1987}. The 
 complexity of finding an optimal integral solution thus lies in the 
