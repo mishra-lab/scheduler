@@ -244,13 +244,14 @@ This method guarantees an optimal solution to be Pareto optimal~\cite{stanimirov
 Currently, the most efficient approach to finding an exact solution for 
 an ILP is called Branch-and-Cut~\cite{mitchell_branch-and-cut_2002}. 
 This method involves iteratively solving 
-LP relaxations versions of the ILP, then constraining the relaxed problems and
+LP relaxations of the ILP, then constraining the relaxed problems and
 considering various sub-problems until it finds integral solutions to the 
 original ILP.
-The intermediate relaxations allow the variables to take on real values, 
-and can be solved efficiently using the Simplex method~\cite{shamir_efficiency_1987}. The 
+In the intermediate relaxations, the integer assignment variables can
+take on real values, allowing the problem to be solved efficiently using 
+the Simplex method~\cite{shamir_efficiency_1987}. The 
 complexity of finding an optimal integral solution thus lies in the 
-branching search structure of the approach.
+branching search structure of Branch-and-Cut.
 
 % JK: How can ILP be used solve such problems? Can you briefly describe?
 
