@@ -89,24 +89,23 @@ in under 1.5 seconds.  %what does division mean? do you mean services?
 %     Describe what varied.
 For the remaining experiments, we simulated a department with 10 clinicians offering 
 two services, similar to the department at St.\ Michael's Hospital. 
-Each clinician was
-configured with $\{0, 5, 10, 15\}$ non-overlapping block
 % JK: \abs{BR} does not clearly imply number of blocks (could be confused with week indices),
 %     so just leave out the LHS here I think.
 % JK: What do you mean by non-overlapping? And why only increments of 5?
-requests.
 The effect of an increasing number of requests per clinician on the runtime of
 the ILP solver is shown in Figure~\ref{fig:runtime-requests}.
-The increase in the number of requests did not affect the runtime of
-the ILP solver, indicating that it can accommodate a lot of flexibility in
-clinician requests. Moreover, we see that all four runs were completed in under
-1 second.
+In this experiment, each clinician was configured with 1 to 15 total block requests.
+The runtime of the algorithm is constant with respect to the number of requests,
+indicating that it can accommodate a lot of flexibility in
+clinician requests. Moreover, we see that all runs were completed in under
+2 seconds.
 % JK: See somments below about trends and repeating simulations.
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[scale=.5]{fig/runtime_requests} % JK: can you export this to PDF or SVG to avoid pixelation?
+	\def\svgwidth{\columnwidth}
 	\caption{Runtime of ILP solver with an increasing number of requests per clinician}
+	\input{fig/runtime-requests.pdf_tex} % JK: can you export this to PDF or SVG to avoid pixelation?
   \label{fig:runtime-requests}
   % JK: The trend here is a bit confusing, since I think you're trying to say
   %     that the runtime is not affected by the number of constraints,
@@ -120,18 +119,21 @@ clinician requests. Moreover, we see that all four runs were completed in under
 % JK: Try to introduce these results in the same order as they appear in the
 %     first paragraph of this section.
 Figure~\ref{fig:runtime-blocks} presents the change in runtime when increasing
-the number of 2-week blocks $B = \{26, 52, 78, 104\}$ in a department with 10
-clinicians offering two services. There does not seem to be a strong effect on
-runtime when we lengthen the time-horizon of the schedule, and in fact the
-solver was able to find an optimal schedule for all time horizons within 3
-seconds. % 'very reasonable amount of time" is vague. what is reasonable?
+the number of 2-week blocks in a department with 10
+clinicians offering two services. In this experiment, we investigated time horizons
+from 5 to 110 blocks. This is equivalent to generating a schedule for up to 4 years ahead.
+The trend in the graph indicates a linear growth in runtime with respect to the time-horizon.
+Notably, the ILP solver was able to find all solutions in under 6 seconds, indicating very 
+good performance for long-term scheduling. 
+% 'very reasonable amount of time" is vague. what is reasonable?
 %better to give a range in value.
 % JK: same comment as above re. trends
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[scale=.5]{fig/runtime_blocks}
+	\def\svgwidth{\textwidth}
 	\caption{Runtime of ILP solver with an increasing number of 2-week blocks}%
+	\input{fig/runtime-blocks.pdf_tex}
   \label{fig:runtime-blocks}
   % JK: same comment as above re. trends
   % JK: Thess figures could also possible be Figure 1. a) and b) 
