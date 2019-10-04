@@ -1,0 +1,114 @@
+{
+    "B": {
+        "name": "B",
+        "email": "",
+        "divisions": {
+            "HIV": {
+                "min": 8,
+                "max": 9
+            },
+            "ID": {
+                "min": 2,
+                "max": 3
+            }
+        }
+    },
+    "A": {
+        "name": "A",
+        "email": "",
+        "divisions": {
+            "HIV": {
+                "min": 8,
+                "max": 9
+            }
+        }
+    },
+    "E": {
+        "name": "E",
+        "email": "",
+        "divisions": {
+            "ID": {
+                "min": 4,
+                "max": 5
+            }
+        }
+    },
+    "G": {
+        "name": "G",
+        "email": "",
+        "divisions": {
+            "ID": {
+                "min": 3,
+                "max": 4
+            }
+        }
+    },
+    "I": {
+        "name": "I",
+        "email": "",
+        "divisions": {
+            "ID": {
+                "min": 3,
+                "max": 4
+            }
+        }
+    },
+    "F": {
+        "name": "F",
+        "email": "",
+        "divisions": {
+            "ID": {
+                "min": 4,
+                "max": 5
+            }
+        }
+    },
+    "D": {
+        "name": "D",
+        "email": "",
+        "divisions": {
+            "ID": {
+                "min": 2,
+                "max": 3
+            },
+            "HIV": {
+                "min": 3,
+                "max": 4
+            }
+        }
+    },
+    "J": {
+        "name": "J",
+        "email": "",
+        "divisions": {
+            "HIV": {
+                "min": 3,
+                "max": 4
+            }
+        }
+    },
+    "H": {
+        "name": "H",
+        "email": "",
+        "divisions": {
+            "ID": {
+                "min": 4,
+                "max": 5
+            }
+        }
+    },
+    "C": {
+        "name": "C",
+        "email": "",
+        "divisions": {
+            "ID": {
+                "min": 3,
+                "max": 4
+            },
+            "HIV": {
+                "min": 3,
+                "max": 4
+            }
+        }
+    }
+}
