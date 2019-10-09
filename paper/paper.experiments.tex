@@ -3,15 +3,15 @@
 % check verb tense - use past tense I think given flow
 Our goal was to determine if the schedules provided by solving the ILP 
 could successfully
-enforce all hard constraints; improve satisfiability of soft constraints compared with ??; %SM: found "improve satisfiability" a bit hard to follow. revise this phrase for clarity
-and assess if our ILP formulation can be used for a wide range
+(i) enforce all hard constraints; 
+(ii) improve fulfillment of soft constraints compared to the manual approach; %SM: found "improve satisfiability" a bit hard to follow. revise this phrase for clarity
+and (iii) assess whether our ILP formulation can be used for a wide range
 of configurations.  %list objectives with numbers (i, ii, iii) or separated by semi-colons - helps the reader re: flow
 First, we compared the schedules created by solving the ILP formulation
 given in Section~\ref{sec:methods} to schedules that were manually generated,
 with respect to adherence to the hard and soft constraints outlined in Section~\ref{sec:problem}.
 We then examined the efficiency of the ILP approach in generating schedules
 by its runtime on a variety of instances that may be found in the real-world.
-
 
 \subsection{Implementation}
 We developed a Python software package with a user interface that implements the above
