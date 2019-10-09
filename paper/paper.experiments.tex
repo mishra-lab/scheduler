@@ -73,7 +73,7 @@ The effect of increasing the number of clinicians and number of services %divisi
 %services?
 on the runtime of the program is shown in Table~\ref{tbl:runtime-services-clinicians-comparison}.
 We executed the algorithm for
-$S = \{1, 2, 3\}$ total services and $C = \{10, 20, 30, 50\}$ clinicians in
+$S = \{1, 2, 3\}$ total services and $C = \{10, 20, 30, 50\}$ clinicians in  
 total across all services. 
 In a department providing a single service, increasing the number of clinicians
 did not affect the runtime, and we were able to find an ILP solution in all four cases
@@ -115,7 +115,7 @@ clinician requests. Moreover, we see that all runs were completed in under
   %     but there is noise in these results.
   %     I would re-run this 10-100 times and average the results so that (I expect)
   %     the mean trend is actually flat. You could (should) then also present the runtimes
-  %     as box-plots to show that the trend is less than the variability.
+  %     as box-plots to show that the trend is less than the variability.  %SM: great suggestion! Did you do this (re-run 10-100 times?) - was not clear from description of experiments above
 \end{figure}
 
 % JK: Introduce what you did first and then the figure showing results (see above)
@@ -141,3 +141,7 @@ good performance for long-term scheduling.
   % JK: same comment as above re. trends
   % JK: Thess figures could also possible be Figure 1. a) and b) 
 \end{figure}
+
+
+%SM: Table 6. change column heading "number of services" to "number of services within 1 division"
+%SM: Table 6. without NCB is a double-negative (without no consecutive blocks). Can this be revised?
