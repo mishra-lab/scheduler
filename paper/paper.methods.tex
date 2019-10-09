@@ -116,47 +116,58 @@ in the problem.
 
 \subsection{Constraints}\label{sec:meth-constraints}
 We now formalize the hard constraints in Table~\ref{tbl:constraint-summary}
-using the variables defined above.
-
+using the variables defined above. 
+The BC (block coverage) and WC (weekend coverage) constraints, 
+are given by Eqns. (\ref{eqn:constr-block-cov}) and (\ref{eqn:constr-weekend-cov}), respectively. 
+\begin{align}
+&\sum_{c=1}^{C} X_{c, b, s} = 1 &&\forall b\in \mathcal{B}, s \in \mathcal{S} \label{eqn:constr-block-cov} \\
+&\sum_{c=1}^{C} Y_{c, w} = 1 &&\forall w\in \mathcal{W} \label{eqn:constr-weekend-cov}
+\end{align}
+The MM (min/max) constraint is given by:
+\begin{align}
+&m_{c, s} \leq \sum_{b=1}^{B} X_{c, b, s} \leq M_{c, s} &&\forall\
+c\in\mathcal{C}, s\in\mathcal{S} \label{eqn:constr-min-max}
+\end{align}
+The NCB (no consecutive blocks) and NCW (no consecutive weekends) constraints are 
+given by Eqns. (\ref{eqn:constr-no-consec-blocks}) and (\ref{eqn:constr-no-consec-weekends}), respectively.
+\begin{align}
+&X_{c, b, s} + X_{c, b + 1, s} \leq 1 &&\forall c\in\mathcal{C}, b \leq B - 1,
+s\in\mathcal{S} \label{eqn:constr-no-consec-blocks} \\
+&Y_{c, w} + Y_{c, w + 1} \leq 1 &&\forall c\in\mathcal{C}, w \leq W - 1 \label{eqn:constr-no-consec-weekends}
+\end{align}
+The EW (equal weekend) and EH (equal holidays) constraints are given by Eqns. (\ref{eqn:constr-equal-weekends})
+and (\ref{eqn:constr-equal-holidays}), respectively.
+\begin{align}
+&\floor*{\frac{W}{C}} \leq \sum_{w=1}^W Y_{c, w} \leq \ceil*{\frac{W}{C}}
+&&\forall c\in\mathcal{C} \label{eqn:constr-equal-weekends} \\
+&\floor*{\frac{\abs{\mathcal{L}}}{C}} \leq \sum_{w\in\mathcal{L}} Y_{c, w} \leq
+\ceil*{\frac{\abs{\mathcal{L}}}{C}} &&\forall c\in\mathcal{C}
+\label{eqn:constr-equal-holidays}
+\end{align}
 % JK: not sure how I feel about these letters as equation refs
 % SM: agree. on reading in full, it felt odd enough for me to suggest using number for equations...
 % e.g. The WC (weekend coverage) constraint is given by .... [equation]
-\begin{align}
-&\sum_{c=1}^{C} X_{c, b, s} = 1 &&\forall b\in \mathcal{B}, s \in \mathcal{S}
-\tag{BC} \label{eqn:constr-block-cov} \\
-&\sum_{c=1}^{C} Y_{c, w} = 1 &&\forall w\in \mathcal{W} \tag{WC}
-\label{eqn:constr-weekend-cov} \\
-&m_{c, s} \leq \sum_{b=1}^{B} X_{c, b, s} \leq M_{c, s} &&\forall\
-c\in\mathcal{C}, s\in\mathcal{S} \tag{MM} \label{eqn:constr-min-max} \\
-&X_{c, b, s} + X_{c, b + 1, s} \leq 1 &&\forall c\in\mathcal{C}, b \leq B - 1,
-s\in\mathcal{S} \tag{NCB} \label{eqn:constr-no-consec-blocks} \\
-&Y_{c, w} + Y_{c, w + 1} \leq 1 &&\forall c\in\mathcal{C}, w \leq W - 1
-\tag{NCW} \label{eqn:constr-no-consec-weekends} \\
-&\floor*{\frac{W}{C}} \leq \sum_{w=1}^W Y_{c, w} \leq \ceil*{\frac{W}{C}}
-&&\forall c\in\mathcal{C} \tag{EW} \label{eqn:constr-equal-weekends} \\
-&\floor*{\frac{\abs{\mathcal{L}}}{C}} \leq \sum_{w\in\mathcal{L}} Y_{c, w} \leq
-\ceil*{\frac{\abs{\mathcal{L}}}{C}} &&\forall c\in\mathcal{C} \tag{EH}
-\label{eqn:constr-equal-holidays}
-\end{align}
+
 
 \subsection{Objectives}\label{sec:meth-objectives}
 As described in Section~\ref{sec:problem}, the soft constraints of the clinician
 scheduling problem include: satisfying clinician block off requests (BR),
 satisfying clinician weekend off requests (WR), and assigning weekends closer to
 blocks (BWA). We convert these soft constraints into linear objective functions
-of the binary variables defined in Section~\ref{sec:meth-variables}. Objectives
-(\ref{eqn:obj-block-requests}) and (\ref{eqn:obj-weekend-requests}) can be
-written as the following linear functions of $X$ and $Y$:  %minor suggestion - consider
+of the binary variables defined in Section~\ref{sec:meth-variables}. 
+Objectives BR and WR are given in Eqns. (\ref{eqn:obj-block-requests}) and (\ref{eqn:obj-weekend-requests})
+as linear functions of $X$ and $Y$:
+%minor suggestion - consider
 %numbering the objectives for ease later when saying things like "these two
 %objectives"...or writing the full name of the objectives instead of 'this' and
 %'these' as sometimes can get confusing what the 'this' and the 'these' refer  %SM: agree!
 %to. 
 \begin{align}
 &Q_1(X) = \sum_{c=1}^{C} \sum_{b=1}^{B} \sum_{s=1}^{S}
-{(-1)}^{\ind(b\,\in\,\mathcal{U}_c)}\cdot X_{c, b, s} \tag{BR}
+{(-1)}^{\ind(b\,\in\,\mathcal{U}_c)}\cdot X_{c, b, s}
 \label{eqn:obj-block-requests}\\
 &Q_2(Y) = \sum_{c=1}^{C} \sum_{w=1}^{W}
-{(-1)}^{\ind(w\,\in\,\mathcal{V}_c)}\cdot Y_{c, w} \tag{WR}
+{(-1)}^{\ind(w\,\in\,\mathcal{V}_c)}\cdot Y_{c, w}
 \label{eqn:obj-weekend-requests}
 \end{align}
 where $\ind(P)$ is the indicator function that has value 1 when predicate $P$
@@ -164,13 +175,12 @@ holds and 0 otherwise. In the above two objectives, we penalize any assignments
 that conflict with a block or weekend request, and aim to maximize the
 non-conflicting assignments.
 
-The Block-Weekend Adjacency is optimized by considering the product $X_{c, b,
-	s}\cdot Y_{c, w}$ for values of $w$ ``adjacent'' to the value of $b$. This
-leads
-to the maximization objective %avoid editorial adjectives
+The BWA objective is optimized by considering the product $X_{c, b, s}\cdot Y_{c, w}$ 
+for values of $w$ ``adjacent'' to the value of $b$. This
+leads to the maximization objective:%avoid editorial adjectives
 \begin{align}
 &Q_3(X, Y) = \sum_{c=1}^{C} \sum_{b=1}^{B} \sum_{s=1}^{S} X_{c, b, s}\cdot Y_{c,
-	w=\varphi(b)} \tag{BWA} \label{eqn:obj-block-weekend-adj}
+	w=\varphi(b)} \label{eqn:obj-block-weekend-adj}
 \end{align}
 where $\varphi(b)$ is a one-to-one mapping of a block to an adjacent weekend, by
 some appropriate definition of adjacency. For instance, clinicians might want to
