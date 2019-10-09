@@ -1,0 +1,114 @@
+{
+    "F": {
+        "name": "F",
+        "email": "",
+        "divisions": {
+            "ID": {
+                "min": 4,
+                "max": 5
+            }
+        }
+    },
+    "I": {
+        "name": "I",
+        "email": "",
+        "divisions": {
+            "ID": {
+                "min": 4,
+                "max": 5
+            }
+        }
+    },
+    "G": {
+        "name": "G",
+        "email": "",
+        "divisions": {
+            "ID": {
+                "min": 2,
+                "max": 3
+            }
+        }
+    },
+    "E": {
+        "name": "E",
+        "email": "",
+        "divisions": {
+            "ID": {
+                "min": 3,
+                "max": 4
+            }
+        }
+    },
+    "B": {
+        "name": "B",
+        "email": "",
+        "divisions": {
+            "HIV": {
+                "min": 9,
+                "max": 10
+            },
+            "ID": {
+                "min": 3,
+                "max": 4
+            }
+        }
+    },
+    "A": {
+        "name": "A",
+        "email": "",
+        "divisions": {
+            "HIV": {
+                "min": 11,
+                "max": 12
+            }
+        }
+    },
+    "D": {
+        "name": "D",
+        "email": "",
+        "divisions": {
+            "ID": {
+                "min": 2,
+                "max": 3
+            },
+            "HIV": {
+                "min": 2,
+                "max": 3
+            }
+        }
+    },
+    "H": {
+        "name": "H",
+        "email": "",
+        "divisions": {
+            "ID": {
+                "min": 4,
+                "max": 5
+            }
+        }
+    },
+    "C": {
+        "name": "C",
+        "email": "",
+        "divisions": {
+            "ID": {
+                "min": 3,
+                "max": 4
+            },
+            "HIV": {
+                "min": 2,
+                "max": 3
+            }
+        }
+    },
+    "J": {
+        "name": "J",
+        "email": "",
+        "divisions": {
+            "HIV": {
+                "min": 1,
+                "max": 2
+            }
+        }
+    }
+}

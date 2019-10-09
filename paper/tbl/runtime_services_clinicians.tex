@@ -1,0 +1,18 @@
+\begin{table}[htbp]
+	\centering
+ 	\caption{Comparison of program runtime (in seconds) for different numbers of services and total clinicians in the division.}%
+  \label{tbl:runtime-services-clinicians-comparison}%
+	\begin{tabular}{|c|c||c|c||c|c|}
+		\toprule
+		                                      &  \multicolumn{5}{c|}{Number of Services}  \\ \midrule
+		\makecell[l]{Number of \\ Clinicians} &  1   &    2    & 2 (*) &  3   & 3 (*) \\ \midrule
+		                 10                   & 0.16 &  0.74   &  0.16   & 1.40 &  0.23   \\ \hline
+		                 20                   & 0.25 & 7468.86 &  0.32   &  --  &  0.43   \\ \hline
+		                 30                   & 0.42 &    --   &  0.49   &  --  &  0.66   \\ \hline
+		                 50                   & 0.62 &    --   &  0.82   &  --  &  1.14   \\ \bottomrule
+	\end{tabular}\\[1em]
+  \footnotesize\raggedright
+  Notes:
+  ``--'' indicates that no solution was found within 24 hours;
+  ``(*)'' indicates that the No Consecutive Blocks (NCB) constraint was removed.
+\end{table}

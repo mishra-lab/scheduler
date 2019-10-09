@@ -116,6 +116,10 @@ src/token.json
 *.aux
 *.out
 *.synctex.gz
+*.fdb_latexmk
+*.fls
+*.bbl
+*.blg
 
 ##########
 # SPHINX #
