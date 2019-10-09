@@ -1,7 +1,7 @@
 In this section, we present an application of integer linear programming to solve the clinician
 % JK: there are a few variations of
 %     "nurse scheduling problem", "scheduling problem" "clinician scheduling problem"
-%     floating around. Can you do a consistency check throughout?
+%     floating around. Can you do a consistency check throughout?  SM: agree
 scheduling problem presented in Section~\ref{sec:problem}. 
 An integer linear program (ILP) consists of a linear objective function and linear constraints,
 with integer-valued variables. The optimal solution to the ILP must lie within the space
@@ -10,7 +10,7 @@ First, we describe
 % JK: Also, while the intro gives a reference for ILP,
 %     I think you should define it here. e.g. It is not clear to the naive reader (me!)
 %     that ILP needs an objective function
-%     or (most importantly) how ILP works to satisfy multiple constraints.
+%     or (most importantly) how ILP works to satisfy multiple constraints.  %SM: great JK comments + how you addrssed them DL
 the sets, indices and variables necessary for the formulation of the problem. We
 then write the constraints given in Table~\ref{tbl:constraint-summary} as
 linear functions of the variables, and define the objective function of the ILP.
@@ -34,9 +34,9 @@ used in our experiments is 2 weeks, but the following LP formulation does not
 require a particular size for blocks, and so it can be adapted for other cases.
 %The size of a block is not constrained and can be adapted %how?
 %to the needs of the given department. 
-A subset of weekends are denoted $\mathcal{L} \subset \mathcal{W}$, corresponding to established
-long/holiday weekends such as the Thanksgiving weekend. Lastly,
-% JK: I'm being picky, but maybe a non-Canadian holiday like Thanksgiving as the e.g.
+A subset of weekends are denoted $\mathcal{L} \subset \mathcal{W}$, corresponding to statutory
+long/holiday weekends such as the Thanksgiving weekend in the United States and Canada. Lastly,
+% JK: I'm being picky, but maybe a non-Canadian holiday like Thanksgiving as the e.g.  %SM: but not in Europe yak!
 the block and weekend time-off requests of clinicians are denoted as the following
 subsets of all blocks and weekends: $\mathcal{U}_c \subset \mathcal{B}$ and $\mathcal{V}_c \subset \mathcal{W}$, respectively.
 % JK: keeping "x is denoted as x" sentence structure
@@ -119,6 +119,8 @@ We now formalize the hard constraints in Table~\ref{tbl:constraint-summary}
 using the variables defined above.
 
 % JK: not sure how I feel about these letters as equation refs
+% SM: agree. on reading in full, it felt odd enough for me to suggest using number for equations...
+% e.g. The WC (weekend coverage) constraint is given by .... [equation]
 \begin{align}
 &\sum_{c=1}^{C} X_{c, b, s} = 1 &&\forall b\in \mathcal{B}, s \in \mathcal{S}
 \tag{BC} \label{eqn:constr-block-cov} \\
@@ -147,7 +149,7 @@ of the binary variables defined in Section~\ref{sec:meth-variables}. Objectives
 written as the following linear functions of $X$ and $Y$:  %minor suggestion - consider
 %numbering the objectives for ease later when saying things like "these two
 %objectives"...or writing the full name of the objectives instead of 'this' and
-%'these' as sometimes can get confusing what the 'this' and the 'these' refer
+%'these' as sometimes can get confusing what the 'this' and the 'these' refer  %SM: agree!
 %to. 
 \begin{align}
 &Q_1(X) = \sum_{c=1}^{C} \sum_{b=1}^{B} \sum_{s=1}^{S}
@@ -242,7 +244,7 @@ where $\bar{Q}_i$ is the normalization of objective $Q_i$, and $0 \leq \alpha_i 
 This method guarantees an optimal solution to be Pareto optimal~\cite{stanimirovic_linear_2011}. 
 
 Currently, the most efficient approach to finding an exact solution for 
-an ILP is called Branch-and-Cut~\cite{mitchell_branch-and-cut_2002}. 
+an ILP is called Branch-and-Cut~\cite{mitchell_branch-and-cut_2002}.   %SM: good
 This method involves iteratively solving 
 LP relaxations of the ILP, then constraining the relaxed problems and
 considering various sub-problems until it finds integral solutions to the 
