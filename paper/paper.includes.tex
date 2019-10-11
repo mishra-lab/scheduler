@@ -24,3 +24,16 @@
 \DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
 \DeclareUnicodeCharacter{2713}{\checkmark}
 \setlength{\parskip}{1em}
+
+\makeatletter
+\newcommand{\printfnsymbol}[1]{%
+	\textsuperscript{\@fnsymbol{#1}}%
+}
+\makeatother
+
+% Keywords command
+\providecommand{\keywords}[1]
+{
+	\small	
+	\textbf{\textit{Keywords:}} #1
+}
