@@ -1,12 +1,9 @@
-% JK: I think give an overview here of the experiments here
-%     and what you're going to show in this section (and why)
-% check verb tense - use past tense I think given flow
 Our goal was to determine if the schedules provided by solving the ILP 
 could successfully
 (i) enforce all hard constraints; 
-(ii) improve fulfillment of soft constraints compared to the manual approach; %SM: found "improve satisfiability" a bit hard to follow. revise this phrase for clarity
+(ii) improve fulfillment of soft constraints compared to the manual approach; 
 and (iii) assess whether our ILP formulation can be used for a wide range
-of configurations.  %list objectives with numbers (i, ii, iii) or separated by semi-colons - helps the reader re: flow
+of configurations.
 First, we compared the schedules created by solving the ILP formulation
 given in Section~\ref{sec:methods} to schedules that were manually generated,
 with respect to adherence to the hard and soft constraints outlined in Section~\ref{sec:problem}.
@@ -16,18 +13,15 @@ by its runtime on a variety of instances that may be found in the real-world.
 \subsection{Implementation}
 We developed a Python software package with a user interface that implements the above
 linear program and allows configuration of clinicians, to be
-% JK: what is this ref? Do you want to mention it is in Python?
 used by the ID division at St.\ Michael's Hospital~\cite{landsman_scheduling}. 
 The software was used to
 generate the results in the following sections, using real data as well as
 simulated data as input. All the following experiments were conducted on an
 Intel Core i7-4770k CPU @ 3.50 GHz with 16 GB of RAM running 64-bit Windows 10.
 Our software package uses COIN-OR Branch-and-Cut open source solver
-% JK: "software" here is not clear to me, is it the solver for the ILP formulation?
 version 2.9.9~\cite{johnjforrest_coin-or/cbc:_2019}.
 
-\subsection{Comparison with Manually Generated Schedules}  %main comment  = I think use past
-%tense in writing
+\subsection{Comparison with Manually Generated Schedules}
 We used clinician time-off requests and minimum/maximum requirements from
 2015-2018 as input data for the ILP problem.
 Table~\ref{tbl:2018-schedule-comparison} compares the optimal schedule generated using
@@ -35,19 +29,12 @@ the software with the manually-created schedule for data from 2018. The
 schedule is color-coded to distinguish between the different clinicians.
 
 \input{tbl/2018_schedule_comparison}
-% JK: I think use input not include here to avoid unnecessary page breaks
-%     https://tex.stackexchange.com/questions/246
 
 First, we evaluated the ILP solution by comparing it with the
-% JK: I think it would be good to give a short name for manual and the proposed
-%     data -- e.g. LP Solution as in Table 4 and Manual Generation.		%SM: great suggestion!
-%     Then check for consistency throughout.
-%     While lack of synonyms can sound repetitive, it can help avoid confusion.  %SM: agree
 manual generation, as in Table~\ref{tbl:2018-schedule-comparison}. Specifically, we examined the adherence of each
 schedule to the constraints presented in Table~\ref{tbl:constraint-summary}. As
 shown in Table~\ref{tbl:constraints-comparison}, the ILP solution satisfied all 
 hard constraints. In contrast,
-% JK: "mandatory" = "hard"? if possible just use one.
 manual generation did not satisfy all hard constraints. In
 particular, we see that the manual generation assigned clinicians to multiple
 consecutive blocks in all four years. Moreover, the manual generation did not have
@@ -57,8 +44,6 @@ in all four years, by accommodating almost all time-off requests and
 ensuring that weekends are always assigned close to blocks.
 
 \input{tbl/constraints_comparison}
-% JK: If you want to be funny, you can estimate the approximate time to
-%     generate the schedule and include that too (16 hours vs 1 second)...
 
 \subsection{Influence of Problem Complexity on Runtime}
 Next, we examined the influence of the following four parameters on the
@@ -68,9 +53,7 @@ number of services offered;
 number of time-off requests per clinician per year;
 time-horizon of the schedule.
 
-% JK: Introduce what you did first and then the figure showing results (see above)
-The effect of increasing the number of clinicians and number of services %divisions %do you mean
-%services?
+The effect of increasing the number of clinicians and number of services 
 on the runtime of the program is shown in Table~\ref{tbl:runtime-services-clinicians-comparison}.
 We executed the algorithm for
 $S = \{1, 2, 3\}$ total services and $C = \{10, 20, 30, 50\}$ clinicians in  
@@ -84,17 +67,12 @@ over 24 hours. We saw similar issues for a roster of 20 or more clinicians
 assigned to a division with 3 concurrent services. However, when removing the
 NCB constraint, we saw a great improvement in runtime for divisions with 2 and 3
 services, and we were able to generate a schedule with upwards of 50 clinicians
-in under 1.5 seconds.  %what does division mean? do you mean services?  %SM: make sure division vs. services defined in introduction, but may need to repeat again in problem statement to help the reader
+in under 1.5 seconds.
 
 \input{tbl/runtime_services_clinicians}
 
-% JK: Good to introduce the detault parameters first, then for each parameter explored,
-%     Describe what varied.
 For the remaining experiments, we simulated a department with 10 clinicians offering 
 two services, similar to the department at St.\ Michael's Hospital. 
-% JK: \abs{BR} does not clearly imply number of blocks (could be confused with week indices),
-%     so just leave out the LHS here I think.
-% JK: What do you mean by non-overlapping? And why only increments of 5?
 The effect of an increasing number of requests per clinician on the runtime of
 the ILP solver is shown in Figure~\ref{fig:runtime-requests}.
 In this experiment, each clinician was configured with 1 to 15 total block requests.
@@ -102,25 +80,15 @@ The runtime of the algorithm is constant with respect to the number of requests,
 indicating that it can accommodate a lot of flexibility in
 clinician requests. Moreover, we see that all runs were completed in under
 2 seconds.
-% JK: See somments below about trends and repeating simulations.
 
 \begin{figure}[h]
 	\centering
 	\def\svgwidth{\columnwidth}
 	\caption{Runtime of ILP solver with an increasing number of requests per clinician}
-	\input{fig/runtime-requests.pdf_tex} % JK: can you export this to PDF or SVG to avoid pixelation?
+	\input{fig/runtime-requests.pdf_tex}
   \label{fig:runtime-requests}
-  % JK: The trend here is a bit confusing, since I think you're trying to say
-  %     that the runtime is not affected by the number of constraints,
-  %     but there is noise in these results.
-  %     I would re-run this 10-100 times and average the results so that (I expect)
-  %     the mean trend is actually flat. You could (should) then also present the runtimes
-  %     as box-plots to show that the trend is less than the variability.  %SM: great suggestion! Did you do this (re-run 10-100 times?) - was not clear from description of experiments above
 \end{figure}
 
-% JK: Introduce what you did first and then the figure showing results (see above)
-% JK: Try to introduce these results in the same order as they appear in the
-%     first paragraph of this section.
 Figure~\ref{fig:runtime-blocks} presents the change in runtime when increasing
 the number of 2-week blocks in a department with 10
 clinicians offering two services. In this experiment, we investigated time horizons
@@ -128,9 +96,6 @@ from 5 to 110 blocks. This is equivalent to generating a schedule for up to 4 ye
 The trend in the graph indicates a linear growth in runtime with respect to the time-horizon.
 Notably, the ILP solver was able to find all solutions in under 6 seconds, indicating very 
 good performance for long-term scheduling. 
-% 'very reasonable amount of time" is vague. what is reasonable?
-%better to give a range in value.
-% JK: same comment as above re. trends
 
 \begin{figure}[h]
 	\centering
@@ -138,10 +103,4 @@ good performance for long-term scheduling.
 	\caption{Runtime of ILP solver with an increasing number of 2-week blocks}%
 	\input{fig/runtime-blocks.pdf_tex}
   \label{fig:runtime-blocks}
-  % JK: same comment as above re. trends
-  % JK: Thess figures could also possible be Figure 1. a) and b) 
 \end{figure}
-
-
-%SM: Table 6. change column heading "number of services" to "number of services within 1 division"
-%SM: Table 6. without NCB is a double-negative (without no consecutive blocks). Can this be revised?

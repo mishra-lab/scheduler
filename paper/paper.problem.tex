@@ -5,15 +5,11 @@ and on weekends and holidays. The schedule is created in advance,
 outlining all work-week and weekend shifts for the full year.
 In the yearly schedule clinicians are assigned to ``blocks'' of
 two consecutive regular work weeks and individual weekends. Apart
-% JK: when I first read this I thought weekends were also in 2-week blocks
 from long (holiday) weekends, a work week starts on Monday at 8 A.M. and ends on
 Friday at 5 P.M. Accordingly, weekend service starts on Friday at 5 P.M., and
 ends on Monday at 8 A.M. During the weekend, ID and HIV consultation services
 are combined and provided by one clinician. During the regular work week the ID
 and HIV services are led by one clinician each.
-% JK: I thik we need something like:
-%     Therefore, our objective is to: assign one clinician to ...
-%     while additionally considering the following constraints ...
 Therefore, our objective is to assign a single clinician to cover
 each service for each block and each weekend of the year, while 
 additionally ensuring a balanced workload.
@@ -24,31 +20,16 @@ soft constraints can be used to select a more favourable solution from a set of
 candidate solutions. Typically, soft constraints are therefore encoded as objective
 functions which are
 maximized when finding a solution. In the case of the clinician
-% JK: the direction of max / minimization is arbitrary,
-%     I think sufficient to pick one here to avoid confusion.
 scheduling problem, we chose departmental regulations and workload balance as hard constraints,
 while clinician preference and requests serve as soft constraints.
-%we chose Block Requests, Weekend Requests and Block-Weekend
-%Adjacency as our soft constraints, while the rest of the constraints are hard.
 After the schedule is generated, clinicians may
 exchange certain weeks or days throughout the year, to fulfill any missed requests.
-%Our approach to schedule generation does not
-%consider such future exchanges, and instead generates on one full year at a time.
-% JK: I think this para (4) should go instead as the 2nd in this section.
-%     you could introduce the ideas of hard and soft constraints (this para) first,
-%     and then have the current paras (2) and (3) after this one, where the reader
-%     is already aware that (2) is hard constraints and (3) is soft.
-%     Oh, I see that they're not currently split up exactly, but I think it would be
-%     helpful to do so. Maybe double check with SM though.  SM: agree with JK and it reads nicely to see the definition of constraints up front here.
 
 The following are the departmental and workload constraints placed on the clinician assignments. 
-% JK: I think you need to introduce BC and WC constraints here,
-%     since they appear in Table 1 without text in the body.
 First, each clinician
 must work between a minimum and maximum number of blocks of each service during the year.
 For instance, one clinician might have to
 provide 3-5 blocks of general ID service and 2-3 blocks of HIV service
-% JK: trying to reduce synonyms "service" / "consultation"
 throughout the year. These limits may be different for each clinician,
 and they may change from year to year as
 the number of clinicians in the department changes. Second, the schedule
@@ -72,14 +53,8 @@ Table~\ref{tbl:constraint-summary}.
 	\centering
 	\caption{Summary of the constraints for the clinician scheduling problem}%
   \label{tbl:constraint-summary}
-  % JK: table caption should go at the top.
-  %     The spacing can be funny so I use:
-  %     \usepackage{caption}\captionsetup[table]{skip=1em}		SM: I need to learn these tricks for appendices of modeling papers!
-  %     also labels should be on their own line.
-  % JK: below: I would consider making the 2-3 letter abbreviations its own column
 	\begin{tabular}{ l c l l }
 		\toprule
-		% JK: different line weights support table structure
 		\textbf{Constraint Name} & \textbf{Abbreviation} & \textbf{Description}                                                                                                                 & \textbf{Type} \\ \midrule
 		Block Coverage                                                                  & BC                    & \makecell[l]{each service needs to have
 			exactly \\ one clinician that covers any given block}                                     & Hard          \\ \hline
@@ -102,9 +77,7 @@ Table~\ref{tbl:constraint-summary}.
 			off service \\ during certain weekends throughout the year}                         & Soft          \\ \hline
 		Block-Weekend Adjacency                                                         & BWA                   & \makecell[l]{the block and weekend
 			assignments of a given \\ clinician should be adjacent}                                        & Soft          \\ \bottomrule
-		% JK: I think usually table bottom also has a rule                              &                       &                                                                                                                                      &
 	\end{tabular}
-  % JK: please define Hard & Soft constraints in a footnote
 \footnotesize\raggedright
 Hard constraints must be satisfied by any candidate schedule. 
 Soft constraints are optionally satisfied, and are used to rank the set of candidate solutions.
