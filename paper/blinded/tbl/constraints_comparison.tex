@@ -1,0 +1,27 @@
+\begin{sidewaystable}[htbp]
+    \centering
+    \caption{Comparison of constraint satisfaction and objectives values in LP-generated and historical schedules.}%
+    \label{tbl:constraints-comparison}
+		\begin{tabular}{l|cc|cc|cc|cc}
+      \toprule
+			\multirow{2}[1]{*}{}                                & \multicolumn{2}{c|}{\textbf{2015}} & \multicolumn{2}{c|}{\textbf{2016}} & \multicolumn{2}{c|}{\textbf{2017}} & \multicolumn{2}{c}{\textbf{2018}} \\
+			                                                    &     LP     &      Historical       &     LP     &      Historical       &     LP     &      Historical       &     LP     &      Historical      \\ \midrule
+			\multicolumn{1}{c|}{\textbf{Constraint}}            &            &                       &            &                       &            &                       &            &                      \\ \midrule
+			Block Coverage                                      & \checkmark &      \checkmark       & \checkmark &      \checkmark       & \checkmark &      \checkmark       & \checkmark &      \checkmark      \\
+			Weekend Coverage                                    & \checkmark &      \checkmark       & \checkmark &      \checkmark       & \checkmark &      \checkmark       & \checkmark &      \checkmark      \\
+			Min/Max                                             & \checkmark &      \checkmark       & \checkmark &      \checkmark       & \checkmark &      \checkmark       & \checkmark &      \checkmark      \\
+			No Consecutive Blocks                               & \checkmark &                       & \checkmark &                       & \checkmark &                       & \checkmark &                      \\
+			No Consecutive Weekends                             & \checkmark &                       & \checkmark &                       & \checkmark &      \checkmark       & \checkmark &      \checkmark      \\
+			Equal Weekends                                      & \checkmark &                       & \checkmark &                       & \checkmark &                       & \checkmark &                      \\
+			Equal Holidays                                      & \checkmark &                       & \checkmark &      \checkmark       & \checkmark &                       & \checkmark &      \checkmark      \\ \midrule
+			\multicolumn{1}{c|}{\textbf{Objective}}             &            &                       &            &                       &            &                       &            &                      \\ \midrule
+			\makecell[l]{Satisfied Block Requests}              &  123/129   &        121/129        &  120/126   &        116/126        &   99/99    &         95/99         &  124/128   &       121/128        \\
+			\makecell[l]{Satisfied Weekend Requests}            &  113/113   &        111/113        &  119/119   &        112/119        &   75/75    &         75/75         &  115/115   &       113/115        \\
+			\makecell[l]{Adjacent Block-Weekend Assignments}    &   26/26    &         9/26          &   26/26    &         6/26          &   26/26    &         7/26          &   26/26    &         5/26         \\
+      \bottomrule
+		\end{tabular}\\[1em]
+  \footnotesize\raggedright
+  The objective denominator represents:
+  the total number of requests submitted by clinicians for request objectives; and
+  the total number of possible adjacencies for adjacency objectives.
+\end{sidewaystable}%

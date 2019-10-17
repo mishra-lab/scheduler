@@ -1,0 +1,84 @@
+At the hospital, the division of infectious diseases offers
+separate but concurrent services for general ID consultations and for HIV consultations. Each
+service provides clinical care throughout the year, during regular working hours
+and on weekends and holidays. The schedule is created in advance,
+outlining all work-week and weekend shifts for the full year.
+In the yearly schedule clinicians are assigned to ``blocks'' of
+two consecutive regular work weeks and individual weekends. Apart
+from long (holiday) weekends, a work week starts on Monday at 8 A.M. and ends on
+Friday at 5 P.M. Accordingly, weekend service starts on Friday at 5 P.M., and
+ends on Monday at 8 A.M. During the weekend, ID and HIV consultation services
+are combined and provided by one clinician. During the regular work week the ID
+and HIV services are led by one clinician each.
+Therefore, our objective is to assign a single clinician to cover
+each service for each block and each weekend of the year, while 
+additionally ensuring a balanced workload.
+
+In most scheduling problems, the constraints can be divided into hard and soft
+constraints. Hard constraints must be satisfied by any candidate solution, while
+soft constraints can be used to select a more favourable solution from a set of
+candidate solutions. Typically, soft constraints are therefore encoded as objective
+functions which are
+maximized when finding a solution. In the case of the clinician
+scheduling problem, we chose departmental regulations and workload balance as hard constraints,
+while clinician preference and requests serve as soft constraints.
+After the schedule is generated, clinicians may
+exchange certain weeks or days throughout the year, to fulfill any missed requests.
+
+The following are the departmental and workload constraints placed on the clinician assignments. 
+First, each clinician
+must work between a minimum and maximum number of blocks of each service during the year.
+For instance, one clinician might have to
+provide 3-5 blocks of general ID service and 2-3 blocks of HIV service
+throughout the year. These limits may be different for each clinician,
+and they may change from year to year as
+the number of clinicians in the department changes. Second, the schedule
+should not assign a clinician to work for two consecutive blocks or two
+consecutive weekends. The schedule should also distribute regular
+weekends and holiday weekends each equally among all clinicians.
+
+In addition to balancing the workload among clinicians, the schedule
+should accommodate their preferences. Clinicians provide their requests for
+time off before schedule generation so that the requests may be integrated
+into the schedule. Clinicians may specify days, weeks or weekends off, with the
+understanding that any blocks overlapping with their request will be assigned to
+a different clinician where possible. For example, if a clinician only requests
+a given Monday and Tuesday off, the schedule should avoid assigning the
+entire block to that clinician. Clinicians also typically prefer to have their weekend and
+block assignments side by side, so the schedule should accommodate this where possible.
+A summary of the outlined constraints is given in
+Table~\ref{tbl:constraint-summary}.
+
+\begin{table}[h]
+	\centering
+	\caption{Summary of the constraints for the clinician scheduling problem}%
+  \label{tbl:constraint-summary}
+	\begin{tabular}{ l c l l }
+		\toprule
+		\textbf{Constraint Name} & \textbf{Abbreviation} & \textbf{Description}                                                                                                                 & \textbf{Type} \\ \midrule
+		Block Coverage                                                                  & BC                    & \makecell[l]{each service needs to have
+			exactly \\ one clinician that covers any given block}                                     & Hard          \\ \hline
+		Weekend Coverage                                                                & WC                    & \makecell[l]{every weekend needs to have
+			exactly \\ one clinician that covers it}                                                 & Hard          \\ \hline
+		Min/Max                                                                         & MM                    & \makecell[l]{for a given service, each
+			clinician can only \\ work between the minimum and maximum \\ number of allowed
+			blocks} & Hard          \\ \hline
+		No Consecutive Blocks                                                           & NCB                   & \makecell[l]{any clinician should not work \\
+			two consecutive blocks, across all services}                                        & Hard          \\ \hline
+		No Consecutive Weekends                                                         & NCW                   & \makecell[l]{any clinician should not work two
+			consecutive \\ weekends}                                                           & Hard          \\ \hline
+		Equal Weekends                                                                  & EW                    & \makecell[l]{weekends should be equally
+			distributed \\ between clinicians}                                                        & Hard          \\ \hline
+		Equal Holidays                                                                  & EH                    & \makecell[l]{long weekends should be equally
+			distributed \\ between clinicians}                                                   & Hard          \\ \hline
+		Block Requests                                                                  & BR                    & \makecell[l]{each clinician can request to be
+			off service \\ during certain blocks throughout the year}                           & Soft          \\ \hline
+		Weekend Requests                                                                & WR                    & \makecell[l]{each clinician can request to be
+			off service \\ during certain weekends throughout the year}                         & Soft          \\ \hline
+		Block-Weekend Adjacency                                                         & BWA                   & \makecell[l]{the block and weekend
+			assignments of a given \\ clinician should be adjacent}                                        & Soft          \\ \bottomrule
+	\end{tabular}
+\footnotesize\raggedright
+Hard constraints must be satisfied by any candidate schedule. 
+Soft constraints are optionally satisfied, and are used to rank the set of candidate solutions.
+\end{table}

@@ -1,0 +1,86 @@
+Hospital departments must allocate and use their limited resources efficiently
+in order to provide a high quality of care for their patients.
+In particular, on-call schedules for
+a fixed number of health-care providers are central to the efficient running of
+hospitals. Carefully allocated schedules should balance
+sufficient staff with workload
+to maximize quality of care. It is common for on-call schedules in
+hospitals to be created manually. However,
+manually-created schedules are subject to three problems.
+First, when there are a large number of clinicians,
+or the constraints that need to be satisfied
+by the schedule are complex, it becomes infeasible
+to find a satisfying schedule by hand. 
+Second, when creating a schedule manually it is difficult to ensure
+that all constraints are met while also trying to satisfy all staff
+preferences.
+Third, manual scheduling is often time-consuming even for relatively small 
+departments, and can take up time and resources that are better used
+for improving patient care.
+For these reasons, it is important to develop automated methods that
+can efficiently generate schedules that satisfy the given constraints.
+
+Automated methods to generate schedules have been studied and applied in many
+industries, including
+transportation~\cite{aickelin_improved_2006, goel_truck_2012, gunther_combined_2010},
+manufacturing~\cite{al-yakoob_mixed-integer_2007, al-yakoob_column_2008, alfares_simulation_2007},
+retail~\cite{chapados_retail_2011, nissen_automatic_2010}, and
+military~\cite{horn_scheduling_2007, laguna_modeling_2005}.
+Of special interest to a clinician scheduling
+problem are the approaches to scheduling nurses, who often work in shifts. In the
+nurse scheduling problem, the goal is to find an optimal assignment of nurses to
+shifts that satisfies all hard constraints (such as hospital regulations),
+and as many soft constraints (such as nurse preferences) as possible.
+Hard constraints must be satisfied by any candidate solution to the nurse scheduling problem,
+while soft constraints can be used to rank the candidate solutions. 
+For instance, a nurse scheduling problem may include a hard constraint to assign
+at most a single shift for each nurse per day. It can also incorporate 
+nurse preference for shift time (that is, day versus night shifts) as a soft constraint
+that is meant to optimize the schedule, but is not guaranteed to be fulfilled.
+A wide variety of approaches, including exact and heuristic approaches, have been
+used to solve the nurse scheduling problem:
+integer linear programming~\cite{azaiez_0-1_2005, trilling_nurse_2006, widyastiti_nurses_2016},
+network flows~\cite{el_adoly_new_2018},
+genetic algorithms~\cite{aickelin_exploiting_2000, jan_evolutionary_2000, kawanaka_genetic_2001},
+simulated annealing~\cite{jaszkiewicz_metaheuristic_1997}, and
+artificial intelligence~\cite{abdennadher_nurse_1999, li_hybrid_2003}.
+A comprehensive
+literature review of these and other methods applied to nurse scheduling is
+presented in~\cite{burke_state_2004}.
+
+Many of the approaches to nurse scheduling were designed to satisfy the
+requirements of a specific hospital department, which results in a large number of
+variables and constraints to be incorporated into the problem formulation. While
+these department-specific approaches allow end-users to find precise schedules
+that satisfy the needs of that department and the preferences of nurses and
+clinicians in that department, they are difficult to adapt to other
+departments.
+Moreover, the large number of variables and constraints also leads to
+computational complexity issues~\cite{goos_complexity_1996}, especially when
+trying to find the most optimal solution. In particular, difficult instances of these formulations
+become impossible to solve in a reasonable amount of time. 
+In this paper, we tackle the clinician 
+scheduling problem arising from a case study of one clinical
+division, providing two different services (general infectious
+disease (ID) consults; and HIV consults) at our candidate hospital. 
+The clinician scheduling problem involves creating
+a yearly schedule that assigns clinicians to on-call work on a weekly basis,
+while ensuring a fair and balanced workload.
+Our goals in this paper are to (1) present an integer linear programming 
+(ILP) formulation for our problem, and
+describe the flexibility of this formulation for solving similar problems;
+(2) compare the performance of our tool for solving the ILP formulation to the
+results of a manual approach; 
+and (3) analyze the robustness of this approach
+in difficult instances of the problem, by exploring the change in runtime with
+changes to:
+the number of clinicians,
+the number of services provided by the department,
+the number of requests per clinician, and
+the time-horizon of the schedule.
+
+We begin by describing the details of the problem in Section~\ref{sec:problem}, and presenting
+our ILP formulation in Section~\ref{sec:methods}. Next, we compare the results
+of our formulation to manually-created schedules, and evaluate the performance
+of the algorithm on simulated data in Section~\ref{sec:experiments}. Finally, we
+discuss and interpret the results in Section~\ref{sec:discussion}.
