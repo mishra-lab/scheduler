@@ -231,14 +231,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         calendarYear = self.calendarYearSpinBox.value()
         shuffle = self.shuffleCheckBox.isChecked()
         verbose = self.verboseCheckBox.isChecked()
+        constraints = []
 
-        # requests = []
-        # holidays = []
+        # pull enabled constraints from UI checkboxes
+        for row in range(self.constraintsForm.rowCount()):
+            widget = self.constraintsForm.itemAt(row, QFormLayout.FieldRole).widget()
+            if widget.isChecked():
+                constraints.append(widget.objectName().replace('CheckBox', ''))
 
         # init scheduler with all the given data
         schedule = scheduler \
             .Scheduler(logger=self._logger, num_blocks=numBlocks, clin_data=self.configuration, \
-                 request_dict=self._requests, holidays=self._holidays) \
+                 request_dict=self._requests, holidays=self._holidays,
+                 constraints=constraints) \
             .generate(verbose=verbose, shuffle=shuffle)
         if schedule is None:
             self._logger.write_line('Could not generate schedule! Try adjusting min/max values in the configuration tab.', level='ERROR')

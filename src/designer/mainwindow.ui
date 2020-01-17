@@ -23,7 +23,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="configurationTab">
        <attribute name="title">
@@ -151,6 +151,9 @@
                    <property name="text">
                     <string>Configuration</string>
                    </property>
+                   <property name="buddy">
+                    <cstring>loadConfigButton</cstring>
+                   </property>
                   </widget>
                  </item>
                  <item row="0" column="1">
@@ -168,6 +171,9 @@
                    <property name="text">
                     <string>Requests</string>
                    </property>
+                   <property name="buddy">
+                    <cstring>loadRequestsButton</cstring>
+                   </property>
                   </widget>
                  </item>
                  <item row="1" column="1">
@@ -181,6 +187,9 @@
                   <widget class="QLabel" name="calendarYearLabel">
                    <property name="text">
                     <string>Calendar Year</string>
+                   </property>
+                   <property name="buddy">
+                    <cstring>calendarYearSpinBox</cstring>
                    </property>
                   </widget>
                  </item>
@@ -202,6 +211,9 @@
                    <property name="text">
                     <string>Number of Blocks</string>
                    </property>
+                   <property name="buddy">
+                    <cstring>numberOfBlocksSpinBox</cstring>
+                   </property>
                   </widget>
                  </item>
                  <item row="4" column="1">
@@ -221,6 +233,9 @@
                   <widget class="QLabel" name="holidaysLabel">
                    <property name="text">
                     <string>Holidays</string>
+                   </property>
+                   <property name="buddy">
+                    <cstring>loadHolidaysButton</cstring>
                    </property>
                   </widget>
                  </item>
@@ -326,6 +341,152 @@
            </property>
           </column>
          </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="settingsTab">
+       <attribute name="title">
+        <string>Settings</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QGroupBox" name="constraintsGroupBox">
+          <property name="title">
+           <string>Constraints</string>
+          </property>
+          <layout class="QFormLayout" name="formLayout">
+           <item row="0" column="0">
+            <layout class="QFormLayout" name="constraintsForm">
+             <item row="0" column="0">
+              <widget class="QLabel" name="coverageLabel">
+               <property name="text">
+                <string>Cover All Blocks &amp;&amp; Weekends</string>
+               </property>
+               <property name="buddy">
+                <cstring>coverageCheckBox</cstring>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QCheckBox" name="coverageCheckBox">
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="minMaxBlocksLabel">
+               <property name="text">
+                <string>Restrict Min/Max Blocks</string>
+               </property>
+               <property name="buddy">
+                <cstring>minMaxBlocksCheckBox</cstring>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QCheckBox" name="minMaxBlocksCheckBox">
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="balancedWeekendsLabel">
+               <property name="text">
+                <string>Balance Weekends</string>
+               </property>
+               <property name="buddy">
+                <cstring>balancedWeekendsCheckBox</cstring>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QCheckBox" name="balancedWeekendsCheckBox">
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="balancedLongWeekendsLabel">
+               <property name="text">
+                <string>Balance Long Weekends</string>
+               </property>
+               <property name="buddy">
+                <cstring>balancedLongWeekendsCheckBox</cstring>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QCheckBox" name="balancedLongWeekendsCheckBox">
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0">
+              <widget class="QLabel" name="preventConsecutiveBlocksLabel">
+               <property name="text">
+                <string>Prevent Consecutive Blocks</string>
+               </property>
+               <property name="buddy">
+                <cstring>preventConsecutiveBlocksCheckBox</cstring>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1">
+              <widget class="QCheckBox" name="preventConsecutiveBlocksCheckBox">
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="0">
+              <widget class="QLabel" name="spreadOutBlocksLabel">
+               <property name="text">
+                <string>Spread Out Blocks</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="1">
+              <widget class="QCheckBox" name="spreadBlocksCheckBox">
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="0">
+              <widget class="QLabel" name="spreadOutWeekendsLabel">
+               <property name="text">
+                <string>Spread Out Weekends</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="1">
+              <widget class="QCheckBox" name="spreadWeekendsCheckBox">
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </widget>
