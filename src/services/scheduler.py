@@ -7,11 +7,6 @@ import time
 from datetime import datetime, timedelta
 
 import pulp
-from googleapiclient.discovery import build
-from httplib2 import Http
-from oauth2client import client
-from oauth2client import file as oauth_file
-from oauth2client import tools
 
 from constants import *
 
