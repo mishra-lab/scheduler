@@ -24,9 +24,9 @@ copyright = '2019, David Landsman'
 author = 'David Landsman'
 
 # The short X.Y version
-version = ''
+version = '2.3'
 # The full version, including alpha/beta/rc tags
-release = '2.0'
+release = '2.3'
 
 
 # -- General configuration ---------------------------------------------------
@@ -119,11 +119,14 @@ latex_elements = {
 
     # Additional stuff for the LaTeX preamble.
     #
-    # 'preamble': '',
+    'preamble': r'''\makeatletter
+\def\set@curr@file#1{\def\@curr@file{#1}}
+\makeatother''',
 
     # Latex figure (float) alignment
     #
     # 'figure_align': 'htbp',
+    'babel': '\\usepackage[noconfigs]{babel}',
     'figure_align': 'H'
 }
 
@@ -132,7 +135,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     ('manual', 'ClinicianScheduler.tex', 'Clinician Scheduler Documentation',
-     'David Landsman', 'manual'),
+     author, 'manual'),
 ]
 
 
