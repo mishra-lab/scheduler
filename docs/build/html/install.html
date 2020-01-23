@@ -1,6 +1,5 @@
 
 
-
 <!DOCTYPE html>
 <!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
@@ -9,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; Clinician Scheduler 2.0 documentation</title>
+  <title>Installation &mdash; Clinician Scheduler 2.0 documentation</title>
   
 
   
@@ -35,8 +34,10 @@
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
   <link rel="stylesheet" href="_static/css/style.css" type="text/css" />
-    <link rel="index" title="Index" href="#" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="User Manual" href="manual.html" />
+    <link rel="prev" title="Clinician Scheduler" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -80,8 +81,12 @@
               
             
             
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#download-it">Download it</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#build-it-from-source">Build it from source</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="manual.html">User Manual</a></li>
 </ul>
 
@@ -128,12 +133,14 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Index</li>
+      <li>Installation</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
+            <a href="_sources/install.rst.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
     
@@ -145,11 +152,45 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-
-<h1 id="index">Index</h1>
-
-<div class="genindex-jumpbox">
- 
+  <div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="download-it">
+<h2>Download it<a class="headerlink" href="#download-it" title="Permalink to this headline">¶</a></h2>
+<p>You can find the latest version of the executable from the <a class="reference external" href="https://github.com/c-uhs/scheduler/releases">releases</a>.
+The executable comes pre-bundled with the COIN-OR LP solver.</p>
+</div>
+<div class="section" id="build-it-from-source">
+<h2>Build it from source<a class="headerlink" href="#build-it-from-source" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You must use a 32-bit Python 3 installation!</p>
+</div>
+<ol class="arabic">
+<li><p>Get COIN-OR LP solver</p>
+<blockquote>
+<div><p>Before compiling the executable, you must download the 32bit version
+of the COIN-OR Branch-and-Cut (CBC)
+executable, to be bundled together with the scheduler.
+Download the 2.9.9 version from <a class="reference external" href="https://bintray.com/coin-or/download/Cbc/2.9.9">Bintray</a>, unzip it, and place it
+under the <code class="code docutils literal notranslate"><span class="pre">scheduler/scripts</span></code> folder.</p>
+</div></blockquote>
+</li>
+</ol>
+<ol class="arabic" start="2">
+<li><p>Run the script</p>
+<blockquote>
+<div><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;</span> git clone git@github.com:c-uhs/scheduler.git
+<span class="gp">&gt;</span> sudo pip install -r scheduler/src/requirements.txt
+<span class="gp">&gt;</span> <span class="nb">cd</span> scheduler/scripts
+<span class="gp">&gt;</span> sh make_exe.sh
+</pre></div>
+</div>
+<p>This will create a <code class="code docutils literal notranslate"><span class="pre">scheduler/dist</span></code> folder
+containing the executable file.</p>
+</div></blockquote>
+</li>
+</ol>
+</div>
 </div>
 
 
@@ -157,6 +198,15 @@
            
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="manual.html" class="btn btn-neutral float-right" title="User Manual" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Clinician Scheduler" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>

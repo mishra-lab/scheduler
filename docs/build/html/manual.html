@@ -1,69 +1,184 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>User Manual &#8212; Clinician Scheduler 2.0 documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/css/style.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>User Manual &mdash; Clinician Scheduler 2.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/style.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Clinician Scheduler" href="index.html" />
+    <link rel="prev" title="Installation" href="install.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
    
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
-  </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
           
 
-          <div class="body" role="main">
+          
+            <a href="index.html" class="icon icon-home"> Clinician Scheduler
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">User Manual</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#clinician-configuration">Clinician Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#creating-a-new-configuration-file">Creating a new configuration file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#saving-the-configuration-file">Saving the configuration file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#loading-a-configuration-file">Loading a configuration file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#adding-a-new-clinician">Adding a new clinician</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#deleting-an-existing-clinician">Deleting an existing clinician</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#editing-an-existing-clinician">Editing an existing clinician</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#requests-holiday-weekends">Requests &amp; Holiday Weekends</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#clinician-requests-excel-file">Clinician Requests Excel File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#holiday-weekends-excel-file">Holiday Weekends Excel File</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#scheduling">Scheduling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#generating-a-schedule">Generating a schedule</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#changing-settings">Changing settings</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#st-michael-s-hospital-smh-constraints">St. Michael’s Hospital (SMH) Constraints</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#exporting-a-schedule">Exporting a schedule</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#sample-output">Sample Output</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#yearly-excel-format">Yearly Excel Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#monthly-excel-format">Monthly Excel Format</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Clinician Scheduler</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>User Manual</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/manual.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="user-manual">
 <h1>User Manual<a class="headerlink" href="#user-manual" title="Permalink to this headline">¶</a></h1>
-<div class="contents local topic" id="table-of-contents">
-<p class="topic-title first">Table of Contents</p>
-<ul class="simple">
-<li><a class="reference internal" href="#clinician-configuration" id="id4">Clinician Configuration</a><ul>
-<li><a class="reference internal" href="#creating-a-new-configuration-file" id="id5">Creating a new configuration file</a></li>
-<li><a class="reference internal" href="#saving-the-configuration-file" id="id6">Saving the configuration file</a></li>
-<li><a class="reference internal" href="#loading-a-configuration-file" id="id7">Loading a configuration file</a></li>
-<li><a class="reference internal" href="#adding-a-new-clinician" id="id8">Adding a new clinician</a></li>
-<li><a class="reference internal" href="#deleting-an-existing-clinician" id="id9">Deleting an existing clinician</a></li>
-<li><a class="reference internal" href="#editing-an-existing-clinician" id="id10">Editing an existing clinician</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#requests-holiday-weekends" id="id11">Requests &amp; Holiday Weekends</a><ul>
-<li><a class="reference internal" href="#clinician-requests-excel-file" id="id12">Clinician Requests Excel File</a></li>
-<li><a class="reference internal" href="#holiday-weekends-excel-file" id="id13">Holiday Weekends Excel File</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#scheduling" id="id14">Scheduling</a><ul>
-<li><a class="reference internal" href="#generating-a-schedule" id="id15">Generating a schedule</a></li>
-<li><a class="reference internal" href="#exporting-a-schedule" id="id16">Exporting a schedule</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#sample-output" id="id17">Sample Output</a><ul>
-<li><a class="reference internal" href="#yearly-excel-format" id="id18">Yearly Excel Format</a></li>
-<li><a class="reference internal" href="#monthly-excel-format" id="id19">Monthly Excel Format</a></li>
-</ul>
-</li>
-</ul>
-</div>
 <div class="section" id="clinician-configuration">
 <span id="id1"></span><h2>Clinician Configuration<a class="headerlink" href="#clinician-configuration" title="Permalink to this headline">¶</a></h2>
 <p>The clinician configuration specifies which clinicians are available,
@@ -74,12 +189,12 @@ in each of their divisions.</p>
 <p>By default, you will get a blank configuration file when you launch
 the program. If you would like to discard the changes you have made and
 start a configuration file from scratch, simply click on <cite>New Config</cite>.</p>
-<div class="figure">
+<div class="figure align-default">
 <a class="reference external image-reference" href="_static/images/configuration/new_config.png"><img alt="_images/new_config.png" class="with-border" src="_images/new_config.png" /></a>
 </div>
 <div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">Unsaved changes to a configuration file will be discarded upon clicking
+<p class="admonition-title">Warning</p>
+<p>Unsaved changes to a configuration file will be discarded upon clicking
 on <cite>New Config</cite>.</p>
 </div>
 </div>
@@ -88,7 +203,7 @@ on <cite>New Config</cite>.</p>
 <p>When you are ready to save the configuration you created, click on
 <cite>Save Config</cite> and choose a place to save your file. Make note of the name
 and directory of the file so you could load it in future runs.</p>
-<div class="figure">
+<div class="figure align-default">
 <a class="reference external image-reference" href="_static/images/configuration/save_config.png"><img alt="_images/save_config.png" class="with-border" src="_images/save_config.png" /></a>
 </div>
 </div>
@@ -97,7 +212,7 @@ and directory of the file so you could load it in future runs.</p>
 <p>If you would like to open a previously created configuration file, simply
 click on <cite>Open Config</cite>, navigate to the location of the file,
 and select it.</p>
-<div class="figure">
+<div class="figure align-default">
 <a class="reference external image-reference" href="_static/images/configuration/load_config.png"><img alt="_images/load_config.png" class="with-border" src="_images/load_config.png" /></a>
 </div>
 </div>
@@ -105,33 +220,33 @@ and select it.</p>
 <span id="id2"></span><h3>Adding a new clinician<a class="headerlink" href="#adding-a-new-clinician" title="Permalink to this headline">¶</a></h3>
 <p>1. From the configuration tab, click <cite>New Clinician</cite>. You should see a
 form for supplying clinician details.</p>
-<div class="figure">
+<div class="figure align-default">
 <a class="reference external image-reference" href="_static/images/configuration/add_clinician/step1_new_clinician.png"><img alt="_images/step1_new_clinician.png" class="with-border" src="_images/step1_new_clinician.png" /></a>
 </div>
 <ol class="arabic simple" start="2">
-<li>Fill out the name, email (optional), and divisions that the clinician
+<li><p>Fill out the name, email (optional), and divisions that the clinician
 will be covering. To add a division you can click on <cite>Add</cite> and a new row
 will be added to the table which you can fill out. You can set the minimum
-and maximum number of blocks that a clinician can work in a given division.</li>
+and maximum number of blocks that a clinician can work in a given division.</p></li>
 </ol>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">A single block corresponds to two weeks.</p>
+<p class="admonition-title">Note</p>
+<p>A single block corresponds to two weeks.</p>
 </div>
-<div class="figure">
+<div class="figure align-default">
 <a class="reference external image-reference" href="_static/images/configuration/add_clinician/step2_add_division.png"><img alt="_images/step2_add_division.png" class="with-border" src="_images/step2_add_division.png" /></a>
 </div>
 <ol class="arabic simple" start="3">
-<li>To delete a row from the table, select the row and then click <cite>Remove</cite>.</li>
+<li><p>To delete a row from the table, select the row and then click <cite>Remove</cite>.</p></li>
 </ol>
-<div class="figure">
+<div class="figure align-default">
 <a class="reference external image-reference" href="_static/images/configuration/add_clinician/step3_remove_division.png"><img alt="_images/step3_remove_division.png" class="with-border" src="_images/step3_remove_division.png" /></a>
 </div>
 <ol class="arabic simple" start="4">
-<li>When you are finished entering the data for the clinician, click <cite>Ok</cite>.
-You should now see a new entry in the main table for that clinician.</li>
+<li><p>When you are finished entering the data for the clinician, click <cite>Ok</cite>.
+You should now see a new entry in the main table for that clinician.</p></li>
 </ol>
-<div class="figure">
+<div class="figure align-default">
 <a class="reference external image-reference" href="_static/images/configuration/add_clinician/step4_add_clinician.png"><img alt="_images/step4_add_clinician.png" class="with-border" src="_images/step4_add_clinician.png" /></a>
 </div>
 </div>
@@ -139,7 +254,7 @@ You should now see a new entry in the main table for that clinician.</li>
 <h3>Deleting an existing clinician<a class="headerlink" href="#deleting-an-existing-clinician" title="Permalink to this headline">¶</a></h3>
 <p>To delete an existing clinician, simply select a row corresponding
 to the clinician in the table and click on <cite>Delete Clinician</cite>.</p>
-<div class="figure">
+<div class="figure align-default">
 <a class="reference external image-reference" href="_static/images/configuration/delete_clinician.png"><img alt="_images/delete_clinician.png" class="with-border" src="_images/delete_clinician.png" /></a>
 </div>
 </div>
@@ -149,7 +264,7 @@ to the clinician in the table and click on <cite>Delete Clinician</cite>.</p>
 to the clinician in the table and click on <cite>Edit Clinician</cite>. You should
 see a dialog window where you can change the information. For more
 details on how to enter data in the edit dialog, see <a class="reference internal" href="#adding-a-new-clinician"><span class="std std-ref">Adding a new clinician</span></a>.</p>
-<div class="figure">
+<div class="figure align-default">
 <a class="reference external image-reference" href="_static/images/configuration/edit_clinician.png"><img alt="_images/edit_clinician.png" class="with-border" src="_images/edit_clinician.png" /></a>
 </div>
 </div>
@@ -165,15 +280,15 @@ configuration file you created in <a class="reference internal" href="#clinician
 each sheet, each request is entered on a separate row, containing the start
 and end date (inclusive) of the request.</p>
 <div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">Make sure each value in the Excel file is formatted as a date!</p>
+<p class="admonition-title">Warning</p>
+<p>Make sure each value in the Excel file is formatted as a date!</p>
 </div>
-<div class="figure">
+<div class="figure align-default">
 <a class="reference external image-reference" href="_static/images/requests_holidays/excel_requests.png"><img alt="_images/excel_requests.png" class="with-border" src="_images/excel_requests.png" /></a>
 </div>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">To enter a request for a single day, use the same value for both start
+<p class="admonition-title">Note</p>
+<p>To enter a request for a single day, use the same value for both start
 and end date.</p>
 </div>
 </div>
@@ -182,10 +297,10 @@ and end date.</p>
 <p>The holiday weekends file should have a single sheet with the dates of the
 holiday weekends, one in each row.</p>
 <div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">Make sure each value in the Excel file is formatted as a date!</p>
+<p class="admonition-title">Warning</p>
+<p>Make sure each value in the Excel file is formatted as a date!</p>
 </div>
-<div class="figure">
+<div class="figure align-default">
 <a class="reference external image-reference" href="_static/images/requests_holidays/excel_holidays.png"><img alt="_images/excel_holidays.png" class="with-border" src="_images/excel_holidays.png" /></a>
 </div>
 </div>
@@ -197,64 +312,138 @@ holiday weekends, one in each row.</p>
 <p>Once you have created a configuration file, you can switch over to the
 <cite>Scheduler</cite> tab of the application in order to generate a schedule.</p>
 <ol class="arabic simple">
-<li>Load the configuration, requests, and holidays files that you created
-earlier in <a class="reference internal" href="#clinician-configuration"><span class="std std-ref">Clinician Configuration</span></a> and <a class="reference internal" href="#requests-and-holidays"><span class="std std-ref">Requests &amp; Holiday Weekends</span></a>.</li>
+<li><p>Load the configuration, requests, and holidays files that you created
+earlier in <a class="reference internal" href="#clinician-configuration"><span class="std std-ref">Clinician Configuration</span></a> and <a class="reference internal" href="#requests-and-holidays"><span class="std std-ref">Requests &amp; Holiday Weekends</span></a>.</p></li>
 </ol>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">You can be sure that everything loaded correctly by checking the output
+<p class="admonition-title">Note</p>
+<p>You can be sure that everything loaded correctly by checking the output
 on the right.</p>
 </div>
-<div class="figure">
+<div class="figure align-default">
 <a class="reference external image-reference" href="_static/images/scheduling/generate_schedule/step1_load.png"><img alt="_images/step1_load.png" class="with-border" src="_images/step1_load.png" /></a>
 </div>
 <ol class="arabic simple" start="2">
-<li>Set the starting calendar year for the schedule, as well as the number
+<li><p>Set the starting calendar year for the schedule, as well as the number
 of 2-week blocks that you want the schedule to cover. By default, the calendar
 year is the upcoming year, and the number of blocks is 26, to cover a full
-year.</li>
+year.</p></li>
 </ol>
-<div class="figure">
+<div class="figure align-default">
 <a class="reference external image-reference" href="_static/images/scheduling/generate_schedule/step2_year_blocks.png"><img alt="_images/step2_year_blocks.png" class="with-border" src="_images/step2_year_blocks.png" /></a>
 </div>
 <ol class="arabic simple" start="3">
-<li><strong>(Optional)</strong> Check the <cite>Shuffle?</cite> checkbox if you would like the scheduler
-to generate a slightly different schedule each time you click on <cite>Generate</cite>.</li>
+<li><p><strong>(Optional)</strong> Check the <cite>Shuffle?</cite> checkbox if you would like the scheduler
+to generate a slightly different schedule each time you click on <cite>Generate</cite>.</p></li>
 </ol>
-<div class="figure">
+<div class="figure align-default">
 <a class="reference external image-reference" href="_static/images/scheduling/generate_schedule/step3_optional_shuffle.png"><img alt="_images/step3_optional_shuffle.png" class="with-border" src="_images/step3_optional_shuffle.png" /></a>
 </div>
 <ol class="arabic simple" start="4">
-<li><strong>(Optional)</strong> Check the <cite>Verbose Output</cite> checkbox if you would like
+<li><p><strong>(Optional)</strong> Check the <cite>Verbose Output</cite> checkbox if you would like
 to see detailed output on the right after the scheduler finishes generating
-the schedule.</li>
+the schedule.</p></li>
 </ol>
-<div class="figure">
+<div class="figure align-default">
 <a class="reference external image-reference" href="_static/images/scheduling/generate_schedule/step4_optional_verbose.png"><img alt="_images/step4_optional_verbose.png" class="with-border" src="_images/step4_optional_verbose.png" /></a>
 </div>
 <ol class="arabic simple" start="5">
-<li>Click on <cite>Generate</cite> to generate a schedule.</li>
+<li><p>Click on <cite>Generate</cite> to generate a schedule.</p></li>
 </ol>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">Depending on the amount of clinicians and requests provided, it may take
-some time to find an optimal schedule.</p>
-</div>
-<div class="figure">
+<div class="figure align-default">
 <a class="reference external image-reference" href="_static/images/scheduling/generate_schedule/step5_generate.png"><img alt="_images/step5_generate.png" class="with-border" src="_images/step5_generate.png" /></a>
 </div>
 <div class="admonition warning">
-<p class="first admonition-title">Warning</p>
+<p class="admonition-title">Warning</p>
+<p>Depending on the amount of clinicians and requests provided, it may take
+some time to find an optimal schedule.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
 <p>It is possible that the scheduler will not be able to come up with a
-schedule that satisfies your constraints. This can be a result of either
-of the following reasons:</p>
+schedule that satisfies your constraints. This can be a result of one
+or more of the following reasons:</p>
 <ul class="simple">
-<li>There are not enough clinicians to distribute evenly throughout the year</li>
-<li>The minimum and maximum number of blocks of clinicians are too restrictive</li>
+<li><p>There are not enough clinicians to distribute evenly throughout the year</p></li>
+<li><p>The specified constraints are too restrictive</p></li>
+<li><p>The minimum and maximum number of blocks of clinicians are too restrictive</p></li>
 </ul>
-<p>Try changing the configuration file by adding new clinicians, or changing
-the min/max blocks of different clinicians to allow for more flexibility.</p>
-<p class="last">See <a class="reference internal" href="#clinician-configuration"><span class="std std-ref">Clinician Configuration</span></a> for more information on modifying the configuration file.</p>
+<p>In these situations try the following:</p>
+<ol class="arabic simple">
+<li><p>Adjust the constraints in the <cite>Settings</cite> tab, starting from the
+most restrictive constraints. See <a class="reference internal" href="#changing-settings"><span class="std std-ref">Changing settings</span></a></p></li>
+<li><p>Try changing the configuration file by adding new clinicians, or
+changing the min/max blocks of existing clinicians to allow for
+more flexibility. See <a class="reference internal" href="#clinician-configuration"><span class="std std-ref">Clinician Configuration</span></a></p></li>
+</ol>
+</div>
+</div>
+<div class="section" id="changing-settings">
+<span id="id4"></span><h3>Changing settings<a class="headerlink" href="#changing-settings" title="Permalink to this headline">¶</a></h3>
+<p>The <cite>Settings</cite> tab allows you to modify the constraints applied when
+generating a potential schedule.</p>
+<p>In order to disable/enable a constraint, uncheck/check the
+corresponding checkbox and re-generate the schedule in the <cite>Scheduler</cite>
+tab (see <a class="reference internal" href="#generating-a-schedule"><span class="std std-ref">Generating a schedule</span></a>).</p>
+<div class="figure align-default">
+<a class="reference external image-reference" href="_static/images/scheduling/settings_tab.png"><img alt="_images/settings_tab.png" class="with-border" src="_images/settings_tab.png" /></a>
+</div>
+<div class="section" id="st-michael-s-hospital-smh-constraints">
+<h4>St. Michael’s Hospital (SMH) Constraints<a class="headerlink" href="#st-michael-s-hospital-smh-constraints" title="Permalink to this headline">¶</a></h4>
+<p>The following descriptions are specific to the SMH version of the
+scheduler (that is, the <code class="code docutils literal notranslate"><span class="pre">scheduler-smh.exe</span></code> executable file)</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The following constraints are presented in order of restrictiveness,
+from least restrictive to most restrictive.</p>
+<p>If you are struggling to generate a schedule, try disabling them,
+starting from the latter constraints.</p>
+</div>
+<ul class="simple">
+<li><dl class="simple">
+<dt><strong>Cover All Block &amp; Weekends</strong></dt><dd><p>This constraint enforces that a clinician is assigned to every block
+and weekend, in every department.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Restrict Min/Max Blocks</strong></dt><dd><p>This constraint enforces that a clinician is assigned to a number
+of blocks no less than their specified minimum and no more than
+their specified maximum.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Balance Weekends</strong></dt><dd><p>This constraint enforces that all clinicians are assigned to an
+approximately equal number of weekends</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Balance Long Weekends</strong></dt><dd><p>This constraint enforces that all clinicians are assigned to an
+approximately equal number of long (holiday) weekends</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Prevent Consecutive Blocks</strong></dt><dd><p>This constraint enforces that a clinician is not assigned to two
+consecutive blocks in a row</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Spread Out Blocks</strong></dt><dd><p>This constraint enforces that a clinician is not assigned to more than
+2 blocks in every 5 consecutive blocks.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><strong>Spread Out Weekends</strong></dt><dd><p>This constraints enforces that a clinician is not assigned to more than
+1 block in every 4 consecutive blocks.</p>
+</dd>
+</dl>
+</li>
+</ul>
 </div>
 </div>
 <div class="section" id="exporting-a-schedule">
@@ -266,13 +455,13 @@ it as an Excel file. There are two Excel format options: <cite>Yearly Export</ci
 sheet, displaying the clinicians that are covering a particular division
 for a given week or weekend. It is very similar to the table output in
 the application itself.</p>
-<div class="figure">
+<div class="figure align-default">
 <a class="reference external image-reference" href="_static/images/scheduling/export_schedule/export_yearly.png"><img alt="_images/export_yearly.png" class="with-border" src="_images/export_yearly.png" /></a>
 </div>
 <p>Selecting the <cite>Monthly Export</cite> option will generate a more detailed breakdown
 of the schedule, with a separate sheet for every month, detailing which
 clinician covers which division on which day.</p>
-<div class="figure">
+<div class="figure align-default">
 <a class="reference external image-reference" href="_static/images/scheduling/export_schedule/export_monthly.png"><img alt="_images/export_monthly.png" class="with-border" src="_images/export_monthly.png" /></a>
 </div>
 </div>
@@ -281,13 +470,13 @@ clinician covers which division on which day.</p>
 <h2>Sample Output<a class="headerlink" href="#sample-output" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="yearly-excel-format">
 <h3>Yearly Excel Format<a class="headerlink" href="#yearly-excel-format" title="Permalink to this headline">¶</a></h3>
-<div class="figure">
+<div class="figure align-default">
 <a class="reference external image-reference" href="_static/images/scheduling/sample_yearly.png"><img alt="_images/sample_yearly.png" class="with-border" src="_images/sample_yearly.png" /></a>
 </div>
 </div>
 <div class="section" id="monthly-excel-format">
 <h3>Monthly Excel Format<a class="headerlink" href="#monthly-excel-format" title="Permalink to this headline">¶</a></h3>
-<div class="figure">
+<div class="figure align-default">
 <a class="reference external image-reference" href="_static/images/scheduling/sample_monthly.png"><img alt="_images/sample_monthly.png" class="with-border" src="_images/sample_monthly.png" /></a>
 </div>
 </div>
@@ -295,64 +484,50 @@ clinician covers which division on which day.</p>
 </div>
 
 
+           </div>
+           
           </div>
-          
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="install.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, David Landsman
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">Clinician Scheduler</a></h1>
+
+    </section>
+
+  </div>
+  
 
 
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
 
-
-
-
-
-
-<h3>Navigation</h3>
-<ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">User Manual</a></li>
-</ul>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="index.html" title="previous chapter">Clinician Scheduler</a></li>
-  </ul></li>
-</ul>
-</div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    </div>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
-      </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="footer">
-      &copy;2019, David Landsman.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.6</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
-      
-      |
-      <a href="_sources/manual.rst.txt"
-          rel="nofollow">Page source</a>
-    </div>
-
+  
+  
     
+   
 
-    
-  </body>
+</body>
 </html>

@@ -6,9 +6,8 @@
 User Manual
 ===========
 
-.. contents:: Table of Contents
-   :local:
-   :backlinks: none
+.. .. contents:: Table of Contents
+..    :backlinks: none
 
 .. _clinician-configuration:
 
@@ -204,26 +203,81 @@ Once you have created a configuration file, you can switch over to the
 
 5. Click on `Generate` to generate a schedule.
 
-.. warning::
-   Depending on the amount of clinicians and requests provided, it may take
-   some time to find an optimal schedule. 
-
 .. figure:: _static/images/scheduling/generate_schedule/step5_generate.png
    :class: with-border
    :target: _static/images/scheduling/generate_schedule/step5_generate.png
 
 .. warning::
+   Depending on the amount of clinicians and requests provided, it may take
+   some time to find an optimal schedule. 
+
+.. warning::
    It is possible that the scheduler will not be able to come up with a 
-   schedule that satisfies your constraints. This can be a result of either
-   of the following reasons:
+   schedule that satisfies your constraints. This can be a result of one
+   or more of the following reasons:
    
    - There are not enough clinicians to distribute evenly throughout the year
+   - The specified constraints are too restrictive
    - The minimum and maximum number of blocks of clinicians are too restrictive
 
-   Try changing the configuration file by adding new clinicians, or changing
-   the min/max blocks of different clinicians to allow for more flexibility.
+   In these situations try the following:
+
+   1. Adjust the constraints in the `Settings` tab, starting from the 
+      most restrictive constraints. See :ref:`changing-settings`
+   2. Try changing the configuration file by adding new clinicians, or 
+      changing the min/max blocks of existing clinicians to allow for 
+      more flexibility. See :ref:`clinician-configuration`
+
+.. _changing-settings:
+
+Changing settings
+~~~~~~~~~~~~~~~~~
+The `Settings` tab allows you to modify the constraints applied when
+generating a potential schedule.
+
+In order to disable/enable a constraint, uncheck/check the 
+corresponding checkbox and re-generate the schedule in the `Scheduler`
+tab (see :ref:`generating-a-schedule`).
+
+.. figure:: _static/images/scheduling/settings_tab.png
+   :class: with-border
+   :target: _static/images/scheduling/settings_tab.png
+
+St. Michael's Hospital (SMH) Constraints 
+****************************************
+The following descriptions are specific to the SMH version of the 
+scheduler (that is, the :code:`scheduler-smh.exe` executable file)
+
+.. note::
+   The following constraints are presented in order of restrictiveness,
+   from least restrictive to most restrictive.
    
-   See :ref:`clinician-configuration` for more information on modifying the configuration file.
+   If you are struggling to generate a schedule, try disabling them,
+   starting from the latter constraints.
+
+- **Cover All Block & Weekends**
+   This constraint enforces that a clinician is assigned to every block
+   and weekend, in every department.
+- **Restrict Min/Max Blocks**
+   This constraint enforces that a clinician is assigned to a number
+   of blocks no less than their specified minimum and no more than
+   their specified maximum.
+- **Balance Weekends**
+   This constraint enforces that all clinicians are assigned to an 
+   approximately equal number of weekends
+- **Balance Long Weekends**
+   This constraint enforces that all clinicians are assigned to an 
+   approximately equal number of long (holiday) weekends
+- **Prevent Consecutive Blocks**
+   This constraint enforces that a clinician is not assigned to two
+   consecutive blocks in a row
+- **Spread Out Blocks**
+   This constraint enforces that a clinician is not assigned to more than
+   2 blocks in every 5 consecutive blocks.
+- **Spread Out Weekends**
+   This constraints enforces that a clinician is not assigned to more than
+   1 block in every 4 consecutive blocks.
+
 
 Exporting a schedule
 ~~~~~~~~~~~~~~~~~~~~

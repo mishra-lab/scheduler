@@ -28,4 +28,5 @@ Screenshots
     :hidden:
     :maxdepth: 1
 
+    Installation <install>
     User Manual <manual>
