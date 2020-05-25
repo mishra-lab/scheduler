@@ -3,6 +3,7 @@ import ast
 import json
 import re
 from datetime import datetime, timedelta
+from functools import partial
 
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
@@ -10,8 +11,8 @@ from PyQt5.QtWidgets import *
 
 from constants import WEEK_HOURS, WEEKEND_HOURS
 from helpers.excelhelper import ExcelHelper
-from helpers.uihelper import UiHelper
 from helpers.logger import Logger
+from helpers.uihelper import UiHelper
 from services import scheduler
 
 from .dialog import DialogWindow
@@ -85,7 +86,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.generateScheduleButton.clicked.connect(self.generateSchedule)
         self.exportScheduleButton.clicked.connect(self.exportSchedule)
         self.exportMonthlyButton.clicked.connect(self.exportMonthlySchedule)
-        self.exportLpButton.clicked.connect(self.exportLpProblem)
+        self.exportLpButton.clicked.connect(partial(self.exportLpProblem, mps=False))
+        self.exportMpsButton.clicked.connect(partial(self.exportLpProblem, mps=True))
 
         self.calendarYearSpinBox.setValue(datetime.now().year + 1)
 
@@ -242,7 +244,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             constraints=constraints
         )
         
-    def exportLpProblem(self):
+    def exportLpProblem(self, mps=False):
         shuffle = self.shuffleCheckBox.isChecked()
 
         scheduler = self.setupScheduler()
@@ -255,19 +257,28 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         problem = scheduler.get_problem()
 
+        if mps:
+            dialogName = "Save MPS file"
+            dialogExt = "MPS File (*.mps)"
+            export = problem.writeMPS
+        else:
+            dialogName = "Save LP file"
+            dialogExt = "LP File (*.lp)"
+            export = problem.writeLP
+
         # choose save location
         path, _ = QFileDialog.getSaveFileName(
-            self, "Save LP file", "", "LP File (*.lp)", "LP File (*.lp)"
+            self, dialogName, "", dialogExt, dialogExt
         )
 
         if path != '':
             try:
-                problem.writeLP(path)
-                self._logger.write_line('Saved LP file: {}'.format(path))
+                export(path)
+                self._logger.write_line('Saved file: {}'.format(path))
 
             except Exception as ex:
                 QMessageBox.critical(self, "", "Unable to save file!\nDetails: {}".format(str(ex)))
-                self._logger.write_line('Unable to save LP file. {}'.format(str(ex)), level='ERROR')
+                self._logger.write_line('Unable to save file. {}'.format(str(ex)), level='ERROR')
 
 
     def generateSchedule(self):

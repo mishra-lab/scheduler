@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(800, 600)
+        MainWindow.resize(800, 602)
         font = QtGui.QFont()
         font.setPointSize(10)
         MainWindow.setFont(font)
@@ -118,6 +118,9 @@ class Ui_MainWindow(object):
         self.exportLpButton = QtWidgets.QPushButton(self.setupGroupBox)
         self.exportLpButton.setObjectName("exportLpButton")
         self.setupForm.setWidget(5, QtWidgets.QFormLayout.LabelRole, self.exportLpButton)
+        self.exportMpsButton = QtWidgets.QPushButton(self.setupGroupBox)
+        self.exportMpsButton.setObjectName("exportMpsButton")
+        self.setupForm.setWidget(5, QtWidgets.QFormLayout.FieldRole, self.exportMpsButton)
         self.horizontalLayout_6.addLayout(self.setupForm)
         self.setupScheduleGroupBox.addWidget(self.setupGroupBox)
         self.scheduleActions = QtWidgets.QGroupBox(self.schedulerTab)
@@ -270,6 +273,7 @@ class Ui_MainWindow(object):
         self.calendarYearSpinBox.setToolTip(_translate("MainWindow", "<html><head/><body><p>Set the calendar year to be used by the scheduler</p></body></html>"))
         self.numberOfBlocksLabel.setText(_translate("MainWindow", "Number of Blocks"))
         self.exportLpButton.setText(_translate("MainWindow", "Export as LP"))
+        self.exportMpsButton.setText(_translate("MainWindow", "Export as MPS"))
         self.scheduleActions.setTitle(_translate("MainWindow", "Schedule"))
         self.shuffleCheckBox.setText(_translate("MainWindow", "Shuffle?"))
         self.generateScheduleButton.setToolTip(_translate("MainWindow", "<html><head/><body><p>Generate a new schedule using the given configuration file and calendar information</p></body></html>"))
