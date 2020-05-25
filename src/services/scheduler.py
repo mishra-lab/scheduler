@@ -273,6 +273,9 @@ class Scheduler:
 
             return (divAssignments, weekendAssignments, self.holiday_map)
 
+    def get_problem(self):
+        return self.problem
+
     def setup_solver(self):
         if getattr(sys, 'frozen', False):
             # running in a bundle

@@ -23,7 +23,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="configurationTab">
        <attribute name="title">
@@ -183,6 +183,23 @@
                    </property>
                   </widget>
                  </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="holidaysLabel">
+                   <property name="text">
+                    <string>Holidays</string>
+                   </property>
+                   <property name="buddy">
+                    <cstring>loadHolidaysButton</cstring>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QPushButton" name="loadHolidaysButton">
+                   <property name="text">
+                    <string>Load</string>
+                   </property>
+                  </widget>
+                 </item>
                  <item row="3" column="0">
                   <widget class="QLabel" name="calendarYearLabel">
                    <property name="text">
@@ -229,20 +246,10 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="2" column="0">
-                  <widget class="QLabel" name="holidaysLabel">
+                 <item row="5" column="0">
+                  <widget class="QPushButton" name="exportLpButton">
                    <property name="text">
-                    <string>Holidays</string>
-                   </property>
-                   <property name="buddy">
-                    <cstring>loadHolidaysButton</cstring>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="1">
-                  <widget class="QPushButton" name="loadHolidaysButton">
-                   <property name="text">
-                    <string>Load</string>
+                    <string>Export as LP</string>
                    </property>
                   </widget>
                  </item>

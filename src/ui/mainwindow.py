@@ -85,6 +85,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.generateScheduleButton.clicked.connect(self.generateSchedule)
         self.exportScheduleButton.clicked.connect(self.exportSchedule)
         self.exportMonthlyButton.clicked.connect(self.exportMonthlySchedule)
+        self.exportLpButton.clicked.connect(self.exportLpProblem)
 
         self.calendarYearSpinBox.setValue(datetime.now().year + 1)
 
@@ -219,9 +220,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             del self.configuration[clinName]
             UiHelper.syncTreeView(self.treeView, self.model, self.configuration)
 
-    def generateSchedule(self):
-        self.clearScheduleTable()
-
+    def setupScheduler(self):
         numClinicians = len(self.configuration.keys())
         if numClinicians <= 0:
             self._logger.write_line('No clinicians configured! Please load a configuration file with at least one clinician!', level='ERROR')
@@ -229,8 +228,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         numBlocks = self.numberOfBlocksSpinBox.value()
         calendarYear = self.calendarYearSpinBox.value()
-        shuffle = self.shuffleCheckBox.isChecked()
-        verbose = self.verboseCheckBox.isChecked()
         constraints = []
 
         # pull enabled constraints from UI checkboxes
@@ -239,12 +236,51 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if widget.isChecked():
                 constraints.append(widget.objectName().replace('CheckBox', ''))
 
-        # init scheduler with all the given data
-        schedule = scheduler \
-            .Scheduler(logger=self._logger, num_blocks=numBlocks, clin_data=self.configuration, \
-                 request_dict=self._requests, holidays=self._holidays,
-                 constraints=constraints) \
-            .generate(verbose=verbose, shuffle=shuffle)
+        return scheduler.Scheduler(
+            logger=self._logger, num_blocks=numBlocks, clin_data=self.configuration,
+            request_dict=self._requests, holidays=self._holidays,
+            constraints=constraints
+        )
+        
+    def exportLpProblem(self):
+        shuffle = self.shuffleCheckBox.isChecked()
+
+        scheduler = self.setupScheduler()
+        if scheduler is None:
+            self._logger.write_line('Could not setup scheduler!', level='ERROR')
+            return
+
+        scheduler.setup_solver()
+        scheduler.setup_problem(shuffle=shuffle)
+
+        problem = scheduler.get_problem()
+
+        # choose save location
+        path, _ = QFileDialog.getSaveFileName(
+            self, "Save LP file", "", "LP File (*.lp)", "LP File (*.lp)"
+        )
+
+        if path != '':
+            try:
+                problem.writeLP(path)
+                self._logger.write_line('Saved LP file: {}'.format(path))
+
+            except Exception as ex:
+                QMessageBox.critical(self, "", "Unable to save file!\nDetails: {}".format(str(ex)))
+                self._logger.write_line('Unable to save LP file. {}'.format(str(ex)), level='ERROR')
+
+
+    def generateSchedule(self):
+        self.clearScheduleTable()
+        shuffle = self.shuffleCheckBox.isChecked()
+        verbose = self.verboseCheckBox.isChecked()
+
+        scheduler = self.setupScheduler()
+        if scheduler is None:
+            self._logger.write_line('Could not setup scheduler!', level='ERROR')
+            return
+
+        schedule = scheduler.generate(verbose=verbose, shuffle=shuffle)
         if schedule is None:
             self._logger.write_line('Could not generate schedule! Try adjusting min/max values in the configuration tab.', level='ERROR')
         

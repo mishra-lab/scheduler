@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'src\designer\mainwindow.ui'
+# Form implementation generated from reading ui file 'designer\mainwindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
@@ -92,6 +92,12 @@ class Ui_MainWindow(object):
         self.loadRequestsButton = QtWidgets.QPushButton(self.setupGroupBox)
         self.loadRequestsButton.setObjectName("loadRequestsButton")
         self.setupForm.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.loadRequestsButton)
+        self.holidaysLabel = QtWidgets.QLabel(self.setupGroupBox)
+        self.holidaysLabel.setObjectName("holidaysLabel")
+        self.setupForm.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.holidaysLabel)
+        self.loadHolidaysButton = QtWidgets.QPushButton(self.setupGroupBox)
+        self.loadHolidaysButton.setObjectName("loadHolidaysButton")
+        self.setupForm.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.loadHolidaysButton)
         self.calendarYearLabel = QtWidgets.QLabel(self.setupGroupBox)
         self.calendarYearLabel.setObjectName("calendarYearLabel")
         self.setupForm.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.calendarYearLabel)
@@ -109,12 +115,9 @@ class Ui_MainWindow(object):
         self.numberOfBlocksSpinBox.setProperty("value", 26)
         self.numberOfBlocksSpinBox.setObjectName("numberOfBlocksSpinBox")
         self.setupForm.setWidget(4, QtWidgets.QFormLayout.FieldRole, self.numberOfBlocksSpinBox)
-        self.holidaysLabel = QtWidgets.QLabel(self.setupGroupBox)
-        self.holidaysLabel.setObjectName("holidaysLabel")
-        self.setupForm.setWidget(2, QtWidgets.QFormLayout.LabelRole, self.holidaysLabel)
-        self.loadHolidaysButton = QtWidgets.QPushButton(self.setupGroupBox)
-        self.loadHolidaysButton.setObjectName("loadHolidaysButton")
-        self.setupForm.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.loadHolidaysButton)
+        self.exportLpButton = QtWidgets.QPushButton(self.setupGroupBox)
+        self.exportLpButton.setObjectName("exportLpButton")
+        self.setupForm.setWidget(5, QtWidgets.QFormLayout.LabelRole, self.exportLpButton)
         self.horizontalLayout_6.addLayout(self.setupForm)
         self.setupScheduleGroupBox.addWidget(self.setupGroupBox)
         self.scheduleActions = QtWidgets.QGroupBox(self.schedulerTab)
@@ -224,9 +227,9 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.configFileLabel.setBuddy(self.loadConfigButton)
         self.requestsLabel.setBuddy(self.loadRequestsButton)
+        self.holidaysLabel.setBuddy(self.loadHolidaysButton)
         self.calendarYearLabel.setBuddy(self.calendarYearSpinBox)
         self.numberOfBlocksLabel.setBuddy(self.numberOfBlocksSpinBox)
-        self.holidaysLabel.setBuddy(self.loadHolidaysButton)
         self.coverageLabel.setBuddy(self.coverageCheckBox)
         self.minMaxBlocksLabel.setBuddy(self.minMaxBlocksCheckBox)
         self.balancedWeekendsLabel.setBuddy(self.balancedWeekendsCheckBox)
@@ -235,7 +238,7 @@ class Ui_MainWindow(object):
         self.preventConsecutiveWeekendsLabel.setBuddy(self.preventConsecutiveWeekendsCheckBox)
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -261,11 +264,12 @@ class Ui_MainWindow(object):
         self.loadConfigButton.setText(_translate("MainWindow", "Load"))
         self.requestsLabel.setText(_translate("MainWindow", "Requests"))
         self.loadRequestsButton.setText(_translate("MainWindow", "Load"))
+        self.holidaysLabel.setText(_translate("MainWindow", "Holidays"))
+        self.loadHolidaysButton.setText(_translate("MainWindow", "Load"))
         self.calendarYearLabel.setText(_translate("MainWindow", "Calendar Year"))
         self.calendarYearSpinBox.setToolTip(_translate("MainWindow", "<html><head/><body><p>Set the calendar year to be used by the scheduler</p></body></html>"))
         self.numberOfBlocksLabel.setText(_translate("MainWindow", "Number of Blocks"))
-        self.holidaysLabel.setText(_translate("MainWindow", "Holidays"))
-        self.loadHolidaysButton.setText(_translate("MainWindow", "Load"))
+        self.exportLpButton.setText(_translate("MainWindow", "Export as LP"))
         self.scheduleActions.setTitle(_translate("MainWindow", "Schedule"))
         self.shuffleCheckBox.setText(_translate("MainWindow", "Shuffle?"))
         self.generateScheduleButton.setToolTip(_translate("MainWindow", "<html><head/><body><p>Generate a new schedule using the given configuration file and calendar information</p></body></html>"))

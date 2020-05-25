@@ -174,3 +174,6 @@ docs/build/doctrees
 # ignore cbc files
 !scripts/
 scripts/cbc*
+
+# Qt autosave files
+*.ui.autosave
