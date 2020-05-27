@@ -1,5 +1,6 @@
 \documentclass[]{article}
 \input{paper.includes.tex}
+\addbibresource{references.bib}
 
 \title{A flexible integer linear programming formulation for scheduling
 	clinician on-call service in hospitals}
@@ -35,11 +36,13 @@
 	
 	\section{Introduction}\label{sec:introduction}
 	\input{paper.intro.tex}
-	\section{Problem}\label{sec:problem}
+	\section{Problem Description}\label{sec:problem}
 	\input{paper.problem.tex}
-	\section{Methods}\label{sec:methods}
+	\section{Mathematical Formulation}\label{sec:methods}
 	\input{paper.methods.tex}
-	\section{Experiments}\label{sec:experiments}
+	\section{Categorization and comparison with other models}\label{sec:comparison}
+	\input{paper.comparison.tex}
+	\section{Computational Experiments}\label{sec:experiments}
 	\input{paper.experiments.tex}
 	\section{Discussion}\label{sec:discussion}
 	\input{paper.discussion.tex}
@@ -48,6 +51,5 @@
 	\section{Funding}\label{sec:funding}
 	\input{paper.funding.tex}
 	
-	\bibliographystyle{unsrt}
-	\bibliography{references}
+	\printbibliography
 \end{document}

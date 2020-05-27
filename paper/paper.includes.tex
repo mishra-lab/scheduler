@@ -3,6 +3,7 @@
 \usepackage{amsthm}
 \usepackage{amssymb}
 \usepackage{authblk}
+\usepackage[style=trad-unsrt]{biblatex}
 \usepackage{mathtools}
 \usepackage{makecell}
 \usepackage{physics}
@@ -40,4 +41,10 @@
 {
 	\small	
 	\textbf{\textit{Keywords:}} #1
+}
+
+% Suppress fields in references
+\AtEveryBibitem{%
+	\clearfield{url}%
+	\clearfield{urldate}%
 }
