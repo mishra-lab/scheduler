@@ -62,7 +62,7 @@ class WeekendVariable(Variable):
         self.clinician = clinician
         self.week_num = week_num
 
-        Variable.__init__(self, '{},weekend:{}'.format(
+        Variable.__init__(self, '{},weekend_{}'.format(
             self.clinician.name, self.week_num
         ), 0, 1)
 
@@ -84,7 +84,7 @@ class BlockVariable(Variable):
         self.block_num = block_num
         self.division = division
 
-        Variable.__init__(self, '{},div:{},block:{}'.format(
+        Variable.__init__(self, '{},div_{},block_{}'.format(
             self.clinician.name, self.division, self.block_num
         ), 0, 1)
 
@@ -575,7 +575,7 @@ class Scheduler:
                         lambda x, w=week_num: x.week_num == w)[0].get_var()
 
                     var_ = Variable(
-                        '{}:adjacency,div:{},block:{}*weekend:{}'.format(
+                        '{}_adjacency,div_{},block_{}__weekend_{}'.format(
                             clinician.name,
                             div.name,
                             block_num,
