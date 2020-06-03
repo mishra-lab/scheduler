@@ -52,7 +52,8 @@ for our problem is $ASB/R/P$.
 Using the classification in [ref-De Causmaecker and Berghe], we compare our clinician
 scheduling problem and solution approach with existing literature. Azaiez and Al Sharif [ref]
 describe a nurse rostering problem to schedule nurses on a per-day basis, for a total period
-of 28 days. In this problem, they are required to assign a minimum number of staff members
+of 28 days. De Causmaecker and Berghe classify this problem as $ASBN/V2/PL$.
+In this problem, they are required to assign a minimum number of staff members
 per day, unlike in our clinician scheduling problem. Similar to our problem, they include
 hard constraints to prevent consecutive assignments, and enforce a minimum and maximum 
 number of shifts for each nurse. When formulating the optimization goal, Azaiez and Al Sharif
@@ -60,4 +61,12 @@ focus on balancing the workload among nurses, preventing day-night consecutive s
 off-on-off assignments. Their formulation does not incorporate nurse preferences
 for time off into the model. 
 
+In [ref-Bilgin 2008], Bilgin et al address a nurse rostering problem using local search. 
+The problem presented is classified as $ASBI/RVNO/PLR$.
+Some of the constraints they incorporate include coverage constraints, overlapping assignment
+constraints and horizontal constraints, which include constraints arising from employment contracts
+(such as satisfying minimum and maximum thresholds and limiting consecutive assignments). Unlike
+our problem, Bilgin et al consider coverage constraints to be soft constraints, in order to prevent
+over-constraining of the problem. They incorporate nurse requests into the model formulation,
+similar to our problem, but they allow requests for both time off and time on.
 [...]
