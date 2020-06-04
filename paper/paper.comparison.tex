@@ -3,16 +3,17 @@ the nurse rostering area aiming to organize the types of problems and approaches
 commonly
 addressed in the real-world. This research serves to highlight the similarities
 and differences
-among computationally easy and hard instances of nurse rostering, evaluating
+among computationally easy and hard instances of nurse rostering and evaluating
 which algorithms
-are best geared towards which types of problems, and [...]
+are best geared towards which types of problems thus allowing practitioners
+to choose which approach will work best for their case.
 
 De Causmaecker and Berghe [ref] outline a categorization
-of nurse rostering problems using a similar approach used in scheduling,
-based around the personnel environment, work characteristics and optimization
-objective. Previously, there was a lack of a central categorization for
-nurse rostering problems found in the literature. Their work attempts
-to address this, by creating a classification that takes into account
+of nurse rostering problems using a similar approach used in theoretic scheduling problems,
+based around the machine environment, job characteristics and constraints,
+and optimization objective. Previously, there was a lack of a central categorization system
+for nurse rostering problems found in the literature. Their work attempts
+to address this by creating a classification that takes into account
 hard and soft constraints related to nurse preferences, consecutive 
 assignments, coverage and various flexibilities in terms of shift and
 skill types. They go on to describe where recent examples of the nurse rostering
@@ -28,20 +29,18 @@ Then, they generate sample problems corresponding to all four complexity indicat
 and measure the effect of increasing complexity on CPU time required for solving each
 problem. 
 
-
-[maybe 1 additional paragraph on categorization?]
+[maybe 1 additional paragraph on categorization systems?]
 
 We follow the work in [ref-De Causmaecker and Berghe] to place our clinician
-scheduling problem
-in the realm of work for nurse rostering. According to their specification, our
-problem includes 
+scheduling problem in the realm of work for nurse rostering. 
+According to their specification, our problem includes 
 personnel environment constraints targeting the availability of clinicians
 ([list which constraints...]),
 sequences of assignments ([...]), and balance of rosters ([...]) 
 which fall under the categories $\alpha : A$, $\alpha : S$ and $\alpha : B$,
 respectively. 
 For work characteristics, the relevant category for our problem are the range
-constraints, $\alpha : R$, 
+constraints, $\beta : R$, 
 as we restrict the workload of each clinician between a minimum and maximum
 allowed blocks ([constraint...]).
 Lastly, for the optimization objective our problem corresponds to the category
@@ -69,4 +68,5 @@ constraints and horizontal constraints, which include constraints arising from e
 our problem, Bilgin et al consider coverage constraints to be soft constraints, in order to prevent
 over-constraining of the problem. They incorporate nurse requests into the model formulation,
 similar to our problem, but they allow requests for both time off and time on.
+
 [...]
