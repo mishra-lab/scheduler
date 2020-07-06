@@ -8,18 +8,18 @@ help end-users determine
 which algorithms
 are best suited to each type of problem.
 
-De Causmaecker and Berghe [ref] outline a categorization
-of nurse rostering problems using a similar approach used in theoretic scheduling problems,
+In XXXyear, De Causmaecker and Berghe [ref] addressed a gap in the literature 
+surrounding a central categorization system for the nurse rostering problems identified in the literature.
+The authors categorized
+nurse rostering problems using a similar approach used in theoretic scheduling problems,
 based around the machine environment, job characteristics and constraints,
-and optimization objective. Previously, there was a lack of a central categorization system
-for nurse rostering problems found in the literature. Their work attempts
-to address this by creating a classification that takes into account
+and optimization objective. They also created a classification that takes into account
 hard and soft constraints related to nurse preferences, consecutive 
 assignments, coverage and various flexibilities in terms of shift and
-skill types. De Causmaecker and Berghe go on to describe where recent examples of the nurse rostering
-literature can fit in their classification. %SM: such as?
+skill types. De Causmaecker and Berghe went on to describe where recent examples of the nurse rostering
+literature fit into their classification. %SM: give examples of their recent examples.
 
-% DL - maybe this should be in complexity section?
+% DL - maybe this should be in complexity section? %SM: agree, move to complexity section.
 Vanhoucke and Maenhout [ref] analyze and compare nurse rostering instances
 based on complexity indicators arising from problem constraints. They consider
 problem size (in terms of number of nurses, shifts and days), preference distribution
@@ -29,15 +29,15 @@ Then, they generate sample problems corresponding to all four complexity indicat
 and measure the effect of increasing complexity on CPU time required for solving each
 problem. 
 
-[maybe 1 additional paragraph on categorization systems?]
+[maybe 1 additional paragraph on categorization systems?] %SM: yes, describe a bit more or a table/box as the list of categories. That way - flows into next paragraph on where to place the SMH solution.
+%SM i.e. describe/define each category
 
-We follow the work in [ref-De Causmaecker and Berghe] to place our clinician
-scheduling problem in the realm of work for nurse rostering. 
-According to their specification, our problem includes 
+We follow the categorization by [ref-De Causmaecker and Berghe] to situate our clinician
+scheduling problem. Our problem includes 
 personnel environment constraints targeting the availability of clinicians
 ([list which constraints...]),
 sequences of assignments ([...]), and balance of rosters ([...]) 
-which fall under the categories $\alpha : A$, $\alpha : S$ and $\alpha : B$,
+which fall under the categories $\alpha : A$, $\alpha : S$ and $\alpha : B$,  %are these the categories? think other way around -- these fall into the named categories from De Causeameker, etc.?
 respectively. 
 For work characteristics, the relevant category for our problem are the range
 constraints, $\beta : R$, 
@@ -48,12 +48,12 @@ $\gamma : P$, as our optimization objective
 aim to adhere to clinician preferences. Therefore the appropriate categorization
 for our problem is $ASB/R/P$.
 
-Using the classification in [ref-De Causmaecker and Berghe], we compare our clinician
+Using the classification in [ref-De Causmaecker and Berghe], we compare our clinician  %use the term classification or categorization, but not both
 scheduling problem and solution approach with existing literature. Azaiez and Al Sharif [ref]
 describe a nurse rostering problem to schedule nurses on a per-day basis, for a total period
 of 28 days. De Causmaecker and Berghe classify this problem as $ASBN/V2/PL$.
 In this problem, they are required to assign a minimum number of staff members
-per day, unlike in our clinician scheduling problem. Similar to our problem, they include
+per day, unlike in our clinician scheduling problem. Similar to our problem, they include  %who are 'they'? 
 hard constraints to prevent consecutive assignments, and enforce a minimum and maximum 
 number of shifts for each nurse. When formulating the optimization goal, Azaiez and Al Sharif
 focus on balancing the workload among nurses, preventing day-night consecutive shifts and avoiding
@@ -61,12 +61,12 @@ off-on-off assignments. Their formulation does not incorporate nurse preferences
 for time off into the model. 
 
 In [ref-Bilgin 2008], Bilgin et al address a nurse rostering problem using local search. 
-The problem presented is classified as $ASBI/RVNO/PLR$.
-Some of the constraints they incorporate include coverage constraints, overlapping assignment
+The problem presented is classified as $ASBI/RVNO/PLR$.  %problem presented by whom?
+Some of the constraints they incorporate include coverage constraints, overlapping assignment  %who are 'they'?
 constraints and horizontal constraints, which include constraints arising from employment contracts
 (such as satisfying minimum and maximum thresholds and limiting consecutive assignments). Unlike
 our problem, Bilgin et al consider coverage constraints to be soft constraints, in order to prevent
-over-constraining of the problem. They incorporate nurse requests into the model formulation,
-similar to our problem, but they allow requests for both time off and time on.
+over-constraining of the problem. They incorporate nurse requests into the model formulation,  %SM: tell us who 'they' are :) 
+similar to our problem, but they allow requests for both time off and time on.   %rephrase for clarity - not sure I followed?
 
 [...]
