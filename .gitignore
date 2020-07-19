@@ -177,3 +177,5 @@ scripts/cbc*
 
 # Qt autosave files
 *.ui.autosave
+
+*.DS_Store
