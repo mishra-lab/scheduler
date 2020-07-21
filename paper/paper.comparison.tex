@@ -1,14 +1,14 @@
-Prior work by [authors] have   %avoid editorial type statements without citations or numbers, best to state as objective statements
-provided categories to organize the types of problems and approaches
-commonly used for real-world nurse rostering.
-These categories highlight the similarities
-and differences
-among computationally easy and hard instances of nurse rostering and 
-help end-users determine
-which algorithms
-are best suited to each type of problem.
+%Prior work by [authors] have   %avoid editorial type statements without citations or numbers, best to state as objective statements
+%provided categories to organize the types of problems and approaches
+%commonly used for real-world nurse rostering.
+%These categories highlight the similarities
+%and differences
+%among computationally easy and hard instances of nurse rostering and 
+%help end-users determine
+%which algorithms
+%are best suited to each type of problem.
 
-In 2010, De Causmaecker and Berghe [ref] addressed a gap in the literature 
+In 2010, De Causmaecker and Berghe~\cite{de_causmaecker_categorisation_2011} addressed a gap in the literature 
 surrounding a central categorization system for the nurse rostering problems identified in the literature.
 The authors created a categorization framework that takes into account
 hard and soft constraints related to nurse preferences, consecutive
@@ -36,19 +36,6 @@ by the authors is given in Table \ref{tbl:nurse-rostering-categorization}.
 		                                                  & \makecell[l]{(P) Personnel constraints \\ (L) Coverage constraints\\ (X) Number of personnel \\ (R) Robustness \\ (G) General} & \makecell[l]{Multi-objective}                                                 \\ \hline
 	\end{tabular}
 \end{table}
- 
-
-
-%The authors categorized
-%nurse rostering problems using a similar approach used in theoretic scheduling problems,
-%based around the machine environment, job characteristics and constraints,
-%and optimization objective. They also created a classification that takes into account
-%hard and soft constraints related to nurse preferences, consecutive 
-%assignments, coverage and various flexibilities in terms of shift and
-%skill types. 
-
-%De Causmaecker and Berghe went on to describe where recent examples of the nurse rostering
-%literature fit into their classification. %SM: give examples of their recent examples.
 
 % DL - maybe this should be in complexity section? %SM: agree, move to complexity section.
 %Vanhoucke and Maenhout [ref] analyze and compare nurse rostering instances
@@ -59,9 +46,6 @@ by the authors is given in Table \ref{tbl:nurse-rostering-categorization}.
 %Then, they generate sample problems corresponding to all four complexity indicators
 %and measure the effect of increasing complexity on CPU time required for solving each
 %problem. 
-
-%[maybe 1 additional paragraph on categorization systems?] %SM: yes, describe a bit more or a table/box as the list of categories. That way - flows into next paragraph on where to place the SMH solution.
-%SM i.e. describe/define each category
 
 We follow the categorization in Table \ref{tbl:nurse-rostering-categorization} to situate our clinician
 scheduling problem. Our problem includes 
@@ -82,7 +66,7 @@ for our problem is $ASB/R/P$.
 De Causmaecker and Berghe also present examples from the nurse rostering literature
 and their appropriate categorization in their framework. We use some of these examples
 to compare our clinician
-scheduling problem and solution approach with existing literature. Azaiez and Al Sharif [ref]
+scheduling problem and solution approach with existing literature. Azaiez and Al Sharif~\cite{azaiez_0-1_2005}
 describe a nurse rostering problem to schedule nurses on a per-day basis, for a total period
 of 28 days. Azaiez and Al Sharif's problem is categorized as $ASBN/V2/PL$.
 Similar to our clinician scheduling problem, the authors include hard constraints
@@ -92,14 +76,26 @@ balancing the workload among nurses, preventing day-night consecutive shifts and
 avoiding off-on-off assignments. The authors do not attempt to incorporate nurse preferences
 for time off into the model. 
 
-In [ref-Bilgin 2008], Bilgin et al address a nurse rostering problem using local search.
-De Causmaecker and Berghe categorize the problem in [ref-Bilgin] as $ASBI/RVNO/PLR$.
+In~\cite{bilgin_local_2012}, Bilgin et al address a nurse rostering problem using local search.
+De Causmaecker and Berghe categorize the problem in~\cite{bilgin_local_2012} as $ASBI/RVNO/PLR$.
 Bilgin et al incorporate coverage constraints, overlapping assignment constraints
 and horizontal constraints, which include constraints arising from employment contracts
 (such as minimum and maximum thresholds).
 Unlike our approach for these constraints, the authors consider coverage constraints to be soft
 constraints, in order to prevent over-constraining of the problem.
-Bilgin et al also incorporate nurse requests into the model formulation while allowing
-nurses to request request days off and days on.
+Bilgin et al also incorporate nurse requests into the model formulation by allowing
+nurses to request days off and days on.
 
-[...]
+Burke et al~\cite{burke_metaheuristics_2006} present a flexible framework for nurse rostering based on various approaches
+observed from Belgin hospitals. 
+In~\cite{de_causmaecker_categorisation_2011}, Burke et al's work is categorized as $ASBCI/RVNTO/PR$.
+The authors use a two-step algorithm comprised of an initialization procedure
+which provides a solution satisfying only the hard constraints of their problem,
+and a metaheuristic procedure, a hybrid tabu search, which aim to satisfy as many soft constraints as possible.
+Unlike our clinician scheduling problem, 
+Burke et al's hard constraints address only coverage requirements in an effort to make the first
+step of their algorithm efficient.
+In their metaheurstic procedure, the authors optimize soft constraints including assignment of free weekends
+and minimum number of assignments per staff member.
+Notably, Burke et al's approach make use of ``time interval personnel requirements'', which describe
+the amount of required staff per skill category as a varying number throughout the work day.

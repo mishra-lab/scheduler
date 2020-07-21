@@ -2202,14 +2202,21 @@
     <bcf:citekey order="9">li_hybrid_2003</bcf:citekey>
     <bcf:citekey order="10">burke_state_2004</bcf:citekey>
     <bcf:citekey order="11">goos_complexity_1996</bcf:citekey>
-    <bcf:citekey order="12">hammer_boolean_1968</bcf:citekey>
-    <bcf:citekey order="13">stanimirovic_linear_2011</bcf:citekey>
-    <bcf:citekey order="14">mitchell_branch-and-cut_2002</bcf:citekey>
-    <bcf:citekey order="15">shamir_efficiency_1987</bcf:citekey>
-    <bcf:citekey order="16">landsman_scheduling</bcf:citekey>
-    <bcf:citekey order="17">johnjforrest_coin-or/cbc:_2019</bcf:citekey>
-    <bcf:citekey order="18">burke_state_2004</bcf:citekey>
-    <bcf:citekey order="19">silvestro_evaluation_2000</bcf:citekey>
+    <bcf:citekey order="12">de_causmaecker_categorisation_2011</bcf:citekey>
+    <bcf:citekey order="13">hammer_boolean_1968</bcf:citekey>
+    <bcf:citekey order="14">stanimirovic_linear_2011</bcf:citekey>
+    <bcf:citekey order="15">mitchell_branch-and-cut_2002</bcf:citekey>
+    <bcf:citekey order="16">shamir_efficiency_1987</bcf:citekey>
+    <bcf:citekey order="17">de_causmaecker_categorisation_2011</bcf:citekey>
+    <bcf:citekey order="18">azaiez_0-1_2005</bcf:citekey>
+    <bcf:citekey order="19">bilgin_local_2012</bcf:citekey>
+    <bcf:citekey order="20">bilgin_local_2012</bcf:citekey>
+    <bcf:citekey order="21">burke_metaheuristics_2006</bcf:citekey>
+    <bcf:citekey order="22">de_causmaecker_categorisation_2011</bcf:citekey>
+    <bcf:citekey order="23">landsman_scheduling</bcf:citekey>
+    <bcf:citekey order="24">johnjforrest_coin-or/cbc:_2019</bcf:citekey>
+    <bcf:citekey order="25">burke_state_2004</bcf:citekey>
+    <bcf:citekey order="26">silvestro_evaluation_2000</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="none">
