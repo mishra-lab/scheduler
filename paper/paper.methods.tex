@@ -101,8 +101,7 @@ c\in\mathcal{C}, s\in\mathcal{S} \label{eqn:constr-min-max}
 The NCB (no consecutive blocks) and NCW (no consecutive weekends) constraints are 
 given by Eqns. (\ref{eqn:constr-no-consec-blocks}) and (\ref{eqn:constr-no-consec-weekends}), respectively.
 \begin{align}
-&X_{c, b, s} + X_{c, b + 1, s} \leq 1 &&\forall c\in\mathcal{C}, b \leq B - 1,
-s\in\mathcal{S} \label{eqn:constr-no-consec-blocks} \\
+&\sum_{s=1}^S \left(X_{c, b, s} + X_{c, b + 1, s}\right) \leq 1 &&\forall c\in\mathcal{C}, b \leq B - 1 \label{eqn:constr-no-consec-blocks} \\
 &Y_{c, w} + Y_{c, w + 1} \leq 1 &&\forall c\in\mathcal{C}, w \leq W - 1 \label{eqn:constr-no-consec-weekends}
 \end{align}
 The EW (equal weekend) and EH (equal holidays) constraints are given by Eqns. (\ref{eqn:constr-equal-weekends})
@@ -180,8 +179,8 @@ subject to the constraints defined in Section \ref{sec:meth-constraints},
 where $\bar{Q}_i$ is the normalization of objective $Q_i$, and $0 \leq \alpha_i \leq 1$. 
 This method guarantees an optimal solution to be Pareto optimal~\cite{stanimirovic_linear_2011}. 
 
-Currently, the most efficient approach to finding an exact solution for 
-an ILP is called Branch-and-Cut~\cite{mitchell_branch-and-cut_2002}.
+One of the efficient approaches to finding an exact solution for an 
+ILP is Branch-and-Cut~\cite{mitchell_branch-and-cut_2002}.
 This method involves iteratively solving 
 LP relaxations of the ILP, then constraining the relaxed problems and
 considering various sub-problems until it finds integral solutions to the 
