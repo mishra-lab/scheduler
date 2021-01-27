@@ -1,0 +1,22 @@
+In this section we discuss the implications of our approach as deployed in the hospital,
+as well as the lessons learned from developing the scheduling tool.
+The tool is used by administrative staff in the division in order to generate a potential schedule
+for the ID and HIV departments. 
+The staff provides the following data as input to the scheduler:
+(1) maximum and minimum required number of blocks for each clinician, for each division;
+(2) a set of time-off requests for each clinician;
+(3) a set of holiday dates for the current calendar year.
+The supplied time-off requests in (2) are mapped to an appropriate block time-off request by the scheduler.
+For example, if a clinician requests time-off during weeks 2 and 3 of the year, the scheduler
+will interpret the request as time-off during block 1 (covering weeks 1-2) and 2 (covering weeks 3-4).
+The scheduler allows the user to disable certain constraints when generating a schedule
+in order to allow a broader range of solutions and prevent issues with infeasibility. 
+It also allows the user to generate multiple schedules by randomly shuffling the input list of clinicians.
+Once a candidate schedule has been created, the department head will manually adjust it based on
+additional [qualitative-?] constraints to create a final schedule for the division.
+Since the development of the tool, it has been used to generate schedules for the years 2019-21.
+
+Figure XX presents a comparison of the generated schedule and the final schedule after manual adjustments
+for the year 20XX. We can see...
+
+[TODO-lessons learned]
