@@ -15,8 +15,25 @@ It also allows the user to generate multiple schedules by randomly shuffling the
 Once a candidate schedule has been created, the department head will manually adjust it based on
 additional [qualitative-?] constraints to create a final schedule for the division.
 Since the development of the tool, it has been used to generate schedules for the years 2019-21.
+Table XX presents a comparison of the generated schedule and the final schedule after manual adjustments
+for the year 2019. We see that the manual adjustments were likely as a result of additional clinicians
+and/or fellows being assigned to cover a few of the blocks, as well as certain blocks that were 
+split into individual weeks. Overall, the generated schedule provides a good global template,
+and local adjustments can be performed post-hoc.
 
-Figure XX presents a comparison of the generated schedule and the final schedule after manual adjustments
-for the year 20XX. We can see...
-
-[TODO-lessons learned]
+The development of the scheduling solution started from a relaxed version of the problem
+(without constraints on consecutive blocks/weekends).
+We first investigated a maximum flow formulation for solving the problem.
+In this formulation, the problem is represented as a graph $G=(V, E)$ where
+the vertices comprise clinicians and blocks/weekends, and the edges comprise
+potential assignments of clinician to a block/weekend.
+A similar approach using maximum flow has been used in [XX, XX, XX].
+The advantages of a maximum flow formulation are in the computational efficiency
+of the algorithm and the interpretability of the constraints and solution in terms of the graph [???].
+However, a max flow formulation makes it difficult to incorporate new constraints.
+For instance, in order to accommodate the NCB and NCW constraints,
+additional edges and nodes need to be added to the graph, potentially reducing 
+the computational efficiency and interpretability.
+As a result, we opted to reformulate the problem as an ILP, in which the additional constraints
+can be incorporated more easily.
+[...]
