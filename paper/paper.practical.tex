@@ -36,4 +36,11 @@ additional edges and nodes need to be added to the graph, potentially reducing
 the computational efficiency and interpretability.
 As a result, we opted to reformulate the problem as an ILP, in which the additional constraints
 can be incorporated more easily.
-[...]
+
+The ILP formulation went through several stages of design and tweaking.
+For instance, we originally aimed to optimize only the BR and WR constraints.
+However, after receiving feedback on some of the test schedules, we learned that 
+clinicians would prefer to have some of their weekend assignments closer to the block assignments.
+Once we were satisfied with the schedules produced by the algorithm, we targeted the
+user interface. Our goal was to develop an easy-to-use interface for the administrative staff to use,
+without requiring knowledge of the algorithm. [DL - do we need to elaborate more on this?]
