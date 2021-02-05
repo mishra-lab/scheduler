@@ -1,25 +1,5 @@
 In this section we discuss the implications of our approach as deployed in the hospital,
 as well as the lessons learned from developing the scheduling tool.
-The tool is used by administrative staff in the division in order to generate a potential schedule
-for the ID and HIV departments. 
-The staff provides the following data as input to the scheduler:
-(1) maximum and minimum required number of blocks for each clinician, for each division;
-(2) a set of time-off requests for each clinician;
-(3) a set of holiday dates for the current calendar year.
-The supplied time-off requests in (2) are mapped to an appropriate block time-off request by the scheduler.
-For example, if a clinician requests time-off during weeks 2 and 3 of the year, the scheduler
-will interpret the request as time-off during block 1 (covering weeks 1-2) and 2 (covering weeks 3-4).
-The scheduler allows the user to disable certain constraints when generating a schedule
-in order to allow a broader range of solutions and prevent issues with infeasibility. 
-It also allows the user to generate multiple schedules by randomly shuffling the input list of clinicians.
-Once a candidate schedule has been created, the department head will manually adjust it based on
-additional [qualitative-?] constraints to create a final schedule for the division.
-Since the development of the tool, it has been used to generate schedules for the years 2019-21.
-Table XX presents a comparison of the generated schedule and the final schedule after manual adjustments
-for the year 2019. We see that the manual adjustments were likely as a result of additional clinicians
-and/or fellows being assigned to cover a few of the blocks, as well as certain blocks that were 
-split into individual weeks. Overall, the generated schedule provides a good global template,
-and local adjustments can be performed post-hoc.
 
 The development of the scheduling solution started from a relaxed version of the problem
 (without constraints on consecutive blocks/weekends).
@@ -27,7 +7,7 @@ We first investigated a maximum flow formulation for solving the problem.
 In this formulation, the problem is represented as a graph $G=(V, E)$ where
 the vertices comprise clinicians and blocks/weekends, and the edges comprise
 potential assignments of clinician to a block/weekend.
-A similar approach using maximum flow has been used in [XX, XX, XX].
+A similar approach using maximum flow has been used in~\cite{brucker_personnel_2011, smet_polynomially_2016, el_adoly_new_2018, moz_integer_2003}.
 The advantages of a maximum flow formulation are in the computational efficiency
 of the algorithm and the interpretability of the constraints and solution in terms of the graph [???].
 However, a max flow formulation makes it difficult to incorporate new constraints.
@@ -44,3 +24,26 @@ clinicians would prefer to have some of their weekend assignments closer to the 
 Once we were satisfied with the schedules produced by the algorithm, we targeted the
 user interface. Our goal was to develop an easy-to-use interface for the administrative staff to use,
 without requiring knowledge of the algorithm. [DL - do we need to elaborate more on this?]
+
+Since the development of the tool, it has been used to generate schedules for the years 2019-21.
+The tool is used by administrative staff in the division in order to generate a potential schedule
+for the ID and HIV departments. 
+The staff provides the following data as input to the scheduler:
+(1) maximum and minimum required number of blocks for each clinician, for each division;
+(2) a set of time-off requests for each clinician;
+(3) a set of holiday dates for the current calendar year.
+The supplied time-off requests in (2) are mapped to an appropriate block time-off request by the scheduler.
+For example, if a clinician requests time-off during weeks 2 and 3 of the year, the scheduler
+will interpret the request as time-off during block 1 (covering weeks 1-2) and 2 (covering weeks 3-4).
+The scheduler allows the user to disable certain constraints when generating a schedule
+in order to allow a broader range of solutions and prevent issues with infeasibility. 
+It also allows the user to generate multiple schedules by randomly shuffling the input list of clinicians.
+Once a candidate schedule has been created, the department head may manually
+adjust the schedule to better accommodate some of the time-off requests
+and any potential [extraneous/qualitative-?] [requirements-?]
+(although at the cost of breaking some of the hard constraints).
+Table XX presents a comparison of the generated schedule and the final schedule after manual adjustments
+for the year 2019. We see that the manual adjustments were likely as a result of additional clinicians
+and/or fellows being assigned to cover a few of the blocks, as well as certain blocks that were 
+split into individual weeks. Overall, the generated schedule provides a good global template,
+and local adjustments can be performed post-hoc.

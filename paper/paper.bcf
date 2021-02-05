@@ -2212,8 +2212,12 @@
     <bcf:citekey order="21">de_causmaecker_categorisation_2011</bcf:citekey>
     <bcf:citekey order="22">landsman_scheduling</bcf:citekey>
     <bcf:citekey order="23">johnjforrest_coin-or/cbc:_2019</bcf:citekey>
-    <bcf:citekey order="24">burke_state_2004</bcf:citekey>
-    <bcf:citekey order="25">silvestro_evaluation_2000</bcf:citekey>
+    <bcf:citekey order="24">brucker_personnel_2011</bcf:citekey>
+    <bcf:citekey order="24">smet_polynomially_2016</bcf:citekey>
+    <bcf:citekey order="24">el_adoly_new_2018</bcf:citekey>
+    <bcf:citekey order="24">moz_integer_2003</bcf:citekey>
+    <bcf:citekey order="25">burke_state_2004</bcf:citekey>
+    <bcf:citekey order="26">silvestro_evaluation_2000</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="none">
