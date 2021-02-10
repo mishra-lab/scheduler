@@ -1,6 +1,5 @@
-In this section we discuss the implications of our approach as deployed in the hospital,
-as well as the lessons learned from developing the scheduling tool.
-
+In this section we discuss the lessons learned from developing the scheduling tool,
+as well as the implications of our approach as deployed in the hospital.
 The development of the scheduling solution started from a relaxed version of the problem
 (without constraints on consecutive blocks/weekends).
 We first investigated a maximum flow formulation for solving the problem.
@@ -25,7 +24,8 @@ Once we were satisfied with the schedules produced by the algorithm, we targeted
 user interface. Our goal was to develop an easy-to-use interface for the administrative staff to use,
 without requiring knowledge of the algorithm. [DL - do we need to elaborate more on this?]
 
-Since the development of the tool, it has been used to generate schedules for the years 2019-21.
+Since the development of the tool, it has been used at St. Michael's Hospital
+to generate schedules for the years 2019-21.
 The tool is used by administrative staff in the division in order to generate a potential schedule
 for the ID and HIV departments. 
 The staff provides the following data as input to the scheduler:
@@ -40,10 +40,20 @@ in order to allow a broader range of solutions and prevent issues with infeasibi
 It also allows the user to generate multiple schedules by randomly shuffling the input list of clinicians.
 Once a candidate schedule has been created, the department head may manually
 adjust the schedule to better accommodate some of the time-off requests
-and any potential [extraneous/qualitative-?] [requirements-?]
+and any additional requirements
 (although at the cost of breaking some of the hard constraints).
-Table XX presents a comparison of the generated schedule and the final schedule after manual adjustments
-for the year 2019. We see that the manual adjustments were likely as a result of additional clinicians
-and/or fellows being assigned to cover a few of the blocks, as well as certain blocks that were 
-split into individual weeks. Overall, the generated schedule provides a good global template,
-and local adjustments can be performed post-hoc.
+Table \ref{tbl:2019-schedule-comparison} presents a comparison of the generated schedule and the final schedule after manual adjustments
+for the year 2019. We see that the manual adjustments included splitting or merging of certain blocks
+and local swaps between clinicians.
+Additionally, blocks and weekends may be adjusted manually due to newly hired clinicians or fellows being 
+assigned to cover some of the assignments.
+For the year 2020, the generated schedules provided a good starting point for the schedule.
+However, due to the COVID-19 pandemic and an increase in the demand and workload of ID clinicians in the department,
+the schedules had to be adjusted manually as new requirements emerged.
+This is something that could be improved in future iterations of the model
+-- specifically, the ability to (re-)generate shorter term schedules which are appropriately
+tuned based on a partial completed schedule provided as input.
+Overall, the generated schedule from the ILP model provide a good global template
+to which local adjustments can be easily performed post-hoc.
+
+\input{tbl/2019_schedule_comparison}
